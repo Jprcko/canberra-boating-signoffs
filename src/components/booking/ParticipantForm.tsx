@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,7 +56,9 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleAgeDialogAccept = (supervisorName: string) => {
     if (tempDate && supervisorName) {
+      // First update the dateOfBirth field
       onChange(index, "dateOfBirth", tempDate);
+      // Then update the supervisorName field
       onChange(index, "supervisorName", supervisorName);
       setShowAgeDialog(false);
       setTempDate(null);
