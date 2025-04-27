@@ -1,7 +1,7 @@
-
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Sailboat } from "lucide-react";
 
 interface HeroProps {
   title: string;
@@ -41,7 +41,7 @@ const Hero = ({
           )}
         </div>
       </div>
-      <div className="waves">
+      <div className="waves relative">
         <svg
           className="w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
@@ -63,6 +63,12 @@ const Hero = ({
             <use xlinkHref="#gentle-wave" x="48" y="7" />
           </g>
         </svg>
+        
+        {/* Boat silhouette */}
+        <Sailboat 
+          className="absolute bottom-[10%] left-1/2 transform -translate-x-1/2 text-white/70 animate-wave" 
+          size={48} 
+        />
       </div>
     </div>
   );
