@@ -12,7 +12,7 @@ const Index = () => {
       <Hero
         title="Get Your Boat Licence with Confidence"
         subtitle="Professional logbook supervision and boat licence training in NSW"
-        backgroundImage="https://images.unsplash.com/photo-1559180709-73e7982729bb?auto=format&fit=crop&w=1920&q=80"
+        backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80"
       >
         <div className="flex gap-4 mt-8">
           <Link to="/services">
@@ -102,10 +102,12 @@ const Index = () => {
         </div>
       </section>
 
-      <FAQ />
+      <div id="faq" className="bg-slate-light">
+        <FAQ />
+      </div>
 
       {/* Why Choose Us Section */}
-      <section className="section-padding bg-slate-light">
+      <section className="section-padding bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-3">Why Choose Us</h2>

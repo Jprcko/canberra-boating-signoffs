@@ -1,6 +1,7 @@
-
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -37,7 +38,15 @@ export const HowItWorks = () => {
   });
 
   return (
-    <section className="section-padding bg-slate-light" ref={ref}>
+    <section 
+      className="section-padding relative" 
+      ref={ref}
+      style={{
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url(https://images.unsplash.com/photo-1559180709-73e7982729bb?auto=format&fit=crop&w=1920&q=80)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       <div className="container-custom max-w-4xl">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">How It Works</h2>
@@ -68,8 +77,15 @@ export const HowItWorks = () => {
             </div>
           ))}
         </div>
+
+        <div className="text-center mt-12">
+          <a href="#faq" className="inline-block">
+            <Button variant="secondary" className="bg-white text-water-blue hover:bg-sky-light">
+              Have questions? Check out our FAQs
+            </Button>
+          </a>
+        </div>
       </div>
     </section>
   );
 };
-
