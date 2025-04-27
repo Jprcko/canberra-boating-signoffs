@@ -15,14 +15,9 @@ const Index = () => {
         backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80"
       >
         <div className="flex gap-4 mt-8">
-          <Link to="/services">
+          <Link to="/booking">
             <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
-              View Services
-            </Button>
-          </Link>
-          <Link to="/contact">
-            <Button variant="secondary" className="bg-white text-water-blue hover:bg-sky-light px-8 py-6 text-lg">
-              Contact Us
+              Book Now
             </Button>
           </Link>
         </div>

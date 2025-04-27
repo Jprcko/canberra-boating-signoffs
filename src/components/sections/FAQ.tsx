@@ -107,9 +107,13 @@ const faqCategories = [
   }
 ];
 
-export const FAQ = () => {
+interface FAQProps {
+  className?: string;
+}
+
+export const FAQ = ({ className }: FAQProps) => {
   return (
-    <section className="section-padding bg-white">
+    <section className={`section-padding bg-slate-light ${className || ''}`}>
       <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">Frequently Asked Questions</h2>
