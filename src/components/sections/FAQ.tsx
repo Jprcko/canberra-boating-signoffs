@@ -1,3 +1,4 @@
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqCategories = [
@@ -69,6 +70,10 @@ const faqCategories = [
       {
         question: "How long does the knowledge test take?",
         answer: "The test usually takes around 30 minutes to 1 hour, depending on your pace."
+      },
+      {
+        question: "How much does it cost to sit the test at Service NSW?",
+        answer: "The test fee is $67, paid at Service NSW when you book or sit your test. (Prices are as per Service NSW current 2025 rates — they may adjust slightly year-to-year.)"
       },
       {
         question: "Why do Canberra residents need to go to Service NSW?",
