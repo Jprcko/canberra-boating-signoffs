@@ -9,6 +9,8 @@ import { PricingSection } from "./form-sections/PricingSection";
 import { DateTimeSection } from "./form-sections/DateTimeSection";
 import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
 import { ParticipantCountSection } from "./form-sections/ParticipantCountSection";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
@@ -25,6 +27,8 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
   const { toast } = useToast();
   const { validateAge } = useAgeValidation();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let totalPrice = 0;
@@ -117,17 +121,70 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    setTimeout(() => {
+
+    try {
+      // Insert main booking record
+      const { data: bookingData, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          booking_date: date,
+          total_price: price,
+          discount_amount: discount,
+        })
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      // Insert selected services
+      const bookingServices = selectedServices.map(serviceId => ({
+        booking_id: bookingData.id,
+        service_id: serviceId,
+        price_per_person: serviceId === 'test' ? 150 : 499,
+        participants: Number(participants)
+      }));
+
+      const { error: servicesError } = await supabase
+        .from('booking_services')
+        .insert(bookingServices);
+
+      if (servicesError) throw servicesError;
+
+      // Insert participant information
+      const participantsToInsert = participantsInfo
+        .slice(0, Number(participants))
+        .map(participant => ({
+          booking_id: bookingData.id,
+          ...participant
+        }));
+
+      const { error: participantsError } = await supabase
+        .from('booking_participants')
+        .insert(participantsToInsert);
+
+      if (participantsError) throw participantsError;
+
       toast({
-        title: "Booking Request Submitted",
-        description: "We've received your booking request and will confirm shortly.",
+        title: "Booking Submitted Successfully",
+        description: "We've received your booking request.",
       });
+
+      // Redirect to a confirmation page or clear the form
+      navigate("/");
+
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      toast({
+        title: "Error Submitting Booking",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
