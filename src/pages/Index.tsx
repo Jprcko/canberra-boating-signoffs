@@ -1,5 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { FAQ } from "@/components/sections/FAQ";
 import Hero from "@/components/ui/Hero";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -100,6 +101,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <FAQ />
 
       {/* Why Choose Us Section */}
       <section className="section-padding bg-slate-light">
