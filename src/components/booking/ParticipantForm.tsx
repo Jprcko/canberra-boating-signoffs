@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -81,33 +80,37 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
         </div>
         <div className="space-y-2">
           <Label htmlFor={`dateOfBirth-${index}`}>Date of Birth *</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !participant.dateOfBirth && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {participant.dateOfBirth ? 
-                  format(participant.dateOfBirth, "PPP") : 
-                  <span>Select date of birth</span>
-                }
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={participant.dateOfBirth}
-                onSelect={handleDateOfBirthChange}
-                initialFocus
-                disabled={(date) => date > new Date()}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !participant.dateOfBirth && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {participant.dateOfBirth ? 
+                format(participant.dateOfBirth, "PPP") : 
+                <span>Select date of birth</span>
+              }
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={participant.dateOfBirth}
+              onSelect={handleDateOfBirthChange}
+              initialFocus
+              disabled={(date) => date > new Date()}
+              captionLayout="dropdown-buttons"
+              fromYear={1900}
+              toYear={new Date().getFullYear()}
+              className="pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
         <div className="space-y-2">
           <Label htmlFor={`email-${index}`}>Email Address *</Label>
           <Input
@@ -158,4 +161,3 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     </div>
   );
 };
-
