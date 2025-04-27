@@ -1,3 +1,4 @@
+
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -80,7 +81,7 @@ export const HowItWorks = () => {
 
         <div className="text-center mt-12">
           <a href="#faq" className="inline-block">
-            <Button variant="secondary" className="bg-white text-water-blue hover:bg-sky-light">
+            <Button variant="secondary" className="bg-white text-water-blue hover:bg-sky-light text-lg px-6 py-4">
               Have questions? Check out our FAQs
             </Button>
           </a>
