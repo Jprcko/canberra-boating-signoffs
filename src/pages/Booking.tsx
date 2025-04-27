@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
@@ -11,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Book, TestTube, Users, CalendarIcon, Clock, Drink, Lunch } from "lucide-react";
+import { Book, TestTube, Users, CalendarIcon, Clock, Coffee, Utensils } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 const BookingPage = () => {
@@ -153,8 +154,8 @@ const BookingPage = () => {
                       <ul className="space-y-2 text-sm">
                         {service.features.map((feature, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            {feature.includes("lunch") ? <Lunch className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
-                             feature.includes("drink") ? <Drink className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
+                            {feature.includes("lunch") ? <Utensils className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
+                             feature.includes("drink") ? <Coffee className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
                              feature.includes("9am to 4pm") ? <Clock className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
                              <div className="h-4 w-4 rounded-full border-2 border-water-blue shrink-0 mt-0.5" />}
                             <span>{feature}</span>
