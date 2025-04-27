@@ -91,6 +91,7 @@ export type Database = {
           created_at: string | null
           discount_amount: number | null
           id: string
+          metadata: Json | null
           status: Database["public"]["Enums"]["booking_status"] | null
           total_price: number
           updated_at: string | null
@@ -101,6 +102,7 @@ export type Database = {
           created_at?: string | null
           discount_amount?: number | null
           id?: string
+          metadata?: Json | null
           status?: Database["public"]["Enums"]["booking_status"] | null
           total_price: number
           updated_at?: string | null
@@ -111,6 +113,7 @@ export type Database = {
           created_at?: string | null
           discount_amount?: number | null
           id?: string
+          metadata?: Json | null
           status?: Database["public"]["Enums"]["booking_status"] | null
           total_price?: number
           updated_at?: string | null
@@ -123,7 +126,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_random_password: {
+        Args: { length?: number }
+        Returns: string
+      }
     }
     Enums: {
       booking_status: "pending" | "confirmed" | "cancelled"
