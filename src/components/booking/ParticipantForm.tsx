@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useAgeValidation } from "@/hooks/useAgeValidation";
 import { ParticipantInfo } from "@/types/booking";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ParticipantFormProps {
   participant: ParticipantInfo;
@@ -18,12 +19,6 @@ interface ParticipantFormProps {
 
 export const ParticipantForm = ({ participant, index, onChange }: ParticipantFormProps) => {
   const { validateAge, calculateAge } = useAgeValidation();
-
-  const handleDateOfBirthChange = (date: Date | undefined) => {
-    if (date && validateAge(date)) {
-      onChange(index, "dateOfBirth", date);
-    }
-  };
 
   const validateAustralianPhone = (phone: string) => {
     // Regex for Australian phone numbers (mobile and landline)
@@ -39,6 +34,12 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
       e.target.setCustomValidity("Please enter a valid Australian phone number");
     } else {
       e.target.setCustomValidity("");
+    }
+  };
+
+  const handleDateOfBirthChange = (date: Date | undefined) => {
+    if (date && validateAge(date)) {
+      onChange(index, "dateOfBirth", date);
     }
   };
 
@@ -136,6 +137,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  id={`dateOfBirth-${index}`}
                   variant={"outline"}
                   className={cn(
                     "w-full mt-1 justify-start text-left font-normal",
@@ -143,10 +145,11 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {participant.dateOfBirth ? 
-                    format(participant.dateOfBirth, "PPP") : 
-                    <span>Select date of birth</span>
-                  }
+                  {participant.dateOfBirth ? (
+                    format(participant.dateOfBirth, "PPP")
+                  ) : (
+                    <span>Select your date of birth</span>
+                  )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -154,15 +157,20 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
                   mode="single"
                   selected={participant.dateOfBirth}
                   onSelect={handleDateOfBirthChange}
-                  initialFocus
                   disabled={(date) => date > new Date()}
-                  captionLayout="dropdown"
+                  initialFocus
+                  captionLayout="dropdown-buttons"
                   fromYear={1900}
                   toYear={new Date().getFullYear()}
-                  className="rounded-md border shadow-sm pointer-events-auto"
+                  defaultMonth={new Date(2000, 0)}
+                  showOutsideDays={false}
+                  className="rounded-md border shadow-sm p-3 pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
+            <p className="text-sm text-gray-500 mt-1">
+              You must be at least 12 years old to participate
+            </p>
           </div>
         </div>
       </div>
