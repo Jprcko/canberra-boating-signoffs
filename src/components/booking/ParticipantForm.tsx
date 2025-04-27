@@ -26,6 +26,23 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     }
   };
 
+  const validateAustralianPhone = (phone: string) => {
+    // Regex for Australian phone numbers (mobile and landline)
+    const australianPhoneRegex = /^(?:\+?61|0)[2-478](?:[ -]?[0-9]){8}$/;
+    return australianPhoneRegex.test(phone);
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const phone = e.target.value;
+    onChange(index, "phone", phone);
+    
+    if (phone && !validateAustralianPhone(phone)) {
+      e.target.setCustomValidity("Please enter a valid Australian phone number");
+    } else {
+      e.target.setCustomValidity("");
+    }
+  };
+
   return (
     <div className="space-y-4 p-4 border border-gray-200 rounded-lg">
       <h3 className="font-medium">Participant {index + 1}</h3>
@@ -39,16 +56,18 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
             placeholder="First name"
             required
           />
+          <p className="text-sm text-gray-500">
+            Please enter your name as it appears on your official ID (driver's licence or passport)
+          </p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor={`middleName-${index}`}>Middle Name</Label>
+          <Label htmlFor={`middleName-${index}`}>Middle Name (Optional)</Label>
           <Input
             id={`middleName-${index}`}
             value={participant.middleName}
             onChange={(e) => onChange(index, "middleName", e.target.value)}
-            placeholder="Middle name"
+            placeholder="Middle Name (Optional)"
           />
-          <p className="text-sm text-gray-500">Please enter middle name if it appears on official ID</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor={`lastName-${index}`}>Last Name *</Label>
@@ -105,10 +124,12 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
           <Input
             id={`phone-${index}`}
             value={participant.phone}
-            onChange={(e) => onChange(index, "phone", e.target.value)}
-            placeholder="Contact number"
+            onChange={handlePhoneChange}
+            placeholder="e.g., 0412345678"
+            pattern="^(?:\+?61|0)[2-478](?:[ -]?[0-9]){8}$"
             required
           />
+          <p className="text-sm text-gray-500">Please enter a valid Australian phone number</p>
         </div>
         
         {participant.dateOfBirth && 
@@ -137,3 +158,4 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     </div>
   );
 };
+
