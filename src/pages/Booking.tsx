@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
@@ -7,45 +6,93 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, CheckCircle } from "lucide-react";
+import { Book, TestTube, Users, CalendarIcon, Clock, Drink, Lunch } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
 const BookingPage = () => {
   const [date, setDate] = useState<Date>();
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
     {
-      id: "single",
-      name: "Single Session",
-      price: "$199",
-      description: "2-hour supervised session with sign-off"
-    },
-    {
       id: "full",
       name: "Full Logbook Package",
       price: "$499",
-      description: "Complete logbook supervision package"
+      description: "Complete your logbook requirements in one day",
+      features: [
+        "Full day on the water (9am to 4pm)",
+        "Professional instructor/supervisor",
+        "Complete logbook sign-offs",
+        "Free lunch + drink at the Light House Pub",
+        "Exam preparation guidance"
+      ],
+      icon: Book,
+      highlight: true
     },
     {
       id: "group",
       name: "Group Package",
-      price: "From $149pp",
-      description: "For 2-5 people learning together"
+      description: "Cost-effective option for friends or family members learning together",
+      price: "Calculated by group size",
+      features: [
+        "Shared full-day supervised session",
+        "Per person discount",
+        "Individual logbook sign-offs",
+        "Fun, social learning environment",
+        "Group booking convenience"
+      ],
+      icon: Users
     },
     {
       id: "test",
       name: "Test Readiness Session",
-      price: "$149",
-      description: "1-hour preparation for your practical test"
+      price: "$150",
+      description: "Online preparation for your practical test",
+      features: [
+        "1-hour online preparation",
+        "Test simulation exercises",
+        "Key skill reinforcement",
+        "Final tips and guidance",
+        "Confidence building"
+      ],
+      icon: TestTube
     }
   ];
+
+  const isServiceSelectionValid = (serviceId: string) => {
+    const updatedSelection = selectedServices.includes(serviceId)
+      ? selectedServices.filter(id => id !== serviceId)
+      : [...selectedServices, serviceId];
+
+    // Group package can't be combined with full logbook package
+    if (serviceId === 'group' && updatedSelection.includes('full')) return false;
+    if (serviceId === 'full' && updatedSelection.includes('group')) return false;
+
+    return true;
+  };
+
+  const handleServiceSelection = (serviceId: string) => {
+    if (!isServiceSelectionValid(serviceId)) {
+      toast({
+        title: "Invalid Selection",
+        description: "Group package cannot be combined with Full Logbook Package",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSelectedServices(prev => 
+      prev.includes(serviceId)
+        ? prev.filter(id => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,42 +122,54 @@ const BookingPage = () => {
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-3">Book Your Boating Session</h2>
             <p className="text-gray-700">
-              Schedule your supervised boating session in just a few simple steps
+              Select one or more services that fit your needs
             </p>
           </div>
 
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Select Your Service</CardTitle>
-              <CardDescription>Choose the service that best fits your needs</CardDescription>
+              <CardTitle>Select Your Services</CardTitle>
+              <CardDescription>Choose the services that best fit your needs - you can combine compatible options</CardDescription>
             </CardHeader>
             <CardContent>
-              <RadioGroup 
-                value={selectedService || ""} 
-                onValueChange={setSelectedService}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {services.map((service) => (
                   <div key={service.id} className="relative">
-                    <RadioGroupItem
-                      value={service.id}
-                      id={service.id}
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor={service.id}
-                      className="flex flex-col h-full p-4 border rounded-lg cursor-pointer 
-                        peer-aria-checked:border-water-blue peer-aria-checked:bg-sky-light
-                        hover:bg-slate-light hover:border-gray-300 transition-all"
+                    <div
+                      className={cn(
+                        "flex flex-col h-full p-4 border rounded-lg cursor-pointer transition-all",
+                        selectedServices.includes(service.id) 
+                          ? "border-water-blue bg-sky-light" 
+                          : "hover:bg-slate-light hover:border-gray-300"
+                      )}
+                      onClick={() => handleServiceSelection(service.id)}
                     >
-                      <span className="font-semibold text-lg">{service.name}</span>
-                      <span className="text-water-blue font-bold text-xl mt-1">{service.price}</span>
-                      <span className="text-sm text-gray-500 mt-1">{service.description}</span>
-                      <CheckCircle className="absolute top-4 right-4 h-5 w-5 text-water-blue opacity-0 peer-aria-checked:opacity-100" />
-                    </Label>
+                      <div className="flex items-center gap-2 mb-2">
+                        <service.icon className="h-5 w-5 text-water-blue" />
+                        <span className="font-semibold text-lg">{service.name}</span>
+                      </div>
+                      <span className="text-water-blue font-bold text-xl mb-2">{service.price}</span>
+                      <p className="text-sm text-gray-500 mb-4">{service.description}</p>
+                      <ul className="space-y-2 text-sm">
+                        {service.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            {feature.includes("lunch") ? <Lunch className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
+                             feature.includes("drink") ? <Drink className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
+                             feature.includes("9am to 4pm") ? <Clock className="h-4 w-4 text-water-blue shrink-0 mt-0.5" /> :
+                             <div className="h-4 w-4 rounded-full border-2 border-water-blue shrink-0 mt-0.5" />}
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Checkbox
+                        checked={selectedServices.includes(service.id)}
+                        className="absolute top-4 right-4"
+                        onCheckedChange={() => handleServiceSelection(service.id)}
+                      />
+                    </div>
                   </div>
                 ))}
-              </RadioGroup>
+              </div>
             </CardContent>
           </Card>
 
@@ -145,7 +204,7 @@ const BookingPage = () => {
                       min="1" 
                       max="5" 
                       defaultValue="1" 
-                      disabled={selectedService !== "group"} 
+                      disabled={!selectedServices.includes("group")} 
                     />
                   </div>
                 </div>
@@ -210,7 +269,7 @@ const BookingPage = () => {
                 <Button 
                   type="submit" 
                   className="w-full bg-water-blue hover:bg-deep-blue" 
-                  disabled={!selectedService || !date || isSubmitting}
+                  disabled={selectedServices.length === 0 || !date || isSubmitting}
                 >
                   {isSubmitting ? "Processing..." : "Complete Booking"}
                 </Button>
