@@ -120,21 +120,29 @@ export const FAQ = () => {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          {faqCategories.map((category, index) => (
-            <div key={index} className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-navy">{category.title}</h3>
-              <Accordion type="single" collapsible className="w-full">
-                {category.items.map((item, itemIndex) => (
-                  <AccordionItem key={itemIndex} value={`item-${index}-${itemIndex}`}>
-                    <AccordionTrigger className="text-left">{item.question}</AccordionTrigger>
-                    <AccordionContent className="whitespace-pre-line text-gray-700">
-                      {item.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          ))}
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {faqCategories.map((category, index) => (
+              <AccordionItem key={index} value={`category-${index}`}>
+                <AccordionTrigger className="text-xl font-semibold text-navy">
+                  {category.title}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Accordion type="single" collapsible className="w-full">
+                    {category.items.map((item, itemIndex) => (
+                      <AccordionItem key={itemIndex} value={`item-${index}-${itemIndex}`}>
+                        <AccordionTrigger className="text-left">
+                          {item.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="whitespace-pre-line text-gray-700">
+                          {item.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>
