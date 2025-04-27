@@ -1,3 +1,4 @@
+
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -31,13 +32,18 @@ const Hero = ({
         <div className="container-custom text-center px-4 z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">{title}</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white">{subtitle}</p>
+          
+          {/* Move children outside conditional rendering to fix button placement */}
           {children}
+          
           {showButton && (
-            <Link to={buttonLink}>
-              <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
-                {buttonText}
-              </Button>
-            </Link>
+            <div className="mt-6">
+              <Link to={buttonLink}>
+                <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
+                  {buttonText}
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </div>

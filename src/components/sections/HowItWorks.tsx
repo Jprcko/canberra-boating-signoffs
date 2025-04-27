@@ -55,9 +55,10 @@ export const HowItWorks = () => {
                 inView
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10",
-                // Add incremental delay for each step
-                inView && `delay-[${index * 200}ms]`
+                // Fix the delay syntax with proper style delay
+                inView && `transition-delay-${index * 200}ms`
               )}
+              style={{ transitionDelay: inView ? `${index * 200}ms` : '0ms' }}
             >
               <div className="w-12 h-12 bg-water-blue rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
                 {step.number}
@@ -71,4 +72,3 @@ export const HowItWorks = () => {
     </section>
   );
 };
-
