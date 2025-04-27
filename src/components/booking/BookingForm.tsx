@@ -27,11 +27,16 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const { validateAge } = useAgeValidation();
 
   useEffect(() => {
+    let totalPrice = 0;
+    let totalDiscount = 0;
+    const basePrice = 499;
+    const testPrice = 150;
+    
     if (selectedServices.includes("full")) {
-      setPrice(499);
-      setDiscount(0);
-    } else if (selectedServices.includes("group")) {
-      const basePrice = 499;
+      totalPrice = basePrice;
+    } 
+    
+    if (selectedServices.includes("group")) {
       let discountPercent = 0;
       
       switch (participants) {
@@ -50,13 +55,38 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       
       const discountAmount = (basePrice * discountPercent) / 100;
       const pricePerPerson = basePrice - discountAmount;
-      const totalPrice = pricePerPerson * Number(participants);
-      setDiscount(discountAmount * Number(participants));
-      setPrice(totalPrice);
-    } else {
-      setPrice(0);
-      setDiscount(0);
+      totalPrice = pricePerPerson * Number(participants);
+      totalDiscount = discountAmount * Number(participants);
     }
+
+    if (selectedServices.includes("test")) {
+      const participantCount = selectedServices.includes("group") ? Number(participants) : 1;
+      let testTotalPrice = testPrice * participantCount;
+      
+      if (selectedServices.includes("group")) {
+        // Apply the same discount structure to test price
+        let discountPercent = 0;
+        switch (participants) {
+          case "2":
+            discountPercent = 10;
+            break;
+          case "3":
+            discountPercent = 12;
+            break;
+          case "4":
+            discountPercent = 15;
+            break;
+        }
+        const testDiscountAmount = (testTotalPrice * discountPercent) / 100;
+        testTotalPrice -= testDiscountAmount;
+        totalDiscount += testDiscountAmount;
+      }
+      
+      totalPrice += testTotalPrice;
+    }
+
+    setPrice(totalPrice);
+    setDiscount(totalDiscount);
   }, [selectedServices, participants]);
 
   useEffect(() => {

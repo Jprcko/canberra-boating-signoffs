@@ -42,6 +42,7 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
       description: "Cost-effective option for friends or family members learning together",
       price: "Calculated by group size",
       features: [
+        "Full day on the water (9am to 4pm)",
         "Shared full-day supervised session",
         "Per person discount",
         "Individual logbook sign-offs",
@@ -54,8 +55,8 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
     {
       id: "test",
       name: "Test Readiness Session",
-      price: "$150",
-      description: "Online preparation for your practical test",
+      price: "$150 per person",
+      description: "Online preparation for your Boat Licence Knowledge Test undertaken at Service NSW",
       features: [
         "1-hour online preparation",
         "Test simulation exercises",
