@@ -19,6 +19,8 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
   ]);
 
   const { toast } = useToast();
