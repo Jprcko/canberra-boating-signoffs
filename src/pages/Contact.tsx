@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
@@ -9,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { FAQ } from "@/components/sections/FAQ";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -157,66 +157,9 @@ const Contact = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-padding bg-slate-light">
-        <div className="container-custom">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3">Frequently Asked Questions</h2>
-            <p className="text-gray-700 max-w-2xl mx-auto">
-              Find quick answers to some of the most common questions about our services
-            </p>
-          </div>
-          
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>How do I book a session?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  You can book a session using our online booking system, by phone, or by email. 
-                  We'll confirm your booking once payment is received.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>What's your cancellation policy?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  Cancellations made more than 48 hours before your session are eligible for a full refund. 
-                  Cancellations within 48 hours may be rescheduled but are not refundable.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Where do the sessions take place?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  Sessions typically take place on Lake Ginninderra in Canberra. The exact meeting point 
-                  will be provided in your booking confirmation.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Do you offer gift certificates?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  Yes, we offer gift certificates for all our services. These make perfect presents for 
-                  friends or family members interested in boating.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <div className="bg-slate-light">
+        <FAQ />
+      </div>
 
       {/* Call to Action */}
       <section className="py-16 bg-water-blue text-white">

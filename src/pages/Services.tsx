@@ -1,10 +1,10 @@
-
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
+import { FAQ } from "@/components/sections/FAQ";
 
 const Services = () => {
   const services = [
@@ -170,44 +170,22 @@ const Services = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">Frequently Asked Questions</h2>
-            <p className="text-gray-700 max-w-2xl mx-auto">
-              Find answers to common questions about our logbook supervision services
-            </p>
-          </div>
+      <div className="bg-slate-light">
+        <FAQ />
+      </div>
 
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div className="bg-slate-light p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">What do I need to bring to my session?</h3>
-              <p className="text-gray-700">
-                Please bring your logbook, any required identification, appropriate clothing for the weather, sun protection, and water. Our supervisor will provide the boat and safety equipment.
-              </p>
-            </div>
-
-            <div className="bg-slate-light p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">How long does it take to complete the logbook?</h3>
-              <p className="text-gray-700">
-                NSW boating regulations require a specific number of supervised hours in your logbook. The time to completion depends on your chosen package and availability. Our Full Logbook Package is designed to help you complete all requirements efficiently.
-              </p>
-            </div>
-
-            <div className="bg-slate-light p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">Do you provide boats for the sessions?</h3>
-              <p className="text-gray-700">
-                Yes, we provide fully equipped and safety-compliant boats for all supervised sessions. You don't need to bring your own boat.
-              </p>
-            </div>
-
-            <div className="bg-slate-light p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">What if the weather is bad on my booked date?</h3>
-              <p className="text-gray-700">
-                Safety is our priority. If weather conditions are unsuitable, we'll contact you to reschedule your session at no additional cost.
-              </p>
-            </div>
-          </div>
+      {/* Call to Action */}
+      <section className="py-16 bg-water-blue text-white">
+        <div className="container-custom text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+          <p className="mb-8 text-xl max-w-2xl mx-auto">
+            Book your boating supervision session today and take the next step toward your boat licence
+          </p>
+          <Link to="/booking">
+            <Button className="bg-white text-water-blue hover:bg-sky-light px-8 py-6 text-lg">
+              Book Now
+            </Button>
+          </Link>
         </div>
       </section>
     </Layout>
