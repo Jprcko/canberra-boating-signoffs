@@ -22,7 +22,7 @@ function Calendar({
         month: "space-y-4",
         caption: "flex justify-center pt-1 relative items-center",
         caption_dropdowns: "flex justify-center gap-1 pl-8 pr-8",
-        caption_label: "text-sm font-medium",
+        caption_label: "hidden", // Hide the default caption label that shows month/year
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
@@ -55,7 +55,6 @@ function Calendar({
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         vhidden: "sr-only",
-        // Remove the invalid property caption_dropdowns_wrapper
         dropdown: "w-[110px] h-9 appearance-none bg-transparent border border-input rounded-md px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         dropdown_month: "w-[110px]",
         dropdown_year: "w-[80px]",
