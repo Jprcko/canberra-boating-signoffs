@@ -1,19 +1,14 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ParticipantForm } from "./ParticipantForm";
 import { BookingFormProps, ParticipantInfo } from "@/types/booking";
 import { useAgeValidation } from "@/hooks/useAgeValidation";
+import { PricingSection } from "./form-sections/PricingSection";
+import { DateTimeSection } from "./form-sections/DateTimeSection";
+import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
+import { ParticipantCountSection } from "./form-sections/ParticipantCountSection";
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
@@ -84,9 +79,9 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setParticipantsInfo(newParticipantsInfo);
   };
 
-  const handleDateOfBirthChange = (date: Date | undefined) => {
-    if (date) {
-      validateAge(date) && setDate(date);
+  const handleDateChange = (newDate: Date | undefined) => {
+    if (newDate) {
+      validateAge(newDate) && setDate(newDate);
     }
   };
 
@@ -121,19 +116,10 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
           {selectedServices.includes("group") && (
             <>
-              <div className="space-y-2">
-                <Label>Number of Participants</Label>
-                <Select value={participants} onValueChange={setParticipants}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select participants" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2">2 Participants</SelectItem>
-                    <SelectItem value="3">3 Participants</SelectItem>
-                    <SelectItem value="4">4 Participants</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <ParticipantCountSection 
+                participants={participants}
+                onParticipantsChange={setParticipants}
+              />
 
               {participantsInfo.map((participant, index) => (
                 <ParticipantForm
@@ -146,84 +132,16 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
             </>
           )}
 
-          <div className="space-y-2">
-            <Label>Preferred Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Select a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                  disabled={(date) => 
-                    date < new Date(new Date().setHours(0, 0, 0, 0)) || 
-                    date > new Date(new Date().setMonth(new Date().getMonth() + 3))
-                  }
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="preferred-time">Preferred Time</Label>
-            <select 
-              id="preferred-time"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-water-blue focus:border-transparent"
-            >
-              <option value="">Select a time</option>
-              <option value="morning">Morning (9am - 12pm)</option>
-              <option value="afternoon">Afternoon (1pm - 4pm)</option>
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="message">Additional Information</Label>
-            <Textarea 
-              id="message" 
-              placeholder="Any special requirements or questions..." 
-              className="min-h-[100px]"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="promo">Promo Code (Optional)</Label>
-            <Input id="promo" placeholder="Enter promo code if you have one" />
-          </div>
+          <DateTimeSection date={date} onDateChange={handleDateChange} />
+          <AdditionalInfoSection />
 
           {(selectedServices.includes("full") || selectedServices.includes("group")) && (
-            <div className="mt-4 p-4 bg-sky-50 rounded-lg">
-              <div className="flex flex-col space-y-2">
-                <p className="text-lg font-semibold text-gray-900">
-                  {selectedServices.includes("group") ? (
-                    <>Total Price (for {participants} participants): ${price.toFixed(2)}</>
-                  ) : (
-                    <>Price: ${price.toFixed(2)}</>
-                  )}
-                </p>
-                {discount > 0 && (
-                  <p className="text-sm text-green-600">
-                    Total savings: ${discount.toFixed(2)} ({participants} participants discount)
-                  </p>
-                )}
-                {selectedServices.includes("group") && (
-                  <p className="text-sm text-gray-600">
-                    Price per person: ${(price / Number(participants)).toFixed(2)}
-                  </p>
-                )}
-              </div>
-            </div>
+            <PricingSection
+              selectedServices={selectedServices}
+              participants={participants}
+              price={price}
+              discount={discount}
+            />
           )}
         </CardContent>
         <CardFooter>
