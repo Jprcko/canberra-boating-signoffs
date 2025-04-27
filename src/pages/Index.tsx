@@ -14,13 +14,7 @@ const Index = () => {
         subtitle="Professional logbook supervision and boat licence training in NSW"
         backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80"
       >
-        <div className="flex gap-4 mt-8">
-          <Link to="/booking">
-            <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
-              Book Now
-            </Button>
-          </Link>
-        </div>
+        {/* Button removed */}
       </Hero>
       
       <HowItWorks />
