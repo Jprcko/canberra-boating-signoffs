@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -160,7 +159,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
                   captionLayout="dropdown"
                   fromYear={1900}
                   toYear={new Date().getFullYear()}
-                  className="rounded-md border p-3 pointer-events-auto"
+                  className="rounded-md border shadow-sm pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
