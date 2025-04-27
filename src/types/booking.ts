@@ -1,4 +1,3 @@
-
 export interface ParticipantInfo {
   firstName: string;
   middleName?: string;
@@ -7,6 +6,7 @@ export interface ParticipantInfo {
   phone: string;
   dateOfBirth?: Date;
   hasGuardianConsent?: boolean;
+  supervisorName?: string;
 }
 
 export interface BookingFormProps {

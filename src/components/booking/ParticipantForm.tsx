@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 import { useAgeValidation } from "@/hooks/useAgeValidation";
 import { ParticipantInfo } from "@/types/booking";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AgeVerificationDialog } from "./AgeVerificationDialog";
+import { useState } from "react";
 
 interface ParticipantFormProps {
   participant: ParticipantInfo;
@@ -19,6 +21,8 @@ interface ParticipantFormProps {
 
 export const ParticipantForm = ({ participant, index, onChange }: ParticipantFormProps) => {
   const { validateAge, calculateAge } = useAgeValidation();
+  const [showAgeDialog, setShowAgeDialog] = useState(false);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
 
   const validateAustralianPhone = (phone: string) => {
     // Regex for Australian phone numbers (mobile and landline)
@@ -38,9 +42,29 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
   };
 
   const handleDateOfBirthChange = (date: Date | undefined) => {
-    if (date && validateAge(date)) {
-      onChange(index, "dateOfBirth", date);
+    if (date) {
+      setTempDate(date);
+      const age = calculateAge(date);
+      if (age >= 12 && age < 16) {
+        setShowAgeDialog(true);
+      } else if (validateAge(date)) {
+        onChange(index, "dateOfBirth", date);
+      }
     }
+  };
+
+  const handleAgeDialogAccept = (supervisorName: string) => {
+    if (tempDate && supervisorName) {
+      onChange(index, "dateOfBirth", tempDate);
+      onChange(index, "supervisorName", supervisorName);
+      setShowAgeDialog(false);
+      setTempDate(null);
+    }
+  };
+
+  const handleAgeDialogClose = () => {
+    setShowAgeDialog(false);
+    setTempDate(null);
   };
 
   return (
@@ -175,6 +199,20 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
         </div>
       </div>
 
+      <AgeVerificationDialog
+        isOpen={showAgeDialog}
+        onClose={handleAgeDialogClose}
+        onAccept={handleAgeDialogAccept}
+      />
+
+      {participant.supervisorName && (
+        <div className="mt-4 p-4 bg-sky-50 rounded-lg">
+          <p className="text-sm text-gray-600">
+            Supervising Adult: {participant.supervisorName}
+          </p>
+        </div>
+      )}
+      
       {participant.dateOfBirth && 
        calculateAge(participant.dateOfBirth) >= 12 && 
        calculateAge(participant.dateOfBirth) < 16 && (
