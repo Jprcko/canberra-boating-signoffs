@@ -16,12 +16,22 @@ interface BookingFormProps {
   selectedServices: string[];
 }
 
+interface ParticipantInfo {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [participants, setParticipants] = useState<string>("2");
   const [price, setPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
+  const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
+    { name: "", email: "", phone: "" },
+    { name: "", email: "", phone: "" },
+    ]);
 
   useEffect(() => {
     if (selectedServices.includes("full")) {
@@ -56,6 +66,29 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     }
   }, [selectedServices, participants]);
 
+  useEffect(() => {
+    // Update participant info array when number of participants changes
+    const newParticipantsInfo = Array(Number(participants))
+      .fill(null)
+      .map((_, index) => 
+        participantsInfo[index] || { name: "", email: "", phone: "" }
+      );
+    setParticipantsInfo(newParticipantsInfo);
+  }, [participants]);
+
+  const handleParticipantChange = (
+    index: number,
+    field: keyof ParticipantInfo,
+    value: string
+  ) => {
+    const newParticipantsInfo = [...participantsInfo];
+    newParticipantsInfo[index] = {
+      ...newParticipantsInfo[index],
+      [field]: value,
+    };
+    setParticipantsInfo(newParticipantsInfo);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -77,25 +110,27 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" placeholder="Your full name" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" placeholder="your@email.com" required />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" placeholder="Your contact number" required />
-            </div>
-            {selectedServices.includes("group") && (
+          {!selectedServices.includes("group") && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="participants">Number of Participants</Label>
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" placeholder="Your full name" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" placeholder="your@email.com" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input id="phone" placeholder="Your contact number" required />
+              </div>
+            </div>
+          )}
+
+          {selectedServices.includes("group") && (
+            <>
+              <div className="space-y-2">
+                <Label>Number of Participants</Label>
                 <Select value={participants} onValueChange={setParticipants}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select participants" />
@@ -107,8 +142,47 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
                   </SelectContent>
                 </Select>
               </div>
-            )}
-          </div>
+
+              {participantsInfo.map((participant, index) => (
+                <div key={index} className="space-y-4 p-4 border border-gray-200 rounded-lg">
+                  <h3 className="font-medium">Participant {index + 1}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`name-${index}`}>Full Name</Label>
+                      <Input
+                        id={`name-${index}`}
+                        value={participant.name}
+                        onChange={(e) => handleParticipantChange(index, "name", e.target.value)}
+                        placeholder="Participant's full name"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`email-${index}`}>Email Address</Label>
+                      <Input
+                        id={`email-${index}`}
+                        type="email"
+                        value={participant.email}
+                        onChange={(e) => handleParticipantChange(index, "email", e.target.value)}
+                        placeholder="participant@email.com"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`phone-${index}`}>Phone Number</Label>
+                      <Input
+                        id={`phone-${index}`}
+                        value={participant.phone}
+                        onChange={(e) => handleParticipantChange(index, "phone", e.target.value)}
+                        placeholder="Contact number"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
 
           <div className="space-y-2">
             <Label>Preferred Date</Label>
