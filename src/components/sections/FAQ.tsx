@@ -1,4 +1,3 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqCategories = [
@@ -65,7 +64,7 @@ const faqCategories = [
       },
       {
         question: "How hard is the knowledge test?",
-        answer: "The test is straightforward, multiple-choice, and covers boating basics like rules, safety, and navigation. With real-world practice and a quick revision, most people pass easily."
+        answer: "The test is straightforward and multiple-choice, covering boating rules, navigation, and safety basics.\nMost people pass easily, especially after real-world practice — and we provide a free practice quiz to help!"
       },
       {
         question: "How long does the knowledge test take?",
