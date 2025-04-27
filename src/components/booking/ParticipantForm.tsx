@@ -152,7 +152,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={5}>
                 <Calendar
                   mode="single"
                   selected={participant.dateOfBirth}
@@ -179,22 +179,36 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
        calculateAge(participant.dateOfBirth) >= 12 && 
        calculateAge(participant.dateOfBirth) < 16 && (
         <div className="mt-6 pt-4 border-t">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={`guardian-consent-${index}`}
-              checked={participant.hasGuardianConsent}
-              onCheckedChange={(checked) => 
-                onChange(index, "hasGuardianConsent", checked)
-              }
-              required
-            />
-            <label
-              htmlFor={`guardian-consent-${index}`}
-              className="text-sm font-medium leading-none text-gray-700"
+          <Popover>
+            <PopoverTrigger className="w-full">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id={`guardian-consent-${index}`}
+                  checked={participant.hasGuardianConsent}
+                  onCheckedChange={(checked) => 
+                    onChange(index, "hasGuardianConsent", checked)
+                  }
+                  required
+                />
+                <label
+                  htmlFor={`guardian-consent-${index}`}
+                  className="text-sm font-medium leading-none text-gray-700"
+                >
+                  I confirm that an adult will be present during the session
+                </label>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent 
+              className="w-auto p-4 bg-white" 
+              align="start" 
+              side="top" 
+              sideOffset={5}
             >
-              I confirm that an adult will be present during the session
-            </label>
-          </div>
+              <p className="text-sm text-gray-600">
+                For safety reasons, participants between 12 and 16 years old must be accompanied by an adult during the session.
+              </p>
+            </PopoverContent>
+          </Popover>
         </div>
       )}
     </div>
