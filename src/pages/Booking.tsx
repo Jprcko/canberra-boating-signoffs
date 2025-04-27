@@ -45,6 +45,7 @@ const BookingPage = () => {
         "Shared full-day supervised session",
         "Per person discount",
         "Individual logbook sign-offs",
+        "Free lunch + drink at the Light House Pub",
         "Fun, social learning environment",
         "Group booking convenience"
       ],
@@ -162,11 +163,13 @@ const BookingPage = () => {
                           </li>
                         ))}
                       </ul>
-                      <Checkbox
-                        checked={selectedServices.includes(service.id)}
-                        className="absolute top-4 right-4"
-                        onCheckedChange={() => handleServiceSelection(service.id)}
-                      />
+                      <div className="absolute top-4 right-4">
+                        <Checkbox 
+                          checked={selectedServices.includes(service.id)}
+                          onCheckedChange={() => handleServiceSelection(service.id)}
+                          className="data-[state=checked]:bg-water-blue"
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
