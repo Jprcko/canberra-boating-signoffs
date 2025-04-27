@@ -11,15 +11,22 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
 interface BookingFormProps {
   selectedServices: string[];
 }
 
 interface ParticipantInfo {
-  name: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
   email: string;
   phone: string;
+  dateOfBirth?: Date;
+  hasGuardianConsent?: boolean;
 }
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
@@ -29,9 +36,9 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [price, setPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
-    { name: "", email: "", phone: "" },
-    { name: "", email: "", phone: "" },
-    ]);
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+  ]);
 
   useEffect(() => {
     if (selectedServices.includes("full")) {
@@ -71,7 +78,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     const newParticipantsInfo = Array(Number(participants))
       .fill(null)
       .map((_, index) => 
-        participantsInfo[index] || { name: "", email: "", phone: "" }
+        participantsInfo[index] || { firstName: "", middleName: "", lastName: "", email: "", phone: "" }
       );
     setParticipantsInfo(newParticipantsInfo);
   }, [participants]);
@@ -79,7 +86,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const handleParticipantChange = (
     index: number,
     field: keyof ParticipantInfo,
-    value: string
+    value: string | Date | boolean
   ) => {
     const newParticipantsInfo = [...participantsInfo];
     newParticipantsInfo[index] = {
@@ -87,6 +94,40 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       [field]: value,
     };
     setParticipantsInfo(newParticipantsInfo);
+  };
+
+  const calculateAge = (birthDate: Date) => {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const handleDateOfBirthChange = (index: number, date: Date | undefined) => {
+    if (date) {
+      const age = calculateAge(date);
+      if (age < 12) {
+        toast({
+          title: "Age Restriction",
+          description: "Participants must be at least 12 years old to proceed.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      handleParticipantChange(index, "dateOfBirth", date);
+      
+      if (age >= 12 && age < 16) {
+        toast({
+          title: "Guardian Required",
+          description: "Participants under 16 must be accompanied by an adult.",
+        });
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -113,8 +154,51 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
           {!selectedServices.includes("group") && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="Your full name" required />
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input id="firstName" placeholder="Your first name" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="middleName">Middle Name</Label>
+                <Input id="middleName" placeholder="Your middle name" />
+                <p className="text-sm text-gray-500">Please enter your middle name if it appears on your official ID (driver's licence or passport)</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input id="lastName" placeholder="Your last name" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">Date of Birth *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Select date of birth</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(newDate) => {
+                        if (newDate) {
+                          handleDateOfBirthChange(0, newDate);
+                          setDate(newDate);
+                        }
+                      }}
+                      initialFocus
+                      disabled={(date) => 
+                        date > new Date()
+                      }
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
@@ -148,14 +232,64 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
                   <h3 className="font-medium">Participant {index + 1}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor={`name-${index}`}>Full Name</Label>
+                      <Label htmlFor={`firstName-${index}`}>First Name *</Label>
                       <Input
-                        id={`name-${index}`}
-                        value={participant.name}
-                        onChange={(e) => handleParticipantChange(index, "name", e.target.value)}
-                        placeholder="Participant's full name"
+                        id={`firstName-${index}`}
+                        value={participant.firstName}
+                        onChange={(e) => handleParticipantChange(index, "firstName", e.target.value)}
+                        placeholder="First name"
                         required
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`middleName-${index}`}>Middle Name</Label>
+                      <Input
+                        id={`middleName-${index}`}
+                        value={participant.middleName}
+                        onChange={(e) => handleParticipantChange(index, "middleName", e.target.value)}
+                        placeholder="Middle name"
+                      />
+                      <p className="text-sm text-gray-500">Please enter middle name if it appears on official ID</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`lastName-${index}`}>Last Name *</Label>
+                      <Input
+                        id={`lastName-${index}`}
+                        value={participant.lastName}
+                        onChange={(e) => handleParticipantChange(index, "lastName", e.target.value)}
+                        placeholder="Last name"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`dateOfBirth-${index}`}>Date of Birth *</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !participant.dateOfBirth && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {participant.dateOfBirth ? 
+                              format(participant.dateOfBirth, "PPP") : 
+                              <span>Select date of birth</span>
+                            }
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={participant.dateOfBirth}
+                            onSelect={(newDate) => handleDateOfBirthChange(index, newDate)}
+                            initialFocus
+                            disabled={(date) => date > new Date()}
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor={`email-${index}`}>Email Address</Label>
@@ -178,6 +312,29 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
                         required
                       />
                     </div>
+                    
+                    {participant.dateOfBirth && 
+                     calculateAge(participant.dateOfBirth) >= 12 && 
+                     calculateAge(participant.dateOfBirth) < 16 && (
+                      <div className="col-span-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`guardian-consent-${index}`}
+                            checked={participant.hasGuardianConsent}
+                            onCheckedChange={(checked) => 
+                              handleParticipantChange(index, "hasGuardianConsent", checked)
+                            }
+                            required
+                          />
+                          <label
+                            htmlFor={`guardian-consent-${index}`}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            I confirm that an adult will be present during the session
+                          </label>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
