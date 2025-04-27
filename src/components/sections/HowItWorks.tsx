@@ -49,8 +49,8 @@ export const HowItWorks = () => {
     >
       <div className="container-custom max-w-4xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-3">How It Works</h2>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold mb-3">How It Works</h2>
+          <p className="text-gray-700 max-w-2xl mx-auto">
             Your journey to getting your boat licence, made simple
           </p>
         </div>
@@ -76,6 +76,14 @@ export const HowItWorks = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <a href="#faq" className="inline-block">
+            <Button variant="secondary" className="bg-white text-water-blue hover:bg-sky-light">
+              Have questions? Check out our FAQs
+            </Button>
+          </a>
         </div>
       </div>
     </section>
