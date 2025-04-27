@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -7,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -19,6 +19,40 @@ interface BookingFormProps {
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [participants, setParticipants] = useState<string>("2");
+  const [price, setPrice] = useState<number>(0);
+  const [discount, setDiscount] = useState<number>(0);
+
+  useEffect(() => {
+    if (selectedServices.includes("full")) {
+      setPrice(499);
+      setDiscount(0);
+    } else if (selectedServices.includes("group")) {
+      const basePrice = 499;
+      let discountPercent = 0;
+      
+      switch (participants) {
+        case "2":
+          discountPercent = 10;
+          break;
+        case "3":
+          discountPercent = 12;
+          break;
+        case "4":
+          discountPercent = 15;
+          break;
+        default:
+          discountPercent = 0;
+      }
+      
+      const discountAmount = (basePrice * discountPercent) / 100;
+      setDiscount(discountAmount);
+      setPrice(basePrice - discountAmount);
+    } else {
+      setPrice(0);
+      setDiscount(0);
+    }
+  }, [selectedServices, participants]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,17 +91,21 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
               <Label htmlFor="phone">Phone Number</Label>
               <Input id="phone" placeholder="Your contact number" required />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="participants">Number of Participants</Label>
-              <Input 
-                id="participants" 
-                type="number" 
-                min="1" 
-                max="5" 
-                defaultValue="1" 
-                disabled={!selectedServices.includes("group")} 
-              />
-            </div>
+            {selectedServices.includes("group") && (
+              <div className="space-y-2">
+                <Label htmlFor="participants">Number of Participants</Label>
+                <Select value={participants} onValueChange={setParticipants}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select participants" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2">2 Participants</SelectItem>
+                    <SelectItem value="3">3 Participants</SelectItem>
+                    <SelectItem value="4">4 Participants</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -125,6 +163,21 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
             <Label htmlFor="promo">Promo Code (Optional)</Label>
             <Input id="promo" placeholder="Enter promo code if you have one" />
           </div>
+
+          {(selectedServices.includes("full") || selectedServices.includes("group")) && (
+            <div className="mt-4 p-4 bg-sky-50 rounded-lg">
+              <div className="flex flex-col space-y-2">
+                <p className="text-lg font-semibold text-gray-900">
+                  Price: ${price.toFixed(2)}
+                </p>
+                {discount > 0 && (
+                  <p className="text-sm text-green-600">
+                    You save: ${discount.toFixed(2)} ({participants} participants discount)
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button 
