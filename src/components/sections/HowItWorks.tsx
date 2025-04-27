@@ -38,7 +38,7 @@ export const HowItWorks = () => {
 
   return (
     <section className="section-padding bg-slate-light" ref={ref}>
-      <div className="container-custom">
+      <div className="container-custom max-w-4xl">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">How It Works</h2>
           <p className="text-gray-700 max-w-2xl mx-auto">
@@ -46,25 +46,25 @@ export const HowItWorks = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="space-y-6">
           {steps.map((step, index) => (
             <div
               key={step.number}
               className={cn(
-                "bg-white rounded-lg p-6 shadow-md transform transition-all duration-700",
+                "bg-white rounded-lg p-6 shadow-md transform transition-all duration-700 flex items-start gap-6",
                 inView
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10",
-                // Fix the delay syntax with proper style delay
-                inView && `transition-delay-${index * 200}ms`
               )}
               style={{ transitionDelay: inView ? `${index * 200}ms` : '0ms' }}
             >
-              <div className="w-12 h-12 bg-water-blue rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
+              <div className="w-12 h-12 bg-water-blue rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold">
                 {step.number}
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-center">{step.title}</h3>
-              <p className="text-gray-700 text-center">{step.description}</p>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-gray-700">{step.description}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -72,3 +72,4 @@ export const HowItWorks = () => {
     </section>
   );
 };
+
