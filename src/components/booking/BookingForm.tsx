@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -126,11 +127,18 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setIsSubmitting(true);
 
     try {
+      // Format the date for PostgreSQL
+      const formattedDate = date ? date.toISOString() : null;
+      
+      if (!formattedDate) {
+        throw new Error("Please select a valid booking date");
+      }
+
       // Insert main booking record
       const { data: bookingData, error: bookingError } = await supabase
         .from('bookings')
         .insert({
-          booking_date: date,
+          booking_date: formattedDate,
           total_price: price,
           discount_amount: discount,
         })
@@ -153,12 +161,16 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
       if (servicesError) throw servicesError;
 
-      // Insert participant information
+      // Transform participant information to match database schema
       const participantsToInsert = participantsInfo
         .slice(0, Number(participants))
         .map(participant => ({
           booking_id: bookingData.id,
-          ...participant
+          first_name: participant.firstName,
+          middle_name: participant.middleName || null,
+          last_name: participant.lastName,
+          email: participant.email,
+          phone: participant.phone
         }));
 
       const { error: participantsError } = await supabase
@@ -210,7 +222,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
                 onParticipantsChange={setParticipants}
               />
 
-              {participantsInfo.map((participant, index) => (
+              {participantsInfo.slice(0, Number(participants)).map((participant, index) => (
                 <ParticipantForm
                   key={index}
                   participant={participant}
