@@ -55,7 +55,7 @@ function Calendar({
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         vhidden: "sr-only",
-        caption_dropdowns_wrapper: "flex justify-center gap-2 pt-2 pb-4 relative w-full",
+        // Remove the invalid property caption_dropdowns_wrapper
         dropdown: "w-[110px] h-9 appearance-none bg-transparent border border-input rounded-md px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         dropdown_month: "w-[110px]",
         dropdown_year: "w-[80px]",
