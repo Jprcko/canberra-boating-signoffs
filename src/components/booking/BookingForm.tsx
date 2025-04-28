@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
 import { ParticipantCountSection } from "./form-sections/ParticipantCountSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
@@ -18,6 +20,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [participants, setParticipants] = useState<string>("2");
   const [price, setPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
+  const [preferredTime, setPreferredTime] = useState<string>("");
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
@@ -27,7 +30,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
   const { toast } = useToast();
   const { validateAge } = useAgeValidation();
-
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -119,6 +122,10 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setDate(newDate);
   };
 
+  const handlePreferredTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPreferredTime(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -131,14 +138,21 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         throw new Error("Please select a valid booking date");
       }
 
+      // Prepare booking data
+      const bookingData = {
+        booking_date: formattedDate,
+        total_price: price,
+        discount_amount: discount,
+        user_id: user?.id || null,
+        metadata: {
+          preferred_time: preferredTime
+        },
+      };
+
       // Insert main booking record
-      const { data: bookingData, error: bookingError } = await supabase
+      const { data: newBooking, error: bookingError } = await supabase
         .from('bookings')
-        .insert({
-          booking_date: formattedDate,
-          total_price: price,
-          discount_amount: discount,
-        })
+        .insert(bookingData)
         .select()
         .single();
 
@@ -146,7 +160,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
       // Insert selected services
       const bookingServices = selectedServices.map(serviceId => ({
-        booking_id: bookingData.id,
+        booking_id: newBooking.id,
         service_id: serviceId,
         price_per_person: serviceId === 'test' ? 150 : 499,
         participants: Number(participants)
@@ -162,7 +176,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       const participantsToInsert = participantsInfo
         .slice(0, Number(participants))
         .map(participant => ({
-          booking_id: bookingData.id,
+          booking_id: newBooking.id,
           first_name: participant.firstName,
           middle_name: participant.middleName || null,
           last_name: participant.lastName,
@@ -230,7 +244,13 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
             </>
           )}
 
-          <DateTimeSection date={date} onDateChange={handleDateChange} />
+          <DateTimeSection 
+            date={date} 
+            onDateChange={handleDateChange}
+            preferredTime={preferredTime}
+            onPreferredTimeChange={handlePreferredTimeChange}
+          />
+          
           <AdditionalInfoSection />
 
           {(selectedServices.includes("full") || selectedServices.includes("group")) && (
@@ -246,7 +266,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
           <Button 
             type="submit" 
             className="w-full bg-water-blue hover:bg-deep-blue" 
-            disabled={selectedServices.length === 0 || !date || isSubmitting}
+            disabled={selectedServices.length === 0 || !date || !preferredTime || isSubmitting}
           >
             {isSubmitting ? "Processing..." : "Complete Booking"}
           </Button>

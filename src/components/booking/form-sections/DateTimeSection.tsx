@@ -11,9 +11,16 @@ import { cn } from "@/lib/utils";
 interface DateTimeSectionProps {
   date: Date | undefined;
   onDateChange: (date: Date | undefined) => void;
+  preferredTime: string;
+  onPreferredTimeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export const DateTimeSection: FC<DateTimeSectionProps> = ({ date, onDateChange }) => {
+export const DateTimeSection: FC<DateTimeSectionProps> = ({ 
+  date, 
+  onDateChange, 
+  preferredTime, 
+  onPreferredTimeChange 
+}) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -51,7 +58,10 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({ date, onDateChange }
         <Label htmlFor="preferred-time">Preferred Time</Label>
         <select 
           id="preferred-time"
+          value={preferredTime}
+          onChange={onPreferredTimeChange}
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-water-blue focus:border-transparent"
+          required
         >
           <option value="">Select a time</option>
           <option value="morning">Morning (9am - 12pm)</option>
