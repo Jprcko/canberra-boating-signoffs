@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -117,9 +116,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
-    if (newDate) {
-      validateAge(newDate) && setDate(newDate);
-    }
+    setDate(newDate);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
