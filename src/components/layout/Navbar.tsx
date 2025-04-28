@@ -12,7 +12,8 @@ const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     { name: "Booking", href: "/booking" },
-    { name: "Contact", href: "/contact" }
+    { name: "Contact", href: "/contact" },
+    { name: "Client Portal", href: "/client-portal" }
   ];
   
   const isActive = (path: string) => {
