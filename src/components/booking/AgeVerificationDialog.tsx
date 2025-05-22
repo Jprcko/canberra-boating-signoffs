@@ -58,16 +58,13 @@ export const AgeVerificationDialog = ({
           <DialogDescription className="text-left">
             Important: Participants aged between 12 and under 16 must be accompanied
             by a supervising adult during all boating activities, in line with NSW
-            Maritime regulations.
+            Maritime regulations. Please provide the name of the supervising adult.
           </DialogDescription>
         </DialogHeader>
         {!showNameField ? (
           <DialogFooter className="sm:justify-start">
             <Button type="button" onClick={handleAccept}>
               Add Supervisor Name
-            </Button>
-            <Button type="button" variant="secondary" onClick={handleDialogClose}>
-              I'll Add Details Later
             </Button>
           </DialogFooter>
         ) : (

@@ -71,12 +71,9 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
   };
 
   const handleAgeDialogClose = () => {
-    // If dialog is closed without accepting, still set the date but mark as needing consent
-    if (tempDate) {
-      onChange(index, "dateOfBirth", tempDate);
-      // Don't set hasGuardianConsent here, let the user check it separately
-    }
-    
+    // If dialog is closed without accepting, reset the date selection
+    // This forces users to provide supervisor information for 12-16 year olds
+    onChange(index, "dateOfBirth", undefined);
     setShowAgeDialog(false);
     setTempDate(null);
   };
