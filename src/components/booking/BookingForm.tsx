@@ -131,11 +131,47 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setIsSubmitting(true);
 
     try {
+      // Check for valid booking date
+      if (!date) {
+        toast({
+          title: "Error Submitting Booking",
+          description: "Please select a valid booking date",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       // Format the date for PostgreSQL
-      const formattedDate = date ? date.toISOString() : null;
+      const formattedDate = date.toISOString();
       
-      if (!formattedDate) {
-        throw new Error("Please select a valid booking date");
+      // Validate all required participant information
+      const activeParticipants = participantsInfo.slice(0, Number(participants));
+      const missingInfo = activeParticipants.some(participant => {
+        // Check for missing name or contact information
+        if (!participant.firstName || !participant.lastName || !participant.email || !participant.phone) {
+          return true;
+        }
+        
+        // Check for guardian consent for participants aged 12-15
+        if (participant.dateOfBirth) {
+          const age = calculateAge(participant.dateOfBirth);
+          if (age >= 12 && age < 16 && !participant.hasGuardianConsent) {
+            return true;
+          }
+        }
+        
+        return false;
+      });
+      
+      if (missingInfo) {
+        toast({
+          title: "Missing Information",
+          description: "Please complete all required fields for each participant",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
       }
 
       // Prepare booking data
@@ -162,7 +198,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       const bookingServices = selectedServices.map(serviceId => ({
         booking_id: newBooking.id,
         service_id: serviceId,
-        price_per_person: serviceId === 'test' ? 150 : 499,
+        price_per_person: serviceId === 'test' ? 149 : 499,
         participants: Number(participants)
       }));
 
@@ -173,16 +209,14 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       if (servicesError) throw servicesError;
 
       // Transform participant information to match database schema
-      const participantsToInsert = participantsInfo
-        .slice(0, Number(participants))
-        .map(participant => ({
-          booking_id: newBooking.id,
-          first_name: participant.firstName,
-          middle_name: participant.middleName || null,
-          last_name: participant.lastName,
-          email: participant.email,
-          phone: participant.phone
-        }));
+      const participantsToInsert = activeParticipants.map(participant => ({
+        booking_id: newBooking.id,
+        first_name: participant.firstName,
+        middle_name: participant.middleName || null,
+        last_name: participant.lastName,
+        email: participant.email,
+        phone: participant.phone
+      }));
 
       const { error: participantsError } = await supabase
         .from('booking_participants')
@@ -208,6 +242,18 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Helper function to calculate age
+  const calculateAge = (birthDate: Date) => {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   };
 
   return (
