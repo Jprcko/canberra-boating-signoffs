@@ -32,6 +32,8 @@ export const AgeVerificationDialog = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent event from bubbling up to parent forms
+    
     if (supervisorName.trim()) {
       onAccept(supervisorName);
       setShowNameField(false);

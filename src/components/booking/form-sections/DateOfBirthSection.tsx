@@ -16,6 +16,14 @@ interface DateOfBirthSectionProps {
 }
 
 export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfBirthSectionProps) => {
+  // Handle date selection with stopPropagation to prevent unintended form submission
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      // Prevent event propagation to avoid triggering form validation
+      onDateChange(date);
+    }
+  };
+  
   return (
     <div>
       <Label htmlFor={`dateOfBirth-${index}`} className="text-sm font-medium">
@@ -25,6 +33,7 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
         <PopoverTrigger asChild>
           <Button
             id={`dateOfBirth-${index}`}
+            type="button" // Explicitly set type to button to prevent form submission
             variant={"outline"}
             className={cn(
               "w-full mt-1 justify-start text-left font-normal",
@@ -39,11 +48,11 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={5}>
+        <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={5} onClick={e => e.stopPropagation()}>
           <Calendar
             mode="single"
             selected={participant.dateOfBirth}
-            onSelect={onDateChange}
+            onSelect={handleDateSelect}
             disabled={(date) => date > new Date()}
             initialFocus
             captionLayout="dropdown-buttons"
