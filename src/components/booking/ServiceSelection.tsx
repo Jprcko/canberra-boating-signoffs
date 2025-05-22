@@ -55,7 +55,7 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
     {
       id: "test",
       name: "Test Readiness Session",
-      price: "$150 per person",
+      price: "$149 per person",
       description: "Online preparation for your Boat Licence Knowledge Test undertaken at Service NSW",
       features: [
         "1-hour online preparation",

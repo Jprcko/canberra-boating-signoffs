@@ -37,7 +37,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     let totalPrice = 0;
     let totalDiscount = 0;
     const basePrice = 499;
-    const testPrice = 150;
+    const testPrice = 149; // Updated from 150 to 149
     
     if (selectedServices.includes("full")) {
       totalPrice = basePrice;
