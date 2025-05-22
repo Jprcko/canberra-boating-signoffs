@@ -50,15 +50,13 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleAgeDialogAccept = (supervisorName: string) => {
     if (tempDate && supervisorName) {
-      // First set the dateOfBirth, then set the supervisor name
+      // Update both fields without delay - first set dateOfBirth
       onChange(index, "dateOfBirth", tempDate);
+      // Then set the supervisor name
+      onChange(index, "supervisorName", supervisorName);
       
-      // Add small delay to ensure dateOfBirth is set first
-      setTimeout(() => {
-        onChange(index, "supervisorName", supervisorName);
-        setTempDate(null);
-      }, 0);
-      
+      // Clear the temp date
+      setTempDate(null);
       setShowAgeDialog(false);
     }
   };
@@ -150,3 +148,4 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     </div>
   );
 };
+
