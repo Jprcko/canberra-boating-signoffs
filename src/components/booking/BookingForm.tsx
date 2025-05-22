@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   ]);
 
   const { toast } = useToast();
-  const { validateAge } = useAgeValidation();
+  const { validateAge, calculateAge } = useAgeValidation();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -148,16 +147,31 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       // Validate all required participant information
       const activeParticipants = participantsInfo.slice(0, Number(participants));
       const missingInfo = activeParticipants.some(participant => {
-        // Check for missing name or contact information
+        // Only check for missing basic contact information
         if (!participant.firstName || !participant.lastName || !participant.email || !participant.phone) {
           return true;
         }
         
-        // Check for guardian consent for participants aged 12-15
+        // Ensure date of birth is provided
+        if (!participant.dateOfBirth) {
+          return true;
+        }
+        
+        // Special handling for participants aged 12-15
         if (participant.dateOfBirth) {
           const age = calculateAge(participant.dateOfBirth);
-          if (age >= 12 && age < 16 && participant.hasGuardianConsent !== true) {
-            return true;
+          
+          // For 12-15 year olds, check if either supervisor name is provided OR consent is checked
+          if (age >= 12 && age < 16) {
+            // If they have a supervisor name, we can proceed
+            if (participant.supervisorName) {
+              return false;
+            }
+            
+            // Otherwise, check if they've given guardian consent
+            if (!participant.hasGuardianConsent) {
+              return true;
+            }
           }
         }
         

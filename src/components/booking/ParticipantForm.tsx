@@ -38,19 +38,25 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleDateOfBirthChange = (date: Date | undefined) => {
     if (date) {
-      setTempDate(date);
       const age = calculateAge(date);
       
+      // For participants between 12 and 16, show the dialog
       if (age >= 12 && age < 16) {
+        setTempDate(date);
         setShowAgeDialog(true);
-      } else if (validateAge(date)) {
+      } else {
+        // For other ages, update directly
         onChange(index, "dateOfBirth", date);
+        
         // Reset supervisor name if the participant is now 16 or older
         if (participant.supervisorName && age >= 16) {
           onChange(index, "supervisorName", "");
           onChange(index, "hasGuardianConsent", false);
         }
       }
+    } else {
+      // Handle case when date is undefined (e.g., user cleared the selection)
+      onChange(index, "dateOfBirth", undefined);
     }
   };
 
@@ -58,13 +64,19 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     if (tempDate && supervisorName) {
       onChange(index, "dateOfBirth", tempDate);
       onChange(index, "supervisorName", supervisorName);
-      onChange(index, "hasGuardianConsent", true); // Set guardian consent to true when supervisor is added
+      onChange(index, "hasGuardianConsent", true);
       setShowAgeDialog(false);
       setTempDate(null);
     }
   };
 
   const handleAgeDialogClose = () => {
+    // If dialog is closed without accepting, still set the date but mark as needing consent
+    if (tempDate) {
+      onChange(index, "dateOfBirth", tempDate);
+      // Don't set hasGuardianConsent here, let the user check it separately
+    }
+    
     setShowAgeDialog(false);
     setTempDate(null);
   };
@@ -125,7 +137,6 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
                   onCheckedChange={(checked) => 
                     onChange(index, "hasGuardianConsent", checked === true)
                   }
-                  required
                 />
                 <label
                   htmlFor={`guardian-consent-${index}`}

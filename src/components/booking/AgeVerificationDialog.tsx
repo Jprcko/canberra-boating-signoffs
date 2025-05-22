@@ -45,6 +45,11 @@ export const AgeVerificationDialog = ({
     onClose();
   };
 
+  const handleBack = () => {
+    setShowNameField(false);
+    // Don't clear supervisor name so it's preserved if they go back
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogClose}>
       <DialogContent className="sm:max-w-md">
@@ -59,10 +64,10 @@ export const AgeVerificationDialog = ({
         {!showNameField ? (
           <DialogFooter className="sm:justify-start">
             <Button type="button" onClick={handleAccept}>
-              Accept
+              Add Supervisor Name
             </Button>
             <Button type="button" variant="secondary" onClick={handleDialogClose}>
-              Cancel
+              I'll Add Details Later
             </Button>
           </DialogFooter>
         ) : (
@@ -86,7 +91,7 @@ export const AgeVerificationDialog = ({
               <Button type="submit" disabled={!supervisorName.trim()}>
                 Submit
               </Button>
-              <Button type="button" variant="secondary" onClick={() => setShowNameField(false)}>
+              <Button type="button" variant="secondary" onClick={handleBack}>
                 Back
               </Button>
             </DialogFooter>
