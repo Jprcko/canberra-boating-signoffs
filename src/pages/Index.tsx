@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
@@ -5,6 +6,8 @@ import Hero from "@/components/ui/Hero";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Book, TestTube, Users } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 const Index = () => {
   return (
@@ -31,31 +34,25 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Example Service Card - Replace with actual data */}
             <Card className="card-hover">
               <CardHeader>
-                <CardTitle>Single Session Sign-Off</CardTitle>
-                <CardDescription>Perfect for those needing a one-off supervised session.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold text-water-blue">$199</p>
-                {/* Add service details here */}
-              </CardContent>
-              <CardFooter>
-                <Link to="/booking" className="w-full">
-                  <Button className="w-full">Book Now</Button>
-                </Link>
-              </CardFooter>
-            </Card>
-
-            <Card className="card-hover">
-              <CardHeader>
-                <CardTitle>Full Logbook Package</CardTitle>
-                <CardDescription>Complete your entire logbook with our comprehensive package.</CardDescription>
+                <div className="flex items-center gap-2 mb-2">
+                  <Book className="h-5 w-5 text-water-blue" />
+                  <CardTitle>Full Logbook Package</CardTitle>
+                </div>
+                <CardDescription>Complete your logbook requirements in one day</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-water-blue">$499</p>
-                {/* Add service details here */}
+                <h4 className="font-semibold my-3">What's included:</h4>
+                <ul className="space-y-2">
+                  {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Free lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
               <CardFooter>
                 <Link to="/booking" className="w-full">
@@ -66,12 +63,50 @@ const Index = () => {
 
             <Card className="card-hover">
               <CardHeader>
-                <CardTitle>Group Package (2-5 people)</CardTitle>
-                <CardDescription>Cost-effective option for friends or family learning together.</CardDescription>
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-5 w-5 text-water-blue" />
+                  <CardTitle>Group Package</CardTitle>
+                </div>
+                <CardDescription>Cost-effective option for friends or family members learning together</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-water-blue">From $149 per person</p>
-                {/* Add service details here */}
+                <p className="text-2xl font-bold text-water-blue">Calculated by group size</p>
+                <h4 className="font-semibold my-3">What's included:</h4>
+                <ul className="space-y-2">
+                  {["Full day on the water (9am to 4pm)", "Shared full-day supervised session", "Per person discount", "Individual logbook sign-offs", "Free lunch + drink at the Light House Pub", "Fun, social learning environment", "Group booking convenience"].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Link to="/booking" className="w-full">
+                  <Button className="w-full">Book Now</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+
+            <Card className="card-hover">
+              <CardHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <TestTube className="h-5 w-5 text-water-blue" />
+                  <CardTitle>Test Readiness Session</CardTitle>
+                </div>
+                <CardDescription>Online preparation for your Boat Licence Knowledge Test undertaken at Service NSW</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-water-blue">$149 per person</p>
+                <h4 className="font-semibold my-3">What's included:</h4>
+                <ul className="space-y-2">
+                  {["1-hour online preparation", "Test simulation exercises", "Key skill reinforcement", "Final tips and guidance", "Confidence building"].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
               <CardFooter>
                 <Link to="/booking" className="w-full">
@@ -90,10 +125,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <div id="faq" className="bg-slate-light">
-        <FAQ />
-      </div>
 
       {/* Why Choose Us Section */}
       <section className="section-padding bg-white">
