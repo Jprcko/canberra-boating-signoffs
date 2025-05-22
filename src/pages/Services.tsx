@@ -5,62 +5,54 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
 import { FAQ } from "@/components/sections/FAQ";
+import { Book, TestTube, Users } from "lucide-react";
 
 const Services = () => {
   const services = [
     {
-      id: "single",
-      title: "Single Session Sign-Off",
-      description: "Perfect for those who just need a one-off supervised session to complete their logbook requirements.",
-      price: "$199",
-      features: [
-        "2-hour supervised boating session",
-        "Professional instructor/supervisor",
-        "Official logbook sign-off",
-        "Guidance on boating safety and skills",
-        "Flexible scheduling options"
-      ]
-    },
-    {
       id: "full",
       title: "Full Logbook Package",
-      description: "Complete your entire logbook with our comprehensive supervision package.",
+      description: "Complete your logbook requirements in one day",
       price: "$499",
       features: [
-        "All required supervised hours",
-        "Multiple sessions as needed",
+        "Full day on the water (9am to 4pm)",
+        "Professional instructor/supervisor",
         "Complete logbook sign-offs",
-        "Personalized skill development",
-        "Exam preparation guidance",
-        "Priority scheduling"
+        "Free lunch + drink at the Light House Pub",
+        "Exam preparation guidance"
       ],
+      icon: Book,
       highlight: true
     },
     {
       id: "group",
-      title: "Group Package (2-5 people)",
-      description: "Cost-effective option for friends or family members learning together.",
-      price: "From $149 per person",
+      title: "Group Package",
+      description: "Cost-effective option for friends or family members learning together",
+      price: "Calculated by group size",
       features: [
-        "Shared 3-hour supervised session",
+        "Full day on the water (9am to 4pm)",
+        "Shared full-day supervised session",
         "Per person discount",
         "Individual logbook sign-offs",
+        "Free lunch + drink at the Light House Pub",
         "Fun, social learning environment",
         "Group booking convenience"
-      ]
+      ],
+      icon: Users
     },
     {
       id: "test",
       title: "Test Readiness Session",
-      description: "Prepare for your practical test with a focused preparation session.",
-      price: "$149",
+      description: "Online preparation for your Boat Licence Knowledge Test undertaken at Service ACT",
+      price: "$149 per person",
       features: [
-        "1-hour intensive preparation",
+        "1-hour online preparation",
         "Test simulation exercises",
         "Key skill reinforcement",
         "Final tips and guidance",
         "Confidence building"
-      ]
+      ],
+      icon: TestTube
     }
   ];
 
@@ -83,14 +75,17 @@ const Services = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
               <Card 
                 key={service.id} 
                 className={`${service.highlight ? 'border-water-blue shadow-lg' : ''} card-hover`}
               >
                 <CardHeader>
-                  <CardTitle>{service.title}</CardTitle>
+                  <div className="flex items-center gap-2 mb-2">
+                    {service.icon && <service.icon className="h-5 w-5 text-water-blue" />}
+                    <CardTitle>{service.title}</CardTitle>
+                  </div>
                   <p className="text-2xl font-bold text-water-blue">{service.price}</p>
                   <p className="text-gray-700">{service.description}</p>
                 </CardHeader>
