@@ -39,8 +39,14 @@ export const AgeVerificationDialog = ({
     }
   };
 
+  const handleDialogClose = () => {
+    setShowNameField(false);
+    setSupervisorName("");
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Age Verification Required</DialogTitle>
@@ -55,7 +61,7 @@ export const AgeVerificationDialog = ({
             <Button type="button" onClick={handleAccept}>
               Accept
             </Button>
-            <Button type="button" variant="secondary" onClick={onClose}>
+            <Button type="button" variant="secondary" onClick={handleDialogClose}>
               Cancel
             </Button>
           </DialogFooter>
@@ -73,11 +79,15 @@ export const AgeVerificationDialog = ({
                 onChange={(e) => setSupervisorName(e.target.value)}
                 placeholder="Enter full name"
                 required
+                autoFocus
               />
             </div>
             <DialogFooter className="sm:justify-start">
               <Button type="submit" disabled={!supervisorName.trim()}>
                 Submit
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setShowNameField(false)}>
+                Back
               </Button>
             </DialogFooter>
           </form>

@@ -48,6 +48,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
         // Reset supervisor name if the participant is now 16 or older
         if (participant.supervisorName && age >= 16) {
           onChange(index, "supervisorName", "");
+          onChange(index, "hasGuardianConsent", false);
         }
       }
     }
@@ -57,7 +58,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     if (tempDate && supervisorName) {
       onChange(index, "dateOfBirth", tempDate);
       onChange(index, "supervisorName", supervisorName);
-      onChange(index, "hasGuardianConsent", true); // Automatically check the consent box
+      onChange(index, "hasGuardianConsent", true); // Set guardian consent to true when supervisor is added
       setShowAgeDialog(false);
       setTempDate(null);
     }
@@ -105,8 +106,8 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
       {participant.supervisorName && (
         <div className="mt-4 p-4 bg-sky-50 rounded-lg">
-          <p className="text-sm text-gray-600">
-            Supervising Adult: {participant.supervisorName}
+          <p className="text-sm text-gray-700">
+            <strong>Supervising Adult:</strong> {participant.supervisorName}
           </p>
         </div>
       )}
@@ -120,7 +121,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
               <div className="flex items-center space-x-2 cursor-pointer">
                 <Checkbox
                   id={`guardian-consent-${index}`}
-                  checked={participant.hasGuardianConsent || false}
+                  checked={participant.hasGuardianConsent === true}
                   onCheckedChange={(checked) => 
                     onChange(index, "hasGuardianConsent", checked === true)
                   }

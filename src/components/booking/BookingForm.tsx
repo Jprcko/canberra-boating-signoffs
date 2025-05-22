@@ -156,7 +156,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         // Check for guardian consent for participants aged 12-15
         if (participant.dateOfBirth) {
           const age = calculateAge(participant.dateOfBirth);
-          if (age >= 12 && age < 16 && !participant.hasGuardianConsent) {
+          if (age >= 12 && age < 16 && participant.hasGuardianConsent !== true) {
             return true;
           }
         }
