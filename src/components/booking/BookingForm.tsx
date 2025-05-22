@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   ]);
 
   const { toast } = useToast();
-  const { validateAge, calculateAge } = useAgeValidation();
+  const { validateAge } = useAgeValidation();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -130,62 +131,11 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setIsSubmitting(true);
 
     try {
-      // Check for valid booking date
-      if (!date) {
-        toast({
-          title: "Error Submitting Booking",
-          description: "Please select a valid booking date",
-          variant: "destructive"
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
       // Format the date for PostgreSQL
-      const formattedDate = date.toISOString();
+      const formattedDate = date ? date.toISOString() : null;
       
-      // Validate all required participant information
-      const activeParticipants = participantsInfo.slice(0, Number(participants));
-      const missingInfo = activeParticipants.some(participant => {
-        // Only check for missing basic contact information
-        if (!participant.firstName || !participant.lastName || !participant.email || !participant.phone) {
-          return true;
-        }
-        
-        // Ensure date of birth is provided
-        if (!participant.dateOfBirth) {
-          return true;
-        }
-        
-        // Special handling for participants aged 12-15
-        if (participant.dateOfBirth) {
-          const age = calculateAge(participant.dateOfBirth);
-          
-          // For 12-15 year olds, check if either supervisor name is provided OR consent is checked
-          if (age >= 12 && age < 16) {
-            // If they have a supervisor name, we can proceed
-            if (participant.supervisorName) {
-              return false;
-            }
-            
-            // Otherwise, check if they've given guardian consent
-            if (!participant.hasGuardianConsent) {
-              return true;
-            }
-          }
-        }
-        
-        return false;
-      });
-      
-      if (missingInfo) {
-        toast({
-          title: "Missing Information",
-          description: "Please complete all required fields for each participant",
-          variant: "destructive"
-        });
-        setIsSubmitting(false);
-        return;
+      if (!formattedDate) {
+        throw new Error("Please select a valid booking date");
       }
 
       // Prepare booking data
@@ -212,7 +162,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       const bookingServices = selectedServices.map(serviceId => ({
         booking_id: newBooking.id,
         service_id: serviceId,
-        price_per_person: serviceId === 'test' ? 149 : 499,
+        price_per_person: serviceId === 'test' ? 150 : 499,
         participants: Number(participants)
       }));
 
@@ -223,14 +173,16 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       if (servicesError) throw servicesError;
 
       // Transform participant information to match database schema
-      const participantsToInsert = activeParticipants.map(participant => ({
-        booking_id: newBooking.id,
-        first_name: participant.firstName,
-        middle_name: participant.middleName || null,
-        last_name: participant.lastName,
-        email: participant.email,
-        phone: participant.phone
-      }));
+      const participantsToInsert = participantsInfo
+        .slice(0, Number(participants))
+        .map(participant => ({
+          booking_id: newBooking.id,
+          first_name: participant.firstName,
+          middle_name: participant.middleName || null,
+          last_name: participant.lastName,
+          email: participant.email,
+          phone: participant.phone
+        }));
 
       const { error: participantsError } = await supabase
         .from('booking_participants')

@@ -32,7 +32,6 @@ export const useAgeValidation = () => {
         title: "Guardian Required",
         description: "Participants under 16 must be accompanied by an adult.",
       });
-      // Always return true - we want to allow submission, just with verification
       return true;
     }
 

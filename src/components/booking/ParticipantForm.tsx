@@ -38,46 +38,26 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleDateOfBirthChange = (date: Date | undefined) => {
     if (date) {
+      setTempDate(date);
       const age = calculateAge(date);
-      
-      // For participants between 12 and 16, show the dialog
       if (age >= 12 && age < 16) {
-        setTempDate(date);
         setShowAgeDialog(true);
-        // Don't update the date yet - wait for supervisor name
-      } else {
-        // For other ages, update directly
+      } else if (validateAge(date)) {
         onChange(index, "dateOfBirth", date);
-        
-        // Reset supervisor name if the participant is now 16 or older
-        if (participant.supervisorName && age >= 16) {
-          onChange(index, "supervisorName", "");
-          onChange(index, "hasGuardianConsent", false);
-        }
       }
-    } else {
-      // Handle case when date is undefined (e.g., user cleared the selection)
-      onChange(index, "dateOfBirth", undefined);
     }
   };
 
   const handleAgeDialogAccept = (supervisorName: string) => {
     if (tempDate && supervisorName) {
-      // Update fields in a specific order to prevent validation issues
-      onChange(index, "supervisorName", supervisorName);
-      onChange(index, "hasGuardianConsent", true);
-      // Set date of birth last to ensure supervisor info is already present
       onChange(index, "dateOfBirth", tempDate);
-      
+      onChange(index, "supervisorName", supervisorName);
       setShowAgeDialog(false);
       setTempDate(null);
     }
   };
 
   const handleAgeDialogClose = () => {
-    // If dialog is closed without accepting, reset the date selection
-    // This forces users to provide supervisor information for 12-16 year olds
-    onChange(index, "dateOfBirth", undefined);
     setShowAgeDialog(false);
     setTempDate(null);
   };
@@ -119,8 +99,8 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
       {participant.supervisorName && (
         <div className="mt-4 p-4 bg-sky-50 rounded-lg">
-          <p className="text-sm text-gray-700">
-            <strong>Supervising Adult:</strong> {participant.supervisorName}
+          <p className="text-sm text-gray-600">
+            Supervising Adult: {participant.supervisorName}
           </p>
         </div>
       )}
@@ -130,14 +110,15 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
        calculateAge(participant.dateOfBirth) < 16 && (
         <div className="mt-6 pt-4 border-t">
           <Popover>
-            <PopoverTrigger asChild>
-              <div className="flex items-center space-x-2 cursor-pointer">
+            <PopoverTrigger className="w-full">
+              <div className="flex items-center space-x-2">
                 <Checkbox
                   id={`guardian-consent-${index}`}
-                  checked={participant.hasGuardianConsent === true}
+                  checked={participant.hasGuardianConsent}
                   onCheckedChange={(checked) => 
-                    onChange(index, "hasGuardianConsent", checked === true)
+                    onChange(index, "hasGuardianConsent", checked)
                   }
+                  required
                 />
                 <label
                   htmlFor={`guardian-consent-${index}`}

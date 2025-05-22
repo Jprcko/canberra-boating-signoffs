@@ -32,8 +32,6 @@ export const AgeVerificationDialog = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Stop event from bubbling up to parent forms
-    
     if (supervisorName.trim()) {
       onAccept(supervisorName);
       setShowNameField(false);
@@ -41,32 +39,24 @@ export const AgeVerificationDialog = ({
     }
   };
 
-  const handleDialogClose = () => {
-    setShowNameField(false);
-    setSupervisorName("");
-    onClose();
-  };
-
-  const handleBack = () => {
-    setShowNameField(false);
-    // Don't clear supervisor name so it's preserved if they go back
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Age Verification Required</DialogTitle>
           <DialogDescription className="text-left">
             Important: Participants aged between 12 and under 16 must be accompanied
             by a supervising adult during all boating activities, in line with NSW
-            Maritime regulations. Please provide the name of the supervising adult.
+            Maritime regulations.
           </DialogDescription>
         </DialogHeader>
         {!showNameField ? (
           <DialogFooter className="sm:justify-start">
             <Button type="button" onClick={handleAccept}>
-              Add Supervisor Name
+              Accept
+            </Button>
+            <Button type="button" variant="secondary" onClick={onClose}>
+              Cancel
             </Button>
           </DialogFooter>
         ) : (
@@ -83,15 +73,11 @@ export const AgeVerificationDialog = ({
                 onChange={(e) => setSupervisorName(e.target.value)}
                 placeholder="Enter full name"
                 required
-                autoFocus
               />
             </div>
             <DialogFooter className="sm:justify-start">
               <Button type="submit" disabled={!supervisorName.trim()}>
                 Submit
-              </Button>
-              <Button type="button" variant="secondary" onClick={handleBack}>
-                Back
               </Button>
             </DialogFooter>
           </form>
