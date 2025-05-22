@@ -44,6 +44,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
       if (age >= 12 && age < 16) {
         setTempDate(date);
         setShowAgeDialog(true);
+        // Don't update the date yet - wait for supervisor name
       } else {
         // For other ages, update directly
         onChange(index, "dateOfBirth", date);
@@ -62,9 +63,12 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleAgeDialogAccept = (supervisorName: string) => {
     if (tempDate && supervisorName) {
-      onChange(index, "dateOfBirth", tempDate);
+      // Update fields in a specific order to prevent validation issues
       onChange(index, "supervisorName", supervisorName);
       onChange(index, "hasGuardianConsent", true);
+      // Set date of birth last to ensure supervisor info is already present
+      onChange(index, "dateOfBirth", tempDate);
+      
       setShowAgeDialog(false);
       setTempDate(null);
     }
