@@ -32,7 +32,7 @@ export const useAgeValidation = () => {
         title: "Guardian Required",
         description: "Participants under 16 must be accompanied by an adult.",
       });
-      return true;
+      return true; // We still allow booking, with extra information
     }
 
     return true;

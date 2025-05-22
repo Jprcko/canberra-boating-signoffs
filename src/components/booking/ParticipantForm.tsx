@@ -40,10 +40,15 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     if (date) {
       setTempDate(date);
       const age = calculateAge(date);
+      
       if (age >= 12 && age < 16) {
         setShowAgeDialog(true);
       } else if (validateAge(date)) {
         onChange(index, "dateOfBirth", date);
+        // Reset supervisor name if the participant is now 16 or older
+        if (participant.supervisorName && age >= 16) {
+          onChange(index, "supervisorName", "");
+        }
       }
     }
   };
@@ -52,6 +57,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     if (tempDate && supervisorName) {
       onChange(index, "dateOfBirth", tempDate);
       onChange(index, "supervisorName", supervisorName);
+      onChange(index, "hasGuardianConsent", true); // Automatically check the consent box
       setShowAgeDialog(false);
       setTempDate(null);
     }
@@ -110,13 +116,13 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
        calculateAge(participant.dateOfBirth) < 16 && (
         <div className="mt-6 pt-4 border-t">
           <Popover>
-            <PopoverTrigger className="w-full">
-              <div className="flex items-center space-x-2">
+            <PopoverTrigger asChild>
+              <div className="flex items-center space-x-2 cursor-pointer">
                 <Checkbox
                   id={`guardian-consent-${index}`}
-                  checked={participant.hasGuardianConsent}
+                  checked={participant.hasGuardianConsent || false}
                   onCheckedChange={(checked) => 
-                    onChange(index, "hasGuardianConsent", checked)
+                    onChange(index, "hasGuardianConsent", checked === true)
                   }
                   required
                 />

@@ -30,6 +30,7 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
               "w-full mt-1 justify-start text-left font-normal",
               !participant.dateOfBirth && "text-muted-foreground"
             )}
+            type="button" // Explicitly set as button type to prevent form submission
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {participant.dateOfBirth ? (
