@@ -1,4 +1,3 @@
-
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
@@ -8,15 +7,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Book, TestTube, Users } from "lucide-react";
 import { CheckCircle } from "lucide-react";
-
 const Index = () => {
-  return (
-    <Layout>
-      <Hero
-        title="Get Your Boat Licence with Confidence"
-        subtitle="Professional logbook supervision and boat licence training in the ACT"
-        backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80"
-      >
+  return <Layout>
+      <Hero title="Get Your Boat Licence with Confidence" subtitle="Professional logbook supervision and boat licence training in the ACT" backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80">
         {/* Button removed */}
       </Hero>
       
@@ -46,12 +39,10 @@ const Index = () => {
                 <p className="text-2xl font-bold text-water-blue">$499</p>
                 <h4 className="font-semibold my-3">What's included:</h4>
                 <ul className="space-y-2">
-                  {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Free lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
+                  {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Free lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
@@ -73,12 +64,10 @@ const Index = () => {
                 <p className="text-2xl font-bold text-water-blue">Calculated by group size</p>
                 <h4 className="font-semibold my-3">What's included:</h4>
                 <ul className="space-y-2">
-                  {["Full day on the water (9am to 4pm)", "Shared full-day supervised session", "Per person discount", "Individual logbook sign-offs", "Free lunch + drink at the Light House Pub", "Fun, social learning environment", "Group booking convenience"].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
+                  {["Full day on the water (9am to 4pm)", "Shared full-day supervised session", "Per person discount", "Individual logbook sign-offs", "Free lunch + drink at the Light House Pub", "Fun, social learning environment", "Group booking convenience"].map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
@@ -100,12 +89,10 @@ const Index = () => {
                 <p className="text-2xl font-bold text-water-blue">$149 per person</p>
                 <h4 className="font-semibold my-3">What's included:</h4>
                 <ul className="space-y-2">
-                  {["1-hour online preparation", "Test simulation exercises", "Key skill reinforcement", "Final tips and guidance", "Confidence building"].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
+                  {["1-hour online preparation", "Test simulation exercises", "Key skill reinforcement", "Final tips and guidance", "Confidence building"].map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
@@ -152,7 +139,7 @@ const Index = () => {
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-md text-center">
-              <h3 className="text-xl font-semibold mb-3">Personalized Approach</h3>
+              <h3 className="text-xl font-semibold mb-3">Personalised Approach</h3>
               <p className="text-gray-700">
                 We tailor our training to meet your individual needs and learning style.
               </p>
@@ -175,8 +162,6 @@ const Index = () => {
           </Link>
         </div>
       </section>
-    </Layout>
-  );
+    </Layout>;
 };
-
 export default Index;
