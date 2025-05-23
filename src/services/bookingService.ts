@@ -34,10 +34,10 @@ export const submitBooking = async (data: BookingData) => {
     },
   };
 
-  // Insert main booking record
-  const { data: newBookingData, error: bookingError } = await supabase
-    .from('bookings' as any)
-    .insert(bookingData as any)
+  // Insert main booking record - Using a more specific type assertion approach
+  const { data: newBookingData, error: bookingError } = await (supabase
+    .from('bookings') as any)
+    .insert(bookingData)
     .select()
     .single();
 
@@ -48,7 +48,7 @@ export const submitBooking = async (data: BookingData) => {
   // Use type assertion for the response data
   const newBooking = newBookingData as any;
 
-  // Insert selected services
+  // Insert selected services - Using a more specific type assertion approach
   const bookingServices = selectedServices.map(serviceId => ({
     booking_id: newBooking.id,
     service_id: serviceId,
@@ -56,13 +56,13 @@ export const submitBooking = async (data: BookingData) => {
     participants: Number(participants)
   }));
 
-  const { error: servicesError } = await supabase
-    .from('booking_services' as any)
-    .insert(bookingServices as any);
+  const { error: servicesError } = await (supabase
+    .from('booking_services') as any)
+    .insert(bookingServices);
 
   if (servicesError) throw servicesError;
 
-  // Transform participant information to match database schema
+  // Transform participant information to match database schema - Using a more specific type assertion approach
   const participantsToInsert = participantsInfo
     .slice(0, Number(participants))
     .map(participant => ({
@@ -74,9 +74,9 @@ export const submitBooking = async (data: BookingData) => {
       phone: participant.phone
     }));
 
-  const { error: participantsError } = await supabase
-    .from('booking_participants' as any)
-    .insert(participantsToInsert as any);
+  const { error: participantsError } = await (supabase
+    .from('booking_participants') as any)
+    .insert(participantsToInsert);
 
   if (participantsError) throw participantsError;
 
