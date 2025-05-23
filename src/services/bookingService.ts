@@ -35,9 +35,10 @@ export const submitBooking = async (data: BookingData) => {
   };
 
   // Insert main booking record with type assertion
+  // Using type assertion to resolve the TypeScript errors
   const { data: newBookingData, error: bookingError } = await supabase
-    .from('bookings' as any)
-    .insert(bookingData as any)
+    .from('bookings')
+    .insert(bookingData)
     .select()
     .single();
 
@@ -46,7 +47,7 @@ export const submitBooking = async (data: BookingData) => {
   if (!newBookingData) throw new Error("Failed to create booking");
 
   // Use type assertion for the response data
-  const newBooking = newBookingData as any;
+  const newBooking = newBookingData;
 
   // Insert selected services with type assertion
   const bookingServices = selectedServices.map(serviceId => ({
@@ -57,8 +58,8 @@ export const submitBooking = async (data: BookingData) => {
   }));
 
   const { error: servicesError } = await supabase
-    .from('booking_services' as any)
-    .insert(bookingServices as any);
+    .from('booking_services')
+    .insert(bookingServices);
 
   if (servicesError) throw servicesError;
 
@@ -75,8 +76,8 @@ export const submitBooking = async (data: BookingData) => {
     }));
 
   const { error: participantsError } = await supabase
-    .from('booking_participants' as any)
-    .insert(participantsToInsert as any);
+    .from('booking_participants')
+    .insert(participantsToInsert);
 
   if (participantsError) throw participantsError;
 
