@@ -51,11 +51,13 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
             <div className="text-sm">
               <p className="font-semibold mb-2">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className="grid grid-cols-4 w-full mb-4">
+                <TabsList className="grid grid-cols-5 w-full mb-4">
                   <TabsTrigger value="card">Card</TabsTrigger>
                   <TabsTrigger value="afterpay">AfterPay</TabsTrigger>
                   <TabsTrigger value="paypal">PayPal</TabsTrigger>
-                  <TabsTrigger value="bank">Bank Transfer</TabsTrigger>
+                  <TabsTrigger value="applepay">Apple Pay</TabsTrigger>
+                  <TabsTrigger value="googlepay">Google Pay</TabsTrigger>
+                  <TabsTrigger value="zip">Zip Pay</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="card" className="space-y-4">
@@ -122,16 +124,44 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                   </p>
                 </TabsContent>
                 
-                <TabsContent value="bank" className="py-4">
-                  <div className="bg-gray-50 p-3 rounded-md">
-                    <p className="font-medium">Direct Bank Transfer Details:</p>
-                    <p className="mt-2">BSB: 123-456</p>
-                    <p>Account: 12345678</p>
-                    <p>Name: Sydney Boat Academy</p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      Please include your name and booking date as reference
-                    </p>
+                <TabsContent value="applepay" className="text-center py-4">
+                  <div className="flex justify-center my-4">
+                    <img 
+                      src="https://developer.apple.com/assets/elements/icons/apple-pay/apple-pay.svg" 
+                      alt="Apple Pay Logo"
+                      className="h-10"
+                    />
                   </div>
+                  <p className="text-sm text-gray-500">
+                    Complete your payment with Apple Pay
+                  </p>
+                </TabsContent>
+                
+                <TabsContent value="googlepay" className="text-center py-4">
+                  <div className="flex justify-center my-4">
+                    <img 
+                      src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" 
+                      alt="Google Pay Logo"
+                      className="h-10"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    Complete your payment with Google Pay
+                  </p>
+                </TabsContent>
+                
+                <TabsContent value="zip" className="text-center py-4">
+                  <p>Shop now, pay later in 4 interest-free instalments</p>
+                  <div className="flex justify-center my-4">
+                    <img 
+                      src="https://cdn.zip.co/web/au/logo.svg" 
+                      alt="Zip Pay Logo"
+                      className="h-10"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    You'll be redirected to Zip to complete your payment
+                  </p>
                 </TabsContent>
               </Tabs>
             </div>
