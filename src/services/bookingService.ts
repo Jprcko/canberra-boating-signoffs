@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/custom-client";
 import { ParticipantInfo } from "@/types/booking";
 
@@ -105,6 +106,62 @@ export const submitBooking = async (data: BookingData) => {
     if (participantsError) {
       console.error('Participants insert error:', participantsError);
       throw new Error(`Failed to add booking participants: ${participantsError.message}`);
+    }
+
+    // Send confirmation email
+    try {
+      console.log("Sending booking confirmation email for booking ID:", newBooking.id);
+      
+      // Check if we need to create an account for this user
+      let accountCreated = false;
+      let tempPassword = null;
+      let userEmail = null;
+      
+      // If user is not logged in but we have their email, we can create an account
+      if (!userId && validParticipants.length > 0) {
+        // Generate a random temporary password
+        tempPassword = Math.random().toString(36).slice(-8);
+        userEmail = validParticipants[0].email;
+        
+        // Update the booking metadata to include account creation info
+        const { error: updateError } = await supabase
+          .from('bookings')
+          .update({
+            metadata: {
+              ...bookingData.metadata,
+              account_created: true,
+              user_email: userEmail,
+              temp_password: tempPassword
+            }
+          })
+          .eq('id', newBooking.id);
+          
+        if (updateError) {
+          console.error('Failed to update booking with account info:', updateError);
+        } else {
+          accountCreated = true;
+        }
+      }
+      
+      // Call the edge function to send confirmation email
+      const { error: emailError } = await supabase.functions.invoke(
+        'send-booking-confirmation',
+        {
+          body: {
+            booking_id: newBooking.id
+          }
+        }
+      );
+      
+      if (emailError) {
+        console.error('Error sending confirmation email:', emailError);
+        // Don't throw here, we still want to return the booking even if email fails
+      } else {
+        console.log('Confirmation email sent successfully');
+      }
+    } catch (emailError) {
+      console.error('Exception sending confirmation email:', emailError);
+      // Don't throw here, we still want to return the booking even if email fails
     }
 
     return newBooking;
