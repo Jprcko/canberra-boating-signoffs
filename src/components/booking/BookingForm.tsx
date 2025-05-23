@@ -1,25 +1,26 @@
+
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ParticipantForm } from "./ParticipantForm";
-import { BookingFormProps, ParticipantInfo } from "@/types/booking";
+import { ParticipantInfo } from "@/types/booking";
 import { useAgeValidation } from "@/hooks/useAgeValidation";
-import { PricingSection } from "./form-sections/PricingSection";
-import { DateTimeSection } from "./form-sections/DateTimeSection";
-import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
-import { ParticipantCountSection } from "./form-sections/ParticipantCountSection";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Booking, BookingService, BookingParticipant } from "@/types/database";
+import { BookingFormProps } from "@/types/booking";
+import { useBookingPrice } from "@/hooks/useBookingPrice";
+import { submitBooking } from "@/services/bookingService";
+
+// Import refactored sections
+import { DateTimeSection } from "./form-sections/DateTimeSection";
+import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
+import { PricingSection } from "./form-sections/PricingSection";
+import { ParticipantListSection } from "./form-sections/ParticipantListSection";
+import { FormSubmission } from "./form-sections/FormSubmission";
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [participants, setParticipants] = useState<string>("2");
-  const [price, setPrice] = useState<number>(0);
-  const [discount, setDiscount] = useState<number>(0);
   const [preferredTime, setPreferredTime] = useState<string>("");
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
@@ -32,6 +33,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const { validateAge } = useAgeValidation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { price, discount } = useBookingPrice(selectedServices, participants);
 
   const handleParticipantChange = (
     index: number,
@@ -66,62 +68,16 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         throw new Error("Please select a valid booking date");
       }
 
-      // Prepare booking data
-      const bookingData = {
-        booking_date: formattedDate,
-        total_price: price,
-        discount_amount: discount,
-        user_id: user?.id || null,
-        metadata: {
-          preferred_time: preferredTime
-        },
-      };
-
-      // Insert main booking record with type assertion
-      const { data, error: bookingError } = await supabase
-        .from('bookings' as any)
-        .insert(bookingData as any)
-        .select()
-        .single();
-
-      if (bookingError) throw bookingError;
-      
-      if (!data) throw new Error("Failed to create booking");
-
-      // Use type assertion for the response data
-      const newBooking = data as any;
-
-      // Insert selected services with type assertion
-      const bookingServices = selectedServices.map(serviceId => ({
-        booking_id: newBooking.id,
-        service_id: serviceId,
-        price_per_person: serviceId === 'test' ? 149 : 499,
-        participants: Number(participants)
-      }));
-
-      const { error: servicesError } = await supabase
-        .from('booking_services' as any)
-        .insert(bookingServices as any);
-
-      if (servicesError) throw servicesError;
-
-      // Transform participant information to match database schema with type assertion
-      const participantsToInsert = participantsInfo
-        .slice(0, Number(participants))
-        .map(participant => ({
-          booking_id: newBooking.id,
-          first_name: participant.firstName,
-          middle_name: participant.middleName || null,
-          last_name: participant.lastName,
-          email: participant.email,
-          phone: participant.phone
-        }));
-
-      const { error: participantsError } = await supabase
-        .from('booking_participants' as any)
-        .insert(participantsToInsert as any);
-
-      if (participantsError) throw participantsError;
+      await submitBooking({
+        bookingDate: formattedDate,
+        totalPrice: price,
+        discountAmount: discount,
+        userId: user?.id || null,
+        preferredTime,
+        selectedServices,
+        participants,
+        participantsInfo
+      });
 
       toast({
         title: "Booking Submitted Successfully",
@@ -144,69 +100,6 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   };
 
   useEffect(() => {
-    let totalPrice = 0;
-    let totalDiscount = 0;
-    const basePrice = 499;
-    const testPrice = 149; // Updated from 150 to 149
-    
-    if (selectedServices.includes("full")) {
-      totalPrice = basePrice;
-    } 
-    
-    if (selectedServices.includes("group")) {
-      let discountPercent = 0;
-      
-      switch (participants) {
-        case "2":
-          discountPercent = 10;
-          break;
-        case "3":
-          discountPercent = 12;
-          break;
-        case "4":
-          discountPercent = 15;
-          break;
-        default:
-          discountPercent = 0;
-      }
-      
-      const discountAmount = (basePrice * discountPercent) / 100;
-      const pricePerPerson = basePrice - discountAmount;
-      totalPrice = pricePerPerson * Number(participants);
-      totalDiscount = discountAmount * Number(participants);
-    }
-
-    if (selectedServices.includes("test")) {
-      const participantCount = selectedServices.includes("group") ? Number(participants) : 1;
-      let testTotalPrice = testPrice * participantCount;
-      
-      if (selectedServices.includes("group")) {
-        // Apply the same discount structure to test price
-        let discountPercent = 0;
-        switch (participants) {
-          case "2":
-            discountPercent = 10;
-            break;
-          case "3":
-            discountPercent = 12;
-            break;
-          case "4":
-            discountPercent = 15;
-            break;
-        }
-        const testDiscountAmount = (testTotalPrice * discountPercent) / 100;
-        testTotalPrice -= testDiscountAmount;
-        totalDiscount += testDiscountAmount;
-      }
-      
-      totalPrice += testTotalPrice;
-    }
-
-    setPrice(totalPrice);
-    setDiscount(totalDiscount);
-  }, [selectedServices, participants]);
-
-  useEffect(() => {
     const newParticipantsInfo = Array(Number(participants))
       .fill(null)
       .map((_, index) => 
@@ -223,31 +116,13 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          {!selectedServices.includes("group") && (
-            <ParticipantForm
-              participant={participantsInfo[0]}
-              index={0}
-              onChange={handleParticipantChange}
-            />
-          )}
-
-          {selectedServices.includes("group") && (
-            <>
-              <ParticipantCountSection 
-                participants={participants}
-                onParticipantsChange={setParticipants}
-              />
-
-              {participantsInfo.slice(0, Number(participants)).map((participant, index) => (
-                <ParticipantForm
-                  key={index}
-                  participant={participant}
-                  index={index}
-                  onChange={handleParticipantChange}
-                />
-              ))}
-            </>
-          )}
+          <ParticipantListSection
+            selectedServices={selectedServices}
+            participants={participants}
+            participantsInfo={participantsInfo}
+            setParticipants={setParticipants}
+            onParticipantChange={handleParticipantChange}
+          />
 
           <DateTimeSection 
             date={date} 
@@ -267,15 +142,12 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
             />
           )}
         </CardContent>
-        <CardFooter>
-          <Button 
-            type="submit" 
-            className="w-full bg-water-blue hover:bg-deep-blue" 
-            disabled={selectedServices.length === 0 || !date || !preferredTime || isSubmitting}
-          >
-            {isSubmitting ? "Processing..." : "Complete Booking"}
-          </Button>
-        </CardFooter>
+        <FormSubmission 
+          selectedServices={selectedServices}
+          date={date}
+          preferredTime={preferredTime}
+          isSubmitting={isSubmitting}
+        />
       </form>
     </Card>
   );
