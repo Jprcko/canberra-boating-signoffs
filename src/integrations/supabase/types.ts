@@ -9,7 +9,106 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      booking_participants: {
+        Row: {
+          booking_id: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          middle_name: string | null
+          phone: string
+        }
+        Insert: {
+          booking_id: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          middle_name?: string | null
+          phone: string
+        }
+        Update: {
+          booking_id?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          middle_name?: string | null
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_participants_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_services: {
+        Row: {
+          booking_id: string
+          id: string
+          participants: number
+          price_per_person: number
+          service_id: string
+        }
+        Insert: {
+          booking_id: string
+          id?: string
+          participants: number
+          price_per_person: number
+          service_id: string
+        }
+        Update: {
+          booking_id?: string
+          id?: string
+          participants?: number
+          price_per_person?: number
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_services_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          booking_date: string
+          created_at: string
+          discount_amount: number
+          id: string
+          metadata: Json
+          total_price: number
+          user_id: string | null
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          metadata?: Json
+          total_price: number
+          user_id?: string | null
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string
+          discount_amount?: number
+          id?: string
+          metadata?: Json
+          total_price?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

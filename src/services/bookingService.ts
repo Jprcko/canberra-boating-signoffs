@@ -34,6 +34,8 @@ export const submitBooking = async (data: BookingData) => {
   };
 
   try {
+    console.log("Submitting booking with data:", bookingData);
+    
     // Insert main booking record
     const { data: newBookingData, error: bookingError } = await supabase
       .from('bookings')
@@ -43,13 +45,14 @@ export const submitBooking = async (data: BookingData) => {
 
     if (bookingError) {
       console.error('Booking insert error:', bookingError);
-      throw bookingError;
+      throw new Error(`Failed to create booking: ${bookingError.message}`);
     }
     
     if (!newBookingData) {
-      throw new Error("Failed to create booking");
+      throw new Error("Failed to create booking - no data returned");
     }
 
+    console.log("Booking created successfully:", newBookingData);
     const newBooking = newBookingData;
 
     // Insert selected services
@@ -60,13 +63,14 @@ export const submitBooking = async (data: BookingData) => {
       participants: Number(participants)
     }));
 
+    console.log("Adding booking services:", bookingServices);
     const { error: servicesError } = await supabase
       .from('booking_services')
       .insert(bookingServices);
 
     if (servicesError) {
       console.error('Services insert error:', servicesError);
-      throw servicesError;
+      throw new Error(`Failed to add booking services: ${servicesError.message}`);
     }
 
     // Transform participant information to match database schema
@@ -81,13 +85,14 @@ export const submitBooking = async (data: BookingData) => {
         phone: participant.phone
       }));
 
+    console.log("Adding booking participants:", participantsToInsert);
     const { error: participantsError } = await supabase
       .from('booking_participants')
       .insert(participantsToInsert);
 
     if (participantsError) {
       console.error('Participants insert error:', participantsError);
-      throw participantsError;
+      throw new Error(`Failed to add booking participants: ${participantsError.message}`);
     }
 
     return newBooking;

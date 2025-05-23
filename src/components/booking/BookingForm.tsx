@@ -41,12 +41,20 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       preferredTime: "",
       additionalInfo: "",
       promoCode: ""
-    }
+    },
+    mode: "onBlur" // Validate fields when they lose focus
   });
 
-  const { handleSubmit, watch, setValue } = methods;
+  const { handleSubmit, watch, setValue, formState } = methods;
   const date = watch("date");
   const preferredTime = watch("preferredTime");
+  
+  // Log form errors when they change
+  useEffect(() => {
+    if (Object.keys(formState.errors).length > 0) {
+      console.log("Current form errors:", formState.errors);
+    }
+  }, [formState.errors]);
 
   const { toast } = useToast();
   const { validateAge } = useAgeValidation();
@@ -79,6 +87,10 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setIsSubmitting(true);
 
     try {
+      console.log("Form is being submitted with data:", formData);
+      console.log("Selected services:", selectedServices);
+      console.log("Participants info:", participantsInfo);
+      
       // Format the date for PostgreSQL
       const formattedDate = formData.date ? formData.date.toISOString() : null;
       
@@ -113,7 +125,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       console.error('Booking error:', error);
       toast({
         title: "Error Submitting Booking",
-        description: error.message,
+        description: error.message || "There was an error submitting your booking",
         variant: "destructive"
       });
     } finally {
