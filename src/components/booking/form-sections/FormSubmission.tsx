@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, CreditCard, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Badge } from "@/components/ui/badge";
 
 interface FormSubmissionProps {
   selectedServices: string[];
@@ -53,13 +54,13 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
             <div className="text-sm">
               <p className="font-semibold mb-2">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className={`grid w-full mb-4 ${isMobile ? 'grid-cols-3 gap-1' : 'grid-cols-6'}`}>
-                  <TabsTrigger value="card" className="text-xs sm:text-sm">Card</TabsTrigger>
-                  <TabsTrigger value="afterpay" className="text-xs sm:text-sm">AfterPay</TabsTrigger>
-                  <TabsTrigger value="paypal" className="text-xs sm:text-sm">PayPal</TabsTrigger>
-                  <TabsTrigger value="applepay" className="text-xs sm:text-sm">Apple Pay</TabsTrigger>
-                  <TabsTrigger value="googlepay" className="text-xs sm:text-sm">Google Pay</TabsTrigger>
-                  <TabsTrigger value="zip" className="text-xs sm:text-sm">Zip Pay</TabsTrigger>
+                <TabsList className={`grid w-full mb-4 ${isMobile ? 'grid-cols-3 gap-2' : 'grid-cols-6'}`}>
+                  <TabsTrigger value="card" className="h-10 px-2 py-1 text-xs sm:text-sm">Card</TabsTrigger>
+                  <TabsTrigger value="afterpay" className="h-10 px-2 py-1 text-xs sm:text-sm">AfterPay</TabsTrigger>
+                  <TabsTrigger value="paypal" className="h-10 px-2 py-1 text-xs sm:text-sm">PayPal</TabsTrigger>
+                  <TabsTrigger value="applepay" className="h-10 px-2 py-1 text-xs sm:text-sm">Apple Pay</TabsTrigger>
+                  <TabsTrigger value="googlepay" className="h-10 px-2 py-1 text-xs sm:text-sm">Google Pay</TabsTrigger>
+                  <TabsTrigger value="zip" className="h-10 px-2 py-1 text-xs sm:text-sm">Zip Pay</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="card" className="space-y-4">
