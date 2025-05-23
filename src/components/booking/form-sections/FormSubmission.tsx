@@ -17,7 +17,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   const { isValid } = formState;
 
   return (
-    <CardFooter>
+    <CardFooter className="flex flex-col gap-2">
       <Button 
         type="submit" 
         className="w-full bg-water-blue hover:bg-deep-blue" 
@@ -25,6 +25,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
       >
         {isSubmitting ? "Processing..." : "Complete Booking"}
       </Button>
+      
+      {selectedServices.length === 0 && (
+        <p className="text-sm text-red-500">Please select at least one service</p>
+      )}
     </CardFooter>
   );
 };
