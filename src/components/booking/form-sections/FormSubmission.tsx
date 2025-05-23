@@ -21,7 +21,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
       <Button 
         type="submit" 
         className="w-full bg-water-blue hover:bg-deep-blue" 
-        disabled={selectedServices.length === 0 || !isValid || isSubmitting}
+        disabled={selectedServices.length === 0 || isSubmitting}
       >
         {isSubmitting ? "Processing..." : "Complete Booking"}
       </Button>

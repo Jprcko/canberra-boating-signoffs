@@ -1,5 +1,5 @@
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseClient } from "@/integrations/supabase/custom-client";
 import { Booking, BookingService, BookingParticipant } from "@/types/database";
 import { ParticipantInfo } from "@/types/booking";
 
@@ -34,9 +34,9 @@ export const submitBooking = async (data: BookingData) => {
     },
   };
 
-  // Insert main booking record with type casting
-  const { data: newBookingData, error: bookingError } = await (supabase
-    .from('bookings') as unknown as any)
+  // Insert main booking record
+  const { data: newBookingData, error: bookingError } = await supabaseClient
+    .from('bookings')
     .insert(bookingData)
     .select()
     .single();
@@ -45,10 +45,9 @@ export const submitBooking = async (data: BookingData) => {
   
   if (!newBookingData) throw new Error("Failed to create booking");
 
-  // Use type assertion for the response data
-  const newBooking = newBookingData as any;
+  const newBooking = newBookingData;
 
-  // Insert selected services with type casting
+  // Insert selected services
   const bookingServices = selectedServices.map(serviceId => ({
     booking_id: newBooking.id,
     service_id: serviceId,
@@ -56,8 +55,8 @@ export const submitBooking = async (data: BookingData) => {
     participants: Number(participants)
   }));
 
-  const { error: servicesError } = await (supabase
-    .from('booking_services') as unknown as any)
+  const { error: servicesError } = await supabaseClient
+    .from('booking_services')
     .insert(bookingServices);
 
   if (servicesError) throw servicesError;
@@ -74,8 +73,8 @@ export const submitBooking = async (data: BookingData) => {
       phone: participant.phone
     }));
 
-  const { error: participantsError } = await (supabase
-    .from('booking_participants') as unknown as any)
+  const { error: participantsError } = await supabaseClient
+    .from('booking_participants')
     .insert(participantsToInsert);
 
   if (participantsError) throw participantsError;
