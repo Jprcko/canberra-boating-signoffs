@@ -3,8 +3,9 @@ import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { useFormContext } from "react-hook-form";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CreditCard, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FormSubmissionProps {
   selectedServices: string[];
@@ -18,6 +19,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   const { formState } = useFormContext();
   const { isValid, errors } = formState;
   const [open, setOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("card");
 
   // Log form errors to help with debugging
   if (Object.keys(errors).length > 0) {
@@ -48,14 +50,104 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
           <div className="space-y-4">
             <div className="text-sm">
               <p className="font-semibold mb-2">Payment Information</p>
-              <p>After submission, you will receive an email with payment instructions.</p>
+              <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
+                <TabsList className="grid grid-cols-4 w-full mb-4">
+                  <TabsTrigger value="card">Card</TabsTrigger>
+                  <TabsTrigger value="afterpay">AfterPay</TabsTrigger>
+                  <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                  <TabsTrigger value="bank">Bank Transfer</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="card" className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Card Number
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full p-2 border rounded-md"
+                        placeholder="1234 5678 9012 3456"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Expiry Date
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full p-2 border rounded-md"
+                          placeholder="MM/YY"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          CVC
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full p-2 border rounded-md"
+                          placeholder="123"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="afterpay" className="text-center py-4">
+                  <p>Pay in 4 interest-free instalments</p>
+                  <div className="flex justify-center my-4">
+                    <img 
+                      src="https://play-lh.googleusercontent.com/2REJKKe0mTHpfQU_UjTk_lMBMBhiSQk1kN7xTS5K3RpJp_pHbTDZ3XjnLqN9D8LMcA" 
+                      alt="AfterPay Logo" 
+                      className="h-10"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    You'll be redirected to AfterPay to complete your payment
+                  </p>
+                </TabsContent>
+                
+                <TabsContent value="paypal" className="text-center py-4">
+                  <div className="flex justify-center my-4">
+                    <img 
+                      src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" 
+                      alt="PayPal Logo"
+                      className="h-10"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    You'll be redirected to PayPal to complete your payment
+                  </p>
+                </TabsContent>
+                
+                <TabsContent value="bank" className="py-4">
+                  <div className="bg-gray-50 p-3 rounded-md">
+                    <p className="font-medium">Direct Bank Transfer Details:</p>
+                    <p className="mt-2">BSB: 123-456</p>
+                    <p>Account: 12345678</p>
+                    <p>Name: Sydney Boat Academy</p>
+                    <p className="mt-2 text-sm text-gray-600">
+                      Please include your name and booking date as reference
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
+            
             <Button 
               type="submit" 
-              className="w-full bg-green-600 hover:bg-green-700" 
+              className="w-full bg-green-600 hover:bg-green-700 flex items-center justify-center" 
               disabled={selectedServices.length === 0 || isSubmitting || Object.keys(errors).length > 0}
             >
-              {isSubmitting ? "Processing..." : "Complete Booking"}
+              {isSubmitting ? "Processing..." : (
+                <>
+                  <span className="mr-2">Complete Booking & Pay</span>
+                  {paymentMethod === "card" && <CreditCard className="h-4 w-4" />}
+                  {paymentMethod !== "card" && <ArrowRight className="h-4 w-4" />}
+                </>
+              )}
             </Button>
           </div>
         </CollapsibleContent>
