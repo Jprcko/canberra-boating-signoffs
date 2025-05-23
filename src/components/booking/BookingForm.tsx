@@ -13,6 +13,7 @@ import { ParticipantCountSection } from "./form-sections/ParticipantCountSection
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { Booking, BookingService, BookingParticipant } from "@/types/database";
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [date, setDate] = useState<Date>();
@@ -149,28 +150,30 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         },
       };
 
-      // Insert main booking record using "as any" to bypass type checking
-      const { data: newBooking, error: bookingError } = await supabase
-        .from('bookings' as any)
-        .insert(bookingData as any)
+      // Insert main booking record
+      const { data, error: bookingError } = await supabase
+        .from('bookings')
+        .insert(bookingData as Partial<Booking>)
         .select()
         .single();
 
       if (bookingError) throw bookingError;
       
-      if (!newBooking) throw new Error("Failed to create booking");
+      if (!data) throw new Error("Failed to create booking");
+
+      const newBooking = data as Booking;
 
       // Insert selected services
       const bookingServices = selectedServices.map(serviceId => ({
         booking_id: newBooking.id,
         service_id: serviceId,
-        price_per_person: serviceId === 'test' ? 150 : 499,
+        price_per_person: serviceId === 'test' ? 149 : 499,
         participants: Number(participants)
       }));
 
       const { error: servicesError } = await supabase
-        .from('booking_services' as any)
-        .insert(bookingServices as any);
+        .from('booking_services')
+        .insert(bookingServices as Partial<BookingService>[]);
 
       if (servicesError) throw servicesError;
 
@@ -187,8 +190,8 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         }));
 
       const { error: participantsError } = await supabase
-        .from('booking_participants' as any)
-        .insert(participantsToInsert as any);
+        .from('booking_participants')
+        .insert(participantsToInsert as Partial<BookingParticipant>[]);
 
       if (participantsError) throw participantsError;
 
