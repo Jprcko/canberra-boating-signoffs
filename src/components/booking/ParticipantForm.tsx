@@ -40,6 +40,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     if (date) {
       setTempDate(date);
       const age = calculateAge(date);
+      
       if (age >= 12 && age < 16) {
         setShowAgeDialog(true);
       } else if (validateAge(date)) {
@@ -50,14 +51,14 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleAgeDialogAccept = (supervisorName: string) => {
     if (tempDate && supervisorName) {
-      // Update both fields without delay - first set dateOfBirth
+      // First update the date of birth so it displays in the UI
       onChange(index, "dateOfBirth", tempDate);
-      // Then set the supervisor name
+      
+      // Then update the supervisor name
       onChange(index, "supervisorName", supervisorName);
       
-      // Clear the temp date
-      setTempDate(null);
       setShowAgeDialog(false);
+      setTempDate(null);
     }
   };
 
@@ -148,4 +149,3 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
     </div>
   );
 };
-
