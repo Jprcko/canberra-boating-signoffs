@@ -34,9 +34,9 @@ export const submitBooking = async (data: BookingData) => {
     },
   };
 
-  // Insert main booking record - Using a complete type assertion
+  // Insert main booking record with type casting
   const { data: newBookingData, error: bookingError } = await (supabase
-    .from('bookings') as any)
+    .from('bookings') as unknown as any)
     .insert(bookingData)
     .select()
     .single();
@@ -48,7 +48,7 @@ export const submitBooking = async (data: BookingData) => {
   // Use type assertion for the response data
   const newBooking = newBookingData as any;
 
-  // Insert selected services
+  // Insert selected services with type casting
   const bookingServices = selectedServices.map(serviceId => ({
     booking_id: newBooking.id,
     service_id: serviceId,
@@ -57,7 +57,7 @@ export const submitBooking = async (data: BookingData) => {
   }));
 
   const { error: servicesError } = await (supabase
-    .from('booking_services') as any)
+    .from('booking_services') as unknown as any)
     .insert(bookingServices);
 
   if (servicesError) throw servicesError;
@@ -75,7 +75,7 @@ export const submitBooking = async (data: BookingData) => {
     }));
 
   const { error: participantsError } = await (supabase
-    .from('booking_participants') as any)
+    .from('booking_participants') as unknown as any)
     .insert(participantsToInsert);
 
   if (participantsError) throw participantsError;
