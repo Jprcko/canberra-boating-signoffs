@@ -14,7 +14,12 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   isSubmitting
 }) => {
   const { formState } = useFormContext();
-  const { isValid } = formState;
+  const { isValid, errors } = formState;
+
+  // Log form errors to help with debugging
+  if (Object.keys(errors).length > 0) {
+    console.log("Form validation errors:", errors);
+  }
 
   return (
     <CardFooter className="flex flex-col gap-2">
@@ -28,6 +33,11 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
       
       {selectedServices.length === 0 && (
         <p className="text-sm text-red-500">Please select at least one service</p>
+      )}
+      
+      {/* Show any validation errors if they exist */}
+      {Object.keys(errors).length > 0 && (
+        <p className="text-sm text-red-500">Please fix the form errors before submitting</p>
       )}
     </CardFooter>
   );

@@ -1,5 +1,5 @@
 
-import { supabaseClient } from "@/integrations/supabase/custom-client";
+import { supabase } from "@/integrations/supabase/custom-client";
 import { ParticipantInfo } from "@/types/booking";
 
 export interface BookingData {
@@ -35,7 +35,7 @@ export const submitBooking = async (data: BookingData) => {
 
   try {
     // Insert main booking record
-    const { data: newBookingData, error: bookingError } = await supabaseClient
+    const { data: newBookingData, error: bookingError } = await supabase
       .from('bookings')
       .insert(bookingData)
       .select()
@@ -60,7 +60,7 @@ export const submitBooking = async (data: BookingData) => {
       participants: Number(participants)
     }));
 
-    const { error: servicesError } = await supabaseClient
+    const { error: servicesError } = await supabase
       .from('booking_services')
       .insert(bookingServices);
 
@@ -81,7 +81,7 @@ export const submitBooking = async (data: BookingData) => {
         phone: participant.phone
       }));
 
-    const { error: participantsError } = await supabaseClient
+    const { error: participantsError } = await supabase
       .from('booking_participants')
       .insert(participantsToInsert);
 
