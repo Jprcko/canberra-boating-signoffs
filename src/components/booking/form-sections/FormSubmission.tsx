@@ -53,13 +53,13 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
             <div className="text-sm">
               <p className="font-semibold mb-2">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className={`grid ${isMobile ? 'grid-cols-2 gap-2' : 'grid-cols-6'} w-full mb-4`}>
-                  <TabsTrigger value="card">Card</TabsTrigger>
-                  <TabsTrigger value="afterpay">AfterPay</TabsTrigger>
-                  <TabsTrigger value="paypal">PayPal</TabsTrigger>
-                  <TabsTrigger value="applepay">Apple Pay</TabsTrigger>
-                  <TabsTrigger value="googlepay">Google Pay</TabsTrigger>
-                  <TabsTrigger value="zip">Zip Pay</TabsTrigger>
+                <TabsList className={`grid w-full mb-4 ${isMobile ? 'grid-cols-3 gap-1' : 'grid-cols-6'}`}>
+                  <TabsTrigger value="card" className="text-xs sm:text-sm">Card</TabsTrigger>
+                  <TabsTrigger value="afterpay" className="text-xs sm:text-sm">AfterPay</TabsTrigger>
+                  <TabsTrigger value="paypal" className="text-xs sm:text-sm">PayPal</TabsTrigger>
+                  <TabsTrigger value="applepay" className="text-xs sm:text-sm">Apple Pay</TabsTrigger>
+                  <TabsTrigger value="googlepay" className="text-xs sm:text-sm">Google Pay</TabsTrigger>
+                  <TabsTrigger value="zip" className="text-xs sm:text-sm">Zip Pay</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="card" className="space-y-4">
@@ -100,15 +100,15 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                 </TabsContent>
                 
                 <TabsContent value="afterpay" className="text-center py-4">
-                  <p>Pay in 4 interest-free instalments</p>
+                  <p className="text-sm sm:text-base">Pay in 4 interest-free instalments</p>
                   <div className="flex justify-center my-4">
                     <img 
                       src="https://play-lh.googleusercontent.com/2REJKKe0mTHpfQU_UjTk_lMBMBhiSQk1kN7xTS5K3RpJp_pHbTDZ3XjnLqN9D8LMcA" 
                       alt="AfterPay Logo" 
-                      className="h-10"
+                      className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     You'll be redirected to AfterPay to complete your payment
                   </p>
                 </TabsContent>
@@ -118,10 +118,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                     <img 
                       src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" 
                       alt="PayPal Logo"
-                      className="h-10"
+                      className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     You'll be redirected to PayPal to complete your payment
                   </p>
                 </TabsContent>
@@ -131,10 +131,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                     <img 
                       src="https://developer.apple.com/assets/elements/icons/apple-pay/apple-pay.svg" 
                       alt="Apple Pay Logo"
-                      className="h-10"
+                      className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     Complete your payment with Apple Pay
                   </p>
                 </TabsContent>
@@ -144,24 +144,24 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                     <img 
                       src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" 
                       alt="Google Pay Logo"
-                      className="h-10"
+                      className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     Complete your payment with Google Pay
                   </p>
                 </TabsContent>
                 
                 <TabsContent value="zip" className="text-center py-4">
-                  <p>Shop now, pay later in 4 interest-free instalments</p>
+                  <p className="text-sm sm:text-base">Shop now, pay later in 4 interest-free instalments</p>
                   <div className="flex justify-center my-4">
                     <img 
                       src="https://cdn.zip.co/web/au/logo.svg" 
                       alt="Zip Pay Logo"
-                      className="h-10"
+                      className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     You'll be redirected to Zip to complete your payment
                   </p>
                 </TabsContent>
