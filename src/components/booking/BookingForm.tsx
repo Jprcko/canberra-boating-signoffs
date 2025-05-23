@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,116 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const { validateAge } = useAgeValidation();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const handleParticipantChange = (
+    index: number,
+    field: keyof ParticipantInfo,
+    value: string | Date | boolean
+  ) => {
+    const newParticipantsInfo = [...participantsInfo];
+    newParticipantsInfo[index] = {
+      ...newParticipantsInfo[index],
+      [field]: value,
+    };
+    setParticipantsInfo(newParticipantsInfo);
+  };
+
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+  };
+
+  const handlePreferredTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPreferredTime(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Format the date for PostgreSQL
+      const formattedDate = date ? date.toISOString() : null;
+      
+      if (!formattedDate) {
+        throw new Error("Please select a valid booking date");
+      }
+
+      // Prepare booking data
+      const bookingData = {
+        booking_date: formattedDate,
+        total_price: price,
+        discount_amount: discount,
+        user_id: user?.id || null,
+        metadata: {
+          preferred_time: preferredTime
+        },
+      };
+
+      // Insert main booking record with type assertion
+      const { data, error: bookingError } = await supabase
+        .from('bookings' as any)
+        .insert(bookingData as any)
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+      
+      if (!data) throw new Error("Failed to create booking");
+
+      // Use type assertion for the response data
+      const newBooking = data as any;
+
+      // Insert selected services with type assertion
+      const bookingServices = selectedServices.map(serviceId => ({
+        booking_id: newBooking.id,
+        service_id: serviceId,
+        price_per_person: serviceId === 'test' ? 149 : 499,
+        participants: Number(participants)
+      }));
+
+      const { error: servicesError } = await supabase
+        .from('booking_services' as any)
+        .insert(bookingServices as any);
+
+      if (servicesError) throw servicesError;
+
+      // Transform participant information to match database schema with type assertion
+      const participantsToInsert = participantsInfo
+        .slice(0, Number(participants))
+        .map(participant => ({
+          booking_id: newBooking.id,
+          first_name: participant.firstName,
+          middle_name: participant.middleName || null,
+          last_name: participant.lastName,
+          email: participant.email,
+          phone: participant.phone
+        }));
+
+      const { error: participantsError } = await supabase
+        .from('booking_participants' as any)
+        .insert(participantsToInsert as any);
+
+      if (participantsError) throw participantsError;
+
+      toast({
+        title: "Booking Submitted Successfully",
+        description: "We've received your booking request.",
+      });
+
+      // Redirect to a confirmation page or clear the form
+      navigate("/");
+
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      toast({
+        title: "Error Submitting Booking",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     let totalPrice = 0;
@@ -105,115 +214,6 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       );
     setParticipantsInfo(newParticipantsInfo);
   }, [participants]);
-
-  const handleParticipantChange = (
-    index: number,
-    field: keyof ParticipantInfo,
-    value: string | Date | boolean
-  ) => {
-    const newParticipantsInfo = [...participantsInfo];
-    newParticipantsInfo[index] = {
-      ...newParticipantsInfo[index],
-      [field]: value,
-    };
-    setParticipantsInfo(newParticipantsInfo);
-  };
-
-  const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
-  };
-
-  const handlePreferredTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPreferredTime(e.target.value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Format the date for PostgreSQL
-      const formattedDate = date ? date.toISOString() : null;
-      
-      if (!formattedDate) {
-        throw new Error("Please select a valid booking date");
-      }
-
-      // Prepare booking data
-      const bookingData = {
-        booking_date: formattedDate,
-        total_price: price,
-        discount_amount: discount,
-        user_id: user?.id || null,
-        metadata: {
-          preferred_time: preferredTime
-        },
-      };
-
-      // Insert main booking record
-      const { data, error: bookingError } = await supabase
-        .from('bookings')
-        .insert(bookingData as Partial<Booking>)
-        .select()
-        .single();
-
-      if (bookingError) throw bookingError;
-      
-      if (!data) throw new Error("Failed to create booking");
-
-      const newBooking = data as Booking;
-
-      // Insert selected services
-      const bookingServices = selectedServices.map(serviceId => ({
-        booking_id: newBooking.id,
-        service_id: serviceId,
-        price_per_person: serviceId === 'test' ? 149 : 499,
-        participants: Number(participants)
-      }));
-
-      const { error: servicesError } = await supabase
-        .from('booking_services')
-        .insert(bookingServices as Partial<BookingService>[]);
-
-      if (servicesError) throw servicesError;
-
-      // Transform participant information to match database schema
-      const participantsToInsert = participantsInfo
-        .slice(0, Number(participants))
-        .map(participant => ({
-          booking_id: newBooking.id,
-          first_name: participant.firstName,
-          middle_name: participant.middleName || null,
-          last_name: participant.lastName,
-          email: participant.email,
-          phone: participant.phone
-        }));
-
-      const { error: participantsError } = await supabase
-        .from('booking_participants')
-        .insert(participantsToInsert as Partial<BookingParticipant>[]);
-
-      if (participantsError) throw participantsError;
-
-      toast({
-        title: "Booking Submitted Successfully",
-        description: "We've received your booking request.",
-      });
-
-      // Redirect to a confirmation page or clear the form
-      navigate("/");
-
-    } catch (error: any) {
-      console.error('Booking error:', error);
-      toast({
-        title: "Error Submitting Booking",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <Card>
