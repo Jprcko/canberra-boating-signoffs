@@ -30,7 +30,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   }
 
   return (
-    <CardFooter className="flex flex-col gap-2">
+    <CardFooter className="flex flex-col gap-4">
       <Collapsible 
         open={open} 
         onOpenChange={setOpen}
@@ -50,11 +50,11 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-4 border rounded-md p-4">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="text-sm">
-              <p className="font-semibold mb-2">Payment Information</p>
+              <p className="font-semibold mb-4">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className={`grid w-full mb-4 ${isMobile ? 'grid-cols-3 gap-2' : 'grid-cols-6'}`}>
+                <TabsList className={`grid w-full mb-6 ${isMobile ? 'grid-cols-3 gap-2' : 'grid-cols-6'}`}>
                   <TabsTrigger value="card" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Card</TabsTrigger>
                   <TabsTrigger value="afterpay" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">AfterPay</TabsTrigger>
                   <TabsTrigger value="paypal" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">PayPal</TabsTrigger>
@@ -63,10 +63,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                   <TabsTrigger value="zip" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Zip Pay</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="card" className="space-y-4">
+                <TabsContent value="card" className="space-y-6">
                   <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Card Number
                       </label>
                       <input
@@ -75,9 +75,9 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                         placeholder="1234 5678 9012 3456"
                       />
                     </div>
-                    <div className={`grid ${isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-2 gap-4'}`}>
+                    <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-2 gap-4'}`}>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Expiry Date
                         </label>
                         <input
@@ -87,7 +87,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           CVC
                         </label>
                         <input
@@ -100,69 +100,69 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="afterpay" className="text-center py-4">
-                  <p className="text-sm sm:text-base">Pay in 4 interest-free instalments</p>
-                  <div className="flex justify-center my-4">
+                <TabsContent value="afterpay" className="text-center py-6">
+                  <p className="text-sm sm:text-base mb-4">Pay in 4 interest-free instalments</p>
+                  <div className="flex justify-center mb-4">
                     <img 
                       src="https://play-lh.googleusercontent.com/2REJKKe0mTHpfQU_UjTk_lMBMBhiSQk1kN7xTS5K3RpJp_pHbTDZ3XjnLqN9D8LMcA" 
                       alt="AfterPay Logo" 
                       className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                     You'll be redirected to AfterPay to complete your payment
                   </p>
                 </TabsContent>
                 
-                <TabsContent value="paypal" className="text-center py-4">
-                  <div className="flex justify-center my-4">
+                <TabsContent value="paypal" className="text-center py-6">
+                  <div className="flex justify-center mb-4">
                     <img 
                       src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" 
                       alt="PayPal Logo"
                       className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                     You'll be redirected to PayPal to complete your payment
                   </p>
                 </TabsContent>
                 
-                <TabsContent value="applepay" className="text-center py-4">
-                  <div className="flex justify-center my-4">
+                <TabsContent value="applepay" className="text-center py-6">
+                  <div className="flex justify-center mb-4">
                     <img 
                       src="https://developer.apple.com/assets/elements/icons/apple-pay/apple-pay.svg" 
                       alt="Apple Pay Logo"
                       className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                     Complete your payment with Apple Pay
                   </p>
                 </TabsContent>
                 
-                <TabsContent value="googlepay" className="text-center py-4">
-                  <div className="flex justify-center my-4">
+                <TabsContent value="googlepay" className="text-center py-6">
+                  <div className="flex justify-center mb-4">
                     <img 
                       src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" 
                       alt="Google Pay Logo"
                       className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                     Complete your payment with Google Pay
                   </p>
                 </TabsContent>
                 
-                <TabsContent value="zip" className="text-center py-4">
-                  <p className="text-sm sm:text-base">Shop now, pay later in 4 interest-free instalments</p>
-                  <div className="flex justify-center my-4">
+                <TabsContent value="zip" className="text-center py-6">
+                  <p className="text-sm sm:text-base mb-4">Shop now, pay later in 4 interest-free instalments</p>
+                  <div className="flex justify-center mb-4">
                     <img 
                       src="https://cdn.zip.co/web/au/logo.svg" 
                       alt="Zip Pay Logo"
                       className="h-8 sm:h-10 object-contain"
                     />
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2">
                     You'll be redirected to Zip to complete your payment
                   </p>
                 </TabsContent>
@@ -171,7 +171,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
             
             <Button 
               type="submit" 
-              className="w-full bg-green-600 hover:bg-green-700 flex items-center justify-center" 
+              className="w-full bg-green-600 hover:bg-green-700 flex items-center justify-center mt-6" 
               disabled={selectedServices.length === 0 || isSubmitting || Object.keys(errors).length > 0}
             >
               {isSubmitting ? "Processing..." : (
@@ -187,12 +187,12 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
       </Collapsible>
       
       {selectedServices.length === 0 && (
-        <p className="text-sm text-red-500">Please select at least one service</p>
+        <p className="text-sm text-red-500 mt-2">Please select at least one service</p>
       )}
       
       {/* Show any validation errors if they exist */}
       {Object.keys(errors).length > 0 && (
-        <p className="text-sm text-red-500">Please fix the form errors before submitting</p>
+        <p className="text-sm text-red-500 mt-2">Please fix the form errors before submitting</p>
       )}
     </CardFooter>
   );
