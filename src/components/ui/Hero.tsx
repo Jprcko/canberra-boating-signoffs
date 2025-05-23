@@ -47,7 +47,7 @@ const Hero = ({
           )}
         </div>
       </div>
-      <div className="waves relative">
+      <div className="waves relative h-24 md:h-32">
         <svg
           className="w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
@@ -70,9 +70,9 @@ const Hero = ({
           </g>
         </svg>
         
-        {/* Boat silhouette */}
+        {/* Boat silhouette - positioned lower with updated positioning */}
         <Sailboat 
-          className="absolute bottom-[10%] left-1/2 transform -translate-x-1/2 text-white/70 animate-wave" 
+          className="absolute bottom-[15%] left-1/2 transform -translate-x-1/2 text-white/70 animate-wave" 
           size={48} 
         />
       </div>
