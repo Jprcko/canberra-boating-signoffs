@@ -34,7 +34,7 @@ export const submitBooking = async (data: BookingData) => {
     },
   };
 
-  // Insert main booking record - Using a more specific type assertion approach
+  // Insert main booking record - Using a complete type assertion
   const { data: newBookingData, error: bookingError } = await (supabase
     .from('bookings') as any)
     .insert(bookingData)
@@ -48,7 +48,7 @@ export const submitBooking = async (data: BookingData) => {
   // Use type assertion for the response data
   const newBooking = newBookingData as any;
 
-  // Insert selected services - Using a more specific type assertion approach
+  // Insert selected services
   const bookingServices = selectedServices.map(serviceId => ({
     booking_id: newBooking.id,
     service_id: serviceId,
@@ -62,7 +62,7 @@ export const submitBooking = async (data: BookingData) => {
 
   if (servicesError) throw servicesError;
 
-  // Transform participant information to match database schema - Using a more specific type assertion approach
+  // Transform participant information to match database schema
   const participantsToInsert = participantsInfo
     .slice(0, Number(participants))
     .map(participant => ({
