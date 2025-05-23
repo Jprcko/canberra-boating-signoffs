@@ -48,7 +48,13 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start" side="bottom" sideOffset={5} onClick={e => e.stopPropagation()}>
+        <PopoverContent 
+          className="w-auto p-0" 
+          align="start" 
+          side="bottom" 
+          sideOffset={5} 
+          onClick={e => e.stopPropagation()}
+        >
           <Calendar
             mode="single"
             selected={participant.dateOfBirth}
@@ -58,7 +64,7 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
             captionLayout="dropdown-buttons"
             fromYear={1900}
             toYear={new Date().getFullYear()}
-            defaultMonth={new Date(2000, 0)}
+            defaultMonth={participant.dateOfBirth || new Date(2000, 0)}
             showOutsideDays={false}
             className="rounded-md border shadow-sm p-3 pointer-events-auto"
           />

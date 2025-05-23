@@ -38,25 +38,27 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
 
   const handleDateOfBirthChange = (date: Date | undefined) => {
     if (date) {
-      setTempDate(date);
+      // Always update the actual date field first
+      onChange(index, "dateOfBirth", date);
+      
       const age = calculateAge(date);
       
       if (age >= 12 && age < 16) {
+        // Store the date for supervisor dialog
+        setTempDate(date);
         setShowAgeDialog(true);
-      } else if (validateAge(date)) {
-        onChange(index, "dateOfBirth", date);
+      } else {
+        // For other ages, validate but don't show dialog
+        validateAge(date);
       }
     }
   };
 
   const handleAgeDialogAccept = (supervisorName: string) => {
-    if (tempDate && supervisorName) {
-      // First update the date of birth so it displays in the UI
-      onChange(index, "dateOfBirth", tempDate);
-      
-      // Then update the supervisor name
+    if (supervisorName) {
+      // The date is already set in handleDateOfBirthChange
+      // Just update the supervisor name
       onChange(index, "supervisorName", supervisorName);
-      
       setShowAgeDialog(false);
       setTempDate(null);
     }
