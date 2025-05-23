@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { ChevronDown, ChevronUp, CreditCard, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FormSubmissionProps {
   selectedServices: string[];
@@ -20,6 +21,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   const { isValid, errors } = formState;
   const [open, setOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const isMobile = useIsMobile();
 
   // Log form errors to help with debugging
   if (Object.keys(errors).length > 0) {
@@ -51,7 +53,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
             <div className="text-sm">
               <p className="font-semibold mb-2">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className="grid grid-cols-5 w-full mb-4">
+                <TabsList className={`grid ${isMobile ? 'grid-cols-2 gap-2' : 'grid-cols-6'} w-full mb-4`}>
                   <TabsTrigger value="card">Card</TabsTrigger>
                   <TabsTrigger value="afterpay">AfterPay</TabsTrigger>
                   <TabsTrigger value="paypal">PayPal</TabsTrigger>
@@ -72,7 +74,7 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                         placeholder="1234 5678 9012 3456"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid ${isMobile ? 'grid-cols-1 gap-3' : 'grid-cols-2 gap-4'}`}>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Expiry Date
