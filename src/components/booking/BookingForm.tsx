@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { BookingFormProps } from "@/types/booking";
 import { useBookingPrice } from "@/hooks/useBookingPrice";
-import { submitBooking } from "@/services/bookingService";
+import { submitBooking, BookingData } from "@/services/bookingService";
+import { useForm, FormProvider } from "react-hook-form";
 
 // Import refactored sections
 import { DateTimeSection } from "./form-sections/DateTimeSection";
@@ -17,17 +18,35 @@ import { PricingSection } from "./form-sections/PricingSection";
 import { ParticipantListSection } from "./form-sections/ParticipantListSection";
 import { FormSubmission } from "./form-sections/FormSubmission";
 
+interface BookingFormValues {
+  date: Date | undefined;
+  preferredTime: string;
+  additionalInfo: string;
+  promoCode: string;
+}
+
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
-  const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [participants, setParticipants] = useState<string>("2");
-  const [preferredTime, setPreferredTime] = useState<string>("");
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
   ]);
+
+  const methods = useForm<BookingFormValues>({
+    defaultValues: {
+      date: undefined,
+      preferredTime: "",
+      additionalInfo: "",
+      promoCode: ""
+    }
+  });
+
+  const { handleSubmit, watch, setValue } = methods;
+  const date = watch("date");
+  const preferredTime = watch("preferredTime");
 
   const { toast } = useToast();
   const { validateAge } = useAgeValidation();
@@ -49,35 +68,38 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   };
 
   const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
+    setValue("date", newDate);
   };
 
   const handlePreferredTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPreferredTime(e.target.value);
+    setValue("preferredTime", e.target.value);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (formData: BookingFormValues) => {
     setIsSubmitting(true);
 
     try {
       // Format the date for PostgreSQL
-      const formattedDate = date ? date.toISOString() : null;
+      const formattedDate = formData.date ? formData.date.toISOString() : null;
       
       if (!formattedDate) {
         throw new Error("Please select a valid booking date");
       }
 
-      await submitBooking({
+      const bookingData: BookingData = {
         bookingDate: formattedDate,
         totalPrice: price,
         discountAmount: discount,
         userId: user?.id || null,
-        preferredTime,
+        preferredTime: formData.preferredTime,
         selectedServices,
         participants,
-        participantsInfo
-      });
+        participantsInfo,
+        additionalInfo: formData.additionalInfo,
+        promoCode: formData.promoCode
+      };
+
+      await submitBooking(bookingData);
 
       toast({
         title: "Booking Submitted Successfully",
@@ -114,41 +136,41 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         <CardTitle>Complete Your Booking</CardTitle>
         <CardDescription>Fill in your details and choose your preferred date</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <ParticipantListSection
-            selectedServices={selectedServices}
-            participants={participants}
-            participantsInfo={participantsInfo}
-            setParticipants={setParticipants}
-            onParticipantChange={handleParticipantChange}
-          />
-
-          <DateTimeSection 
-            date={date} 
-            onDateChange={handleDateChange}
-            preferredTime={preferredTime}
-            onPreferredTimeChange={handlePreferredTimeChange}
-          />
-          
-          <AdditionalInfoSection />
-
-          {(selectedServices.includes("full") || selectedServices.includes("group")) && (
-            <PricingSection
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <ParticipantListSection
               selectedServices={selectedServices}
               participants={participants}
-              price={price}
-              discount={discount}
+              participantsInfo={participantsInfo}
+              setParticipants={setParticipants}
+              onParticipantChange={handleParticipantChange}
             />
-          )}
-        </CardContent>
-        <FormSubmission 
-          selectedServices={selectedServices}
-          date={date}
-          preferredTime={preferredTime}
-          isSubmitting={isSubmitting}
-        />
-      </form>
+
+            <DateTimeSection 
+              date={date} 
+              onDateChange={handleDateChange}
+              preferredTime={preferredTime}
+              onPreferredTimeChange={handlePreferredTimeChange}
+            />
+            
+            <AdditionalInfoSection />
+
+            {(selectedServices.includes("full") || selectedServices.includes("group")) && (
+              <PricingSection
+                selectedServices={selectedServices}
+                participants={participants}
+                price={price}
+                discount={discount}
+              />
+            )}
+          </CardContent>
+          <FormSubmission 
+            selectedServices={selectedServices}
+            isSubmitting={isSubmitting}
+          />
+        </form>
+      </FormProvider>
     </Card>
   );
 };

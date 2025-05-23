@@ -12,12 +12,14 @@ export interface BookingData {
   selectedServices: string[];
   participants: string;
   participantsInfo: ParticipantInfo[];
+  additionalInfo?: string;
+  promoCode?: string;
 }
 
 export const submitBooking = async (data: BookingData) => {
   // Format the date for PostgreSQL
   const { bookingDate, totalPrice, discountAmount, userId, preferredTime, 
-    selectedServices, participants, participantsInfo } = data;
+    selectedServices, participants, participantsInfo, additionalInfo, promoCode } = data;
   
   // Prepare booking data
   const bookingData = {
@@ -26,7 +28,9 @@ export const submitBooking = async (data: BookingData) => {
     discount_amount: discountAmount,
     user_id: userId,
     metadata: {
-      preferred_time: preferredTime
+      preferred_time: preferredTime,
+      additional_info: additionalInfo || null,
+      promo_code: promoCode || null
     },
   };
 
