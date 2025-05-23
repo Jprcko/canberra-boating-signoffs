@@ -55,12 +55,12 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
               <p className="font-semibold mb-2">Payment Information</p>
               <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
                 <TabsList className={`grid w-full mb-4 ${isMobile ? 'grid-cols-3 gap-2' : 'grid-cols-6'}`}>
-                  <TabsTrigger value="card" className="h-10 px-2 py-1 text-xs sm:text-sm">Card</TabsTrigger>
-                  <TabsTrigger value="afterpay" className="h-10 px-2 py-1 text-xs sm:text-sm">AfterPay</TabsTrigger>
-                  <TabsTrigger value="paypal" className="h-10 px-2 py-1 text-xs sm:text-sm">PayPal</TabsTrigger>
-                  <TabsTrigger value="applepay" className="h-10 px-2 py-1 text-xs sm:text-sm">Apple Pay</TabsTrigger>
-                  <TabsTrigger value="googlepay" className="h-10 px-2 py-1 text-xs sm:text-sm">Google Pay</TabsTrigger>
-                  <TabsTrigger value="zip" className="h-10 px-2 py-1 text-xs sm:text-sm">Zip Pay</TabsTrigger>
+                  <TabsTrigger value="card" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Card</TabsTrigger>
+                  <TabsTrigger value="afterpay" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">AfterPay</TabsTrigger>
+                  <TabsTrigger value="paypal" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">PayPal</TabsTrigger>
+                  <TabsTrigger value="applepay" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Apple Pay</TabsTrigger>
+                  <TabsTrigger value="googlepay" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Google Pay</TabsTrigger>
+                  <TabsTrigger value="zip" className="bg-muted hover:bg-water-blue/10 data-[state=active]:bg-water-blue data-[state=active]:text-white">Zip Pay</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="card" className="space-y-4">
