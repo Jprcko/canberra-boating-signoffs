@@ -34,10 +34,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
         <CollapsibleTrigger asChild>
           <Button 
             type="button"
-            className="w-full bg-water-blue hover:bg-deep-blue flex justify-between" 
+            className="w-full bg-water-blue hover:bg-deep-blue flex items-center justify-center" 
             disabled={selectedServices.length === 0}
           >
-            Proceed to Payment
+            <span className="flex-grow text-center">Proceed to Payment</span>
             {open ? 
               <ChevronUp className="h-4 w-4 ml-2" /> : 
               <ChevronDown className="h-4 w-4 ml-2" />
