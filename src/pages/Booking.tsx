@@ -33,13 +33,6 @@ const BookingPage = () => {
           />
 
           <BookingForm selectedServices={selectedServices} />
-          
-          <div className="mt-8 p-4 bg-slate-light rounded-lg text-center">
-            <p className="text-sm text-gray-600">
-              After submitting your booking request, you will receive an email with payment instructions.
-              Your booking will be confirmed once payment is received.
-            </p>
-          </div>
         </div>
       </section>
 
