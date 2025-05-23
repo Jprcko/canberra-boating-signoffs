@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/custom-client";
 import { ParticipantInfo } from "@/types/booking";
 
@@ -73,17 +72,30 @@ export const submitBooking = async (data: BookingData) => {
       throw new Error(`Failed to add booking services: ${servicesError.message}`);
     }
 
-    // Transform participant information to match database schema
-    const participantsToInsert = participantsInfo
+    // Filter out empty participant records
+    // Only keep participants that have at least first name, last name, email and phone
+    const validParticipants = participantsInfo
       .slice(0, Number(participants))
-      .map(participant => ({
-        booking_id: newBooking.id,
-        first_name: participant.firstName,
-        middle_name: participant.middleName || null,
-        last_name: participant.lastName,
-        email: participant.email,
-        phone: participant.phone
-      }));
+      .filter(participant => 
+        participant.firstName && 
+        participant.lastName && 
+        participant.email && 
+        participant.phone
+      );
+
+    if (validParticipants.length === 0) {
+      throw new Error("At least one valid participant is required");
+    }
+
+    // Transform participant information to match database schema
+    const participantsToInsert = validParticipants.map(participant => ({
+      booking_id: newBooking.id,
+      first_name: participant.firstName,
+      middle_name: participant.middleName || null,
+      last_name: participant.lastName,
+      email: participant.email,
+      phone: participant.phone
+    }));
 
     console.log("Adding booking participants:", participantsToInsert);
     const { error: participantsError } = await supabase
