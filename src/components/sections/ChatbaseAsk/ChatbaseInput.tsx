@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search } from "lucide-react";
+import { Search, Copy, CheckCircle } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ChatbaseInputProps {
   isLoaded: boolean;
@@ -11,34 +12,45 @@ interface ChatbaseInputProps {
 
 const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
   const [question, setQuestion] = useState("");
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
 
-  const handleAsk = () => {
+  const handleAsk = async () => {
     if (question.trim() && isLoaded && window.chatbase) {
       console.log("Opening Chatbase with question:", question);
       
-      // Open the chatbase widget
-      window.chatbase("open");
-      
-      // Since we can't programmatically send the message due to iframe restrictions,
-      // we'll copy the question to clipboard and show a helpful message
-      navigator.clipboard.writeText(question).then(() => {
-        console.log("Question copied to clipboard for pasting into chat");
+      // First try to copy to clipboard
+      try {
+        await navigator.clipboard.writeText(question);
+        console.log("Question copied to clipboard successfully");
         
-        // Show a brief visual feedback that the question was copied
-        const button = document.querySelector('[data-ask-button]') as HTMLButtonElement;
-        if (button) {
-          const originalText = button.textContent;
-          button.textContent = "Copied!";
-          setTimeout(() => {
-            button.textContent = originalText;
-          }, 1500);
-        }
-      }).catch(() => {
-        console.log("Could not copy to clipboard, user will need to manually type the question");
-      });
-      
-      // Clear our input
-      setQuestion("");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+        
+        toast({
+          title: "Question Copied!",
+          description: "Your question has been copied to clipboard. Paste it in the chat widget.",
+        });
+        
+        // Open the chatbase widget after successful copy
+        window.chatbase("open");
+        
+        // Clear our input
+        setQuestion("");
+        
+      } catch (error) {
+        console.log("Clipboard copy failed:", error);
+        
+        // Fallback: show the question in a toast for manual copying
+        toast({
+          title: "Copy this question:",
+          description: question,
+          duration: 10000,
+        });
+        
+        // Still open the widget
+        window.chatbase("open");
+      }
     }
   };
 
@@ -66,10 +78,20 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
           <Button
             onClick={handleAsk}
             disabled={!question.trim() || !isLoaded}
-            className="h-12 px-6 bg-water-blue hover:bg-deep-blue"
+            className="h-12 px-6 bg-water-blue hover:bg-deep-blue flex items-center gap-2"
             data-ask-button
           >
-            Ask
+            {copied ? (
+              <>
+                <CheckCircle className="h-4 w-4" />
+                Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4" />
+                Ask
+              </>
+            )}
           </Button>
         </div>
 
@@ -79,9 +101,14 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
           </p>
         )}
         
-        <p className="text-xs text-gray-500 mt-2 text-center">
-          Click "Ask" to open the chat widget with your question copied to clipboard
-        </p>
+        <div className="text-center mt-3">
+          <p className="text-xs text-gray-500">
+            Click "Ask" to copy your question and open the chat widget
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Then paste your question (Ctrl+V) into the chat
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
