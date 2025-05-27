@@ -74,9 +74,7 @@ const ChatbaseAsk = () => {
             <MessageCircle className="h-6 w-6 text-water-blue" />
             <h3 className="text-2xl font-bold">Ask Away — Boat Licence AI</h3>
           </div>
-          <p className="text-gray-700">
-            Have more questions? Ask me anything and I'll answer instantly.
-          </p>
+          <p className="text-gray-700 text-base">Got questions? Our chatbot provides clear, up-to-date answers about boat licensing in ACT &amp; NSW — including the process, pricing, and how to book.</p>
         </div>
 
         <Card className="shadow-lg">
