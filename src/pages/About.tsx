@@ -1,4 +1,3 @@
-
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -155,10 +154,6 @@ const About = () => {
                 <li className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                   <span>Extensive local water knowledge</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
-                  <span>Working with Children Check</span>
                 </li>
               </ul>
             </div>
