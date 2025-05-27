@@ -3,6 +3,7 @@ import Layout from "@/components/layout/Layout";
 import TrustBadges from "@/components/ui/TrustBadges";
 import ComparisonTable from "@/components/ui/ComparisonTable";
 import { FAQ } from "@/components/sections/FAQ";
+import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
 import ServicesHero from "@/components/sections/Services/ServicesHero";
 import ServicesCards from "@/components/sections/Services/ServicesCards";
 import ServicesProcess from "@/components/sections/Services/ServicesProcess";
@@ -35,6 +36,9 @@ const Services = () => {
       <div className="bg-slate-light">
         <FAQ />
       </div>
+
+      {/* ChatbaseAsk Section */}
+      <ChatbaseAsk />
 
       <ServicesCallToAction />
     </Layout>
