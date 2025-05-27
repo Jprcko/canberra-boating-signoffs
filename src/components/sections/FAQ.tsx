@@ -18,8 +18,8 @@ const faqCategories = [
         • No PWC (jet ski) driving at night`
       },
       {
-        question: "How many trips do I need to complete for the logbook?",
-        answer: "You must complete at least three separate supervised trips, practicing a variety of boating skills."
+        question: "How long does it take?",
+        answer: "One full day — we complete all three logbook trips."
       },
       {
         question: "Can all three trips be completed on the same day?",
@@ -53,6 +53,10 @@ const faqCategories = [
         • Full Logbook Completion Package (3 trips in 1 day)
         • Group Discounts (2–5 participants)
         Visit our Services page for full pricing details.`
+      },
+      {
+        question: "Is this approved?",
+        answer: "Yes — fully compliant with NSW Maritime guidelines."
       }
     ]
   },
@@ -62,6 +66,10 @@ const faqCategories = [
       {
         question: "What happens after my logbook is signed off?",
         answer: "You'll take your signed logbook to Service NSW and book the General Boat Licence Knowledge Test."
+      },
+      {
+        question: "Do I still need to sit a test?",
+        answer: "Yes, at Service NSW. We help you book it."
       },
       {
         question: "How hard is the knowledge test?",
