@@ -67,14 +67,19 @@ const ChatbaseAsk = () => {
       handleAsk();
     }
   };
-  return <section className="py-12 bg-white border-t border-gray-100">
+  return (
+    <section className="py-12 bg-white border-t border-gray-100">
       <div className="container-custom max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <MessageCircle className="h-6 w-6 text-water-blue" />
+            <MessageCircle className="h-6 w-6 text-water-blue animate-pulse" />
             <h3 className="text-2xl font-bold">Ask Away — Boat Licence AI</h3>
           </div>
-          <p className="text-gray-700 text-base">Got questions? Our chatbot provides clear, up-to-date answers about boat licensing in ACT &amp; NSW — including the process, pricing, and how to book.</p>
+          <p className="text-gray-700 text-base">
+            Got questions? Our chatbot provides clear, up-to-date answers about
+            boat licensing in ACT &amp; NSW — including the process, pricing,
+            and how to book.
+          </p>
         </div>
 
         <Card className="shadow-lg">
@@ -82,25 +87,41 @@ const ChatbaseAsk = () => {
             <div className="flex gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input type="text" placeholder="Type your question here..." value={question} onChange={e => setQuestion(e.target.value)} onKeyPress={handleKeyPress} className="pl-10 h-12 text-base" />
+                <Input
+                  type="text"
+                  placeholder="Type your question here..."
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="pl-10 h-12 text-base"
+                />
               </div>
-              <Button onClick={handleAsk} disabled={!question.trim() || !isLoaded} className="h-12 px-6 bg-water-blue hover:bg-deep-blue">
+              <Button
+                onClick={handleAsk}
+                disabled={!question.trim() || !isLoaded}
+                className="h-12 px-6 bg-water-blue hover:bg-deep-blue"
+              >
                 Ask
               </Button>
             </div>
-            
-            {!isLoaded && <p className="text-sm text-gray-500 mt-3 text-center">
+
+            {!isLoaded && (
+              <p className="text-sm text-gray-500 mt-3 text-center">
                 Loading chat assistant...
-              </p>}
+              </p>
+            )}
           </CardContent>
         </Card>
 
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            Get instant answers about boat licensing, logbook requirements, and our services
+            Get instant answers about boat licensing, logbook requirements, and
+            our services
           </p>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default ChatbaseAsk;
