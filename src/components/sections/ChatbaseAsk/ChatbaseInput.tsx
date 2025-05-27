@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, CheckCircle } from "lucide-react";
+import { MessageCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ChatbaseInputProps {
@@ -10,40 +10,45 @@ interface ChatbaseInputProps {
 }
 
 const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
-  const [copied, setCopied] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const { toast } = useToast();
 
   const handleAsk = async () => {
+    if (isOpening) return;
+    
     console.log("Ask button clicked, isLoaded:", isLoaded);
     
-    if (isLoaded && window.chatbase) {
-      console.log("Opening Chatbase widget");
+    if (!isLoaded) {
+      toast({
+        title: "Loading...",
+        description: "Chat assistant is still loading. Please wait a moment.",
+      });
+      return;
+    }
+
+    try {
+      setIsOpening(true);
       
-      try {
-        // Open the chatbase widget
+      if (window.chatbase && typeof window.chatbase === 'function') {
+        console.log("Opening Chatbase widget");
         window.chatbase("open");
-        
-        setCopied(true);
-        setTimeout(() => setCopied(false), 3000);
         
         toast({
           title: "Chat Widget Opened!",
           description: "You can now ask your questions in the chat widget.",
         });
-      } catch (error) {
-        console.error("Error opening chatbase:", error);
-        toast({
-          title: "Error",
-          description: "Failed to open chat widget. Please try again.",
-          variant: "destructive",
-        });
+      } else {
+        throw new Error("Chatbase not properly initialized");
       }
-    } else {
-      console.log("Chatbase not loaded yet");
+    } catch (error) {
+      console.error("Error opening chatbase:", error);
       toast({
-        title: "Loading...",
-        description: "Chat assistant is still loading. Please wait a moment.",
+        title: "Error",
+        description: "Failed to open chat widget. Please try again.",
+        variant: "destructive",
       });
+    } finally {
+      setTimeout(() => setIsOpening(false), 2000);
     }
   };
 
@@ -53,18 +58,18 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
         <div className="flex justify-center">
           <Button
             onClick={handleAsk}
-            disabled={!isLoaded}
+            disabled={!isLoaded || isOpening}
             className="h-12 px-8 bg-water-blue hover:bg-deep-blue flex items-center gap-2"
             data-ask-button
           >
-            {copied ? (
+            {isOpening ? (
               <>
                 <CheckCircle className="h-4 w-4" />
-                Opened!
+                Opening...
               </>
             ) : (
               <>
-                <Copy className="h-4 w-4" />
+                <MessageCircle className="h-4 w-4" />
                 Ask Questions
               </>
             )}

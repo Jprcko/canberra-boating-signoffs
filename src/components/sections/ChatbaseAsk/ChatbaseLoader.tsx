@@ -25,33 +25,26 @@ const ChatbaseLoader = ({ onLoad }: ChatbaseLoaderProps) => {
           return;
         }
 
-        // Initialize chatbase if not already done
-        if (!window.chatbase || window.chatbase("getState") !== "initialized") {
-          window.chatbase = (...args: any[]) => {
+        // Simple chatbase initialization without proxy
+        if (!window.chatbase) {
+          window.chatbase = function(...args: any[]) {
             if (!window.chatbase.q) {
               window.chatbase.q = [];
             }
             window.chatbase.q.push(args);
           };
-          
-          window.chatbase = new Proxy(window.chatbase, {
-            get(target, prop) {
-              if (prop === "q") {
-                return target.q;
-              }
-              return (...args: any[]) => target(prop, ...args);
-            }
-          });
+          window.chatbase.q = [];
         }
 
         const script = document.createElement("script");
         script.src = "https://www.chatbase.co/embed.min.js";
         script.id = "H-qdfYx1JpgXU91FNJDWl";
         script.setAttribute("domain", "www.chatbase.co");
+        script.defer = true;
         
         script.onload = () => {
           console.log("Chatbase script loaded successfully");
-          onLoad(true);
+          setTimeout(() => onLoad(true), 100);
         };
         
         script.onerror = (error) => {
@@ -59,25 +52,23 @@ const ChatbaseLoader = ({ onLoad }: ChatbaseLoaderProps) => {
           onLoad(false);
         };
         
-        document.body.appendChild(script);
+        document.head.appendChild(script);
       } catch (error) {
         console.error("Error in loadChatbase:", error);
         onLoad(false);
       }
     };
 
-    if (document.readyState === "complete") {
-      loadChatbase();
-    } else {
-      window.addEventListener("load", loadChatbase);
-    }
+    const timeoutId = setTimeout(() => {
+      if (document.readyState === "complete") {
+        loadChatbase();
+      } else {
+        window.addEventListener("load", loadChatbase);
+      }
+    }, 100);
 
     return () => {
-      // Cleanup
-      const existingScript = document.getElementById("H-qdfYx1JpgXU91FNJDWl");
-      if (existingScript) {
-        existingScript.remove();
-      }
+      clearTimeout(timeoutId);
       window.removeEventListener("load", loadChatbase);
     };
   }, [onLoad]);
