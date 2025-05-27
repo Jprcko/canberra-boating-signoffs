@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -167,12 +168,14 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
             
             <AdditionalInfoSection />
 
-            <PricingSection
-              selectedServices={selectedServices}
-              participants={participants}
-              price={price}
-              discount={discount}
-            />
+            {(selectedServices.includes("full") || selectedServices.includes("group")) && (
+              <PricingSection
+                selectedServices={selectedServices}
+                participants={participants}
+                price={price}
+                discount={discount}
+              />
+            )}
           </CardContent>
           <FormSubmission 
             selectedServices={selectedServices}
