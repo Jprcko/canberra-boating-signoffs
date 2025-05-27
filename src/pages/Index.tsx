@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Book, TestTube, Users } from "lucide-react";
 import { CheckCircle } from "lucide-react";
+
 const Index = () => {
   return <Layout>
       <Hero title="Get Your Boat Licence with Confidence" subtitle="Professional logbook supervision and boat licence training in the ACT" backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80">
@@ -127,6 +128,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Why Choose Us Section */}
       <section className="section-padding bg-white">
