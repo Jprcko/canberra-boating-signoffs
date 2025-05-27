@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,9 +109,9 @@ const ComparisonTable = () => {
     // Check if this is the Service NSW text
     const isServiceNSWText = data.value.includes("Service NSW Queanbeyan");
     
-    return <div className="flex items-center gap-2">
+    return <div className="flex items-start gap-2">
         {icon}
-        <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue' : ''}`}>
+        <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
           {data.value}
         </span>
       </div>;
@@ -126,18 +127,18 @@ const ComparisonTable = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-light">
-                <TableHead className="font-bold text-navy">Feature</TableHead>
-                <TableHead className="font-bold text-water-blue text-center">Our Service</TableHead>
-                <TableHead className="font-bold text-gray-600 text-center">Standard Boat Licence Course</TableHead>
+                <TableHead className="font-bold text-navy text-left">Feature</TableHead>
+                <TableHead className="font-bold text-water-blue text-left">Our Service</TableHead>
+                <TableHead className="font-bold text-gray-600 text-left">Standard Boat Licence Course</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {comparisonData.map((row, index) => <TableRow key={index} className="hover:bg-sky-light/30">
-                  <TableCell className="font-medium">{row.feature}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="font-medium text-left">{row.feature}</TableCell>
+                  <TableCell className="text-left">
                     {renderCell(row.yourService, true)}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-left">
                     {renderCell(row.standardCourse, false)}
                   </TableCell>
                 </TableRow>)}
