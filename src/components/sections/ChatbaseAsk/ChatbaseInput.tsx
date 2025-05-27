@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Copy, CheckCircle } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ChatbaseInputProps {
   isLoaded: boolean;
@@ -14,19 +14,36 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
   const { toast } = useToast();
 
   const handleAsk = async () => {
+    console.log("Ask button clicked, isLoaded:", isLoaded);
+    
     if (isLoaded && window.chatbase) {
       console.log("Opening Chatbase widget");
       
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-      
+      try {
+        // Open the chatbase widget
+        window.chatbase("open");
+        
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+        
+        toast({
+          title: "Chat Widget Opened!",
+          description: "You can now ask your questions in the chat widget.",
+        });
+      } catch (error) {
+        console.error("Error opening chatbase:", error);
+        toast({
+          title: "Error",
+          description: "Failed to open chat widget. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      console.log("Chatbase not loaded yet");
       toast({
-        title: "Chat Widget Opened!",
-        description: "You can now ask your questions in the chat widget.",
+        title: "Loading...",
+        description: "Chat assistant is still loading. Please wait a moment.",
       });
-      
-      // Open the chatbase widget
-      window.chatbase("open");
     }
   };
 
