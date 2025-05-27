@@ -88,7 +88,7 @@ const ComparisonTable = () => {
   }, {
     feature: "Price",
     yourService: {
-      value: "Logbook supervision: $330\nUse of commercial vessel & fuel: $90\nCertificate, support & resources: $79",
+      value: "Logbook supervision: $330\nUse of commercial vessel & fuel: $90\nCertificate, support & resources: $79\nTotal: $499",
       isPositive: true
     },
     standardCourse: {
@@ -116,7 +116,9 @@ const ComparisonTable = () => {
         {isPriceBreakdown ? (
           <div className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
             {data.value.split('\n').map((line, index) => (
-              <div key={index}>{line}</div>
+              <div key={index} className={line.startsWith('Total:') ? 'font-bold border-t pt-1 mt-1' : ''}>
+                {line}
+              </div>
             ))}
           </div>
         ) : (
