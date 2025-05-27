@@ -1,5 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
+import TrustBadges from "@/components/ui/TrustBadges";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,6 +64,13 @@ const Services = () => {
         subtitle="Professional boating supervision and sign-off services tailored to your needs in the ACT"
         backgroundImage="https://images.unsplash.com/photo-1518877593221-1f28583780b4?auto=format&fit=crop&w=1920&q=80"
       />
+
+      {/* Trust Badges Section */}
+      <section className="py-8 bg-white border-b border-gray-100">
+        <div className="container-custom">
+          <TrustBadges />
+        </div>
+      </section>
 
       {/* Main Services */}
       <section className="section-padding bg-white">

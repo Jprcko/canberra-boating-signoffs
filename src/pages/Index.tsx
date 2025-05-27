@@ -4,6 +4,7 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
 import { Testimonials } from "@/components/sections/Testimonials";
 import Hero from "@/components/ui/Hero";
+import TrustBadges from "@/components/ui/TrustBadges";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,13 @@ const Index = () => {
               Book Your Spot Now
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* Trust Badges Section */}
+      <section className="py-8 bg-white border-b border-gray-100">
+        <div className="container-custom">
+          <TrustBadges />
         </div>
       </section>
       
