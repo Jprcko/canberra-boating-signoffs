@@ -44,6 +44,26 @@ const ComparisonTable = () => {
       isPositive: false
     }
   }, {
+    feature: "Real-World Boating Practice",
+    yourService: {
+      value: "On-water skills you actually use",
+      isPositive: true
+    },
+    standardCourse: {
+      value: "Limited practical experience",
+      isPositive: false
+    }
+  }, {
+    feature: "Instructor Attention",
+    yourService: {
+      value: "Small group coaching (12 people max)",
+      isPositive: true
+    },
+    standardCourse: {
+      value: "Group sessions 20+, less individual time",
+      isPositive: false
+    }
+  }, {
     feature: "Includes licence knowledge test",
     yourService: {
       value: "No (book separately)",
