@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
@@ -7,11 +8,29 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Book, TestTube, Users } from "lucide-react";
 import { CheckCircle } from "lucide-react";
+
 const Index = () => {
   return <Layout>
       <Hero title="Get Your Boat Licence with Confidence" subtitle="Professional logbook supervision and boat licence training in the ACT" backgroundImage="https://images.unsplash.com/photo-1540946485063-a40da27545f8?auto=format&fit=crop&w=1920&q=80">
         {/* Button removed */}
       </Hero>
+
+      {/* New compelling message section */}
+      <section className="section-padding bg-slate-light">
+        <div className="container-custom text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-navy mb-6">
+            Logbook signed off in one day. No classrooms. No stress. Just real boating.
+          </h2>
+          <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-4xl mx-auto">
+            Spend a full day on the water and walk away ready to book your NSW boat licence test.
+          </p>
+          <Link to="/booking">
+            <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
+              Book Now
+            </Button>
+          </Link>
+        </div>
+      </section>
       
       <HowItWorks />
 
@@ -164,4 +183,5 @@ const Index = () => {
       </section>
     </Layout>;
 };
+
 export default Index;
