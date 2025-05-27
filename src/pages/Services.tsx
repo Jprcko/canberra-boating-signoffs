@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
 import TrustBadges from "@/components/ui/TrustBadges";
@@ -15,6 +16,11 @@ const Services = () => {
       title: "Full Logbook Package",
       description: "Complete your logbook requirements in one day",
       price: "$499",
+      priceBreakdown: [
+        { item: "Logbook supervision", price: "$330" },
+        { item: "Use of commercial vessel & fuel", price: "$90" },
+        { item: "Certificate, support & resources", price: "$79" }
+      ],
       features: [
         "Full day on the water (9am to 4pm)",
         "Professional instructor/supervisor",
@@ -94,7 +100,26 @@ const Services = () => {
                     {service.icon && <service.icon className="h-5 w-5 text-water-blue" />}
                     <CardTitle>{service.title}</CardTitle>
                   </div>
-                  <p className="text-2xl font-bold text-water-blue">{service.price}</p>
+                  
+                  {service.priceBreakdown ? (
+                    <div className="space-y-2 mb-4">
+                      {service.priceBreakdown.map((breakdown, idx) => (
+                        <div key={idx} className="flex justify-between text-sm">
+                          <span>{breakdown.item}:</span>
+                          <span className="font-semibold">{breakdown.price}</span>
+                        </div>
+                      ))}
+                      <div className="border-t pt-2">
+                        <div className="flex justify-between">
+                          <span className="font-bold">Total:</span>
+                          <span className="text-2xl font-bold text-water-blue">{service.price} flat</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-2xl font-bold text-water-blue">{service.price}</p>
+                  )}
+                  
                   <p className="text-gray-700">{service.description}</p>
                 </CardHeader>
                 <CardContent>

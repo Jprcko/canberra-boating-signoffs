@@ -8,6 +8,7 @@ interface ServiceCardProps {
   id: string;
   name: string;
   price: string;
+  priceBreakdown?: Array<{ item: string; price: string }>;
   description: string;
   features: string[];
   icon: LucideIcon;
@@ -19,6 +20,7 @@ const ServiceCard = ({
   id,
   name,
   price,
+  priceBreakdown,
   description,
   features,
   icon: Icon,
@@ -40,7 +42,26 @@ const ServiceCard = ({
           <Icon className="h-5 w-5 text-water-blue" />
           <span className="font-semibold text-lg">{name}</span>
         </div>
-        <span className="text-water-blue font-bold text-xl mb-2">{price}</span>
+        
+        {priceBreakdown ? (
+          <div className="space-y-2 mb-4">
+            {priceBreakdown.map((breakdown, idx) => (
+              <div key={idx} className="flex justify-between text-sm">
+                <span>{breakdown.item}:</span>
+                <span className="font-semibold">{breakdown.price}</span>
+              </div>
+            ))}
+            <div className="border-t pt-2">
+              <div className="flex justify-between">
+                <span className="font-bold text-sm">Total:</span>
+                <span className="text-lg font-bold text-water-blue">{price} flat</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <span className="text-water-blue font-bold text-xl mb-2">{price}</span>
+        )}
+        
         <p className="text-sm text-gray-500 mb-4">{description}</p>
         <ul className="space-y-2 text-sm">
           {features.map((feature, idx) => (

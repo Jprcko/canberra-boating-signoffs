@@ -8,6 +8,7 @@ export interface Service {
   id: string;
   name: string;
   price: string;
+  priceBreakdown?: Array<{ item: string; price: string }>;
   description: string;
   features: string[];
   icon: any;
@@ -25,6 +26,11 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
       id: "full",
       name: "Full Logbook Package",
       price: "$499",
+      priceBreakdown: [
+        { item: "Logbook supervision", price: "$330" },
+        { item: "Use of commercial vessel & fuel", price: "$90" },
+        { item: "Certificate, support & resources", price: "$79" }
+      ],
       description: "Complete your logbook requirements in one day",
       features: [
         "Full day on the water (9am to 4pm)",
