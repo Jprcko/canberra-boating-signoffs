@@ -23,8 +23,7 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
       setTimeout(() => {
         try {
           // Look for the chatbase input field in the widget
-          const chatInput = document.querySelector('iframe[src*="chatbase.co"] + * input, iframe[src*="chatbase.co"] + * textarea') || 
-                           document.querySelector('[placeholder*="Message"], [placeholder*="message"], textarea') as HTMLInputElement | HTMLTextAreaElement;
+          const chatInput = document.querySelector('iframe[src*="chatbase.co"] + * input, iframe[src*="chatbase.co"] + * textarea, [placeholder*="Message"], [placeholder*="message"], textarea') as HTMLInputElement | HTMLTextAreaElement;
           
           if (chatInput) {
             console.log("Found chat input, setting value");
