@@ -1,9 +1,6 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 const Benefits = () => {
-  return (
-    <section className="section-padding bg-slate-light">
+  return <section className="section-padding bg-slate-light">
       <div className="container-custom max-w-4xl">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">Why Book With Us</h2>
@@ -30,10 +27,7 @@ const Benefits = () => {
               <CardTitle>Flexible Scheduling</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">
-                We offer weekday and weekend sessions to accommodate your schedule, 
-                with early morning and afternoon options available.
-              </p>
+              <p className="text-gray-700">We run weekend sessions from 9am to 4pm — a full day on the water designed to complete your entire logbook in one go.</p>
             </CardContent>
           </Card>
 
@@ -42,10 +36,7 @@ const Benefits = () => {
               <CardTitle>All Equipment Provided</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">
-                We provide the boat and all necessary safety equipment for your session.
-                Just bring your logbook and appropriate clothing.
-              </p>
+              <p className="text-gray-700">We provide the boat and all necessary safety equipment for your session. Just bring appropriate clothing.</p>
             </CardContent>
           </Card>
 
@@ -62,8 +53,6 @@ const Benefits = () => {
           </Card>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Benefits;
