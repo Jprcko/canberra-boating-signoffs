@@ -12,7 +12,7 @@ const About = () => {
       <section className="section-padding bg-white">
         <div className="container-custom max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-6">Why I Started This Service</h2>
+            <h2 className="text-3xl font-bold mb-6">Why We Started This Service</h2>
             <div className="bg-slate-light rounded-lg p-8">
               <p className="text-lg text-gray-700 leading-relaxed italic">&quot;We created Canberra Boating Sign-Offs to give people a simple, hands-on way to complete their boat licence logbook without the classroom overload. After years of boating and mentoring new skippers, we knew there had to be a better way — and now, there is.&quot;</p>
             </div>
