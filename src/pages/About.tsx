@@ -31,11 +31,7 @@ const About = () => {
                 practical, and enjoyable. We're here to eliminate the stress and confusion from the logbook 
                 process by providing professional, one-on-one supervision that gets you water-ready fast.
               </p>
-              <p className="text-gray-700 mb-6">
-                Our approach is simple: spend a day on the water, learn real boating skills, and walk away 
-                with a completed logbook. No lengthy classroom sessions, no unnecessary complications — just 
-                quality instruction that prepares you for safe, confident boating.
-              </p>
+              <p className="text-gray-700 mb-6">Our approach is simple: spend a full day on the water, gain real-world boating skills, and leave with your logbook fully signed off. No long classroom sessions. No unnecessary complications. Just hands-on, practical instruction that prepares you for safe, confident boating.</p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="text-xl font-semibold mb-4">What Sets Us Apart</h3>
