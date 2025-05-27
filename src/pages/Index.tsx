@@ -4,6 +4,7 @@ import { FAQ } from "@/components/sections/FAQ";
 import { Testimonials } from "@/components/sections/Testimonials";
 import Hero from "@/components/ui/Hero";
 import TrustBadges from "@/components/ui/TrustBadges";
+import ComparisonTable from "@/components/ui/ComparisonTable";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -154,6 +155,13 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Comparison Table Section */}
+      <section className="section-padding bg-slate-light">
+        <div className="container-custom">
+          <ComparisonTable />
         </div>
       </section>
 
