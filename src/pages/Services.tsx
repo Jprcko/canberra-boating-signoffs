@@ -2,6 +2,7 @@
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
 import TrustBadges from "@/components/ui/TrustBadges";
+import ComparisonTable from "@/components/ui/ComparisonTable";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -75,6 +76,13 @@ const Services = () => {
       <section className="py-8 bg-white border-b border-gray-100">
         <div className="container-custom">
           <TrustBadges />
+        </div>
+      </section>
+
+      {/* Comparison Table Section */}
+      <section className="section-padding bg-slate-light">
+        <div className="container-custom">
+          <ComparisonTable />
         </div>
       </section>
 
