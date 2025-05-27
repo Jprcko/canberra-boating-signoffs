@@ -5,6 +5,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import Hero from "@/components/ui/Hero";
 import TrustBadges from "@/components/ui/TrustBadges";
 import ComparisonTable from "@/components/ui/ComparisonTable";
+import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -168,6 +169,9 @@ const Index = () => {
       <Testimonials />
 
       <FAQ />
+
+      {/* Chatbase Ask Section */}
+      <ChatbaseAsk />
 
       {/* Urgent Weekend Availability Section */}
       <section className="py-12 bg-gradient-to-r from-water-blue to-deep-blue text-white">

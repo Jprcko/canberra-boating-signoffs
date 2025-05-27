@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
@@ -9,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { FAQ } from "@/components/sections/FAQ";
+import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -160,6 +162,9 @@ const Contact = () => {
       <div className="bg-slate-light">
         <FAQ />
       </div>
+
+      {/* Chatbase Ask Section */}
+      <ChatbaseAsk />
 
       {/* Call to Action */}
       <section className="py-16 bg-water-blue text-white">
