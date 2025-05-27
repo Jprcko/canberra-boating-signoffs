@@ -1,4 +1,3 @@
-
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
@@ -62,7 +61,26 @@ const Index = () => {
                 <CardDescription>Complete your logbook requirements in one day</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-water-blue">$499</p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span>Logbook supervision:</span>
+                    <span className="font-semibold">$330</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Use of commercial vessel & fuel:</span>
+                    <span className="font-semibold">$90</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Certificate, support & resources:</span>
+                    <span className="font-semibold">$79</span>
+                  </div>
+                  <div className="border-t pt-2">
+                    <div className="flex justify-between">
+                      <span className="font-bold">Total:</span>
+                      <span className="text-2xl font-bold text-water-blue">$499 flat</span>
+                    </div>
+                  </div>
+                </div>
                 <h4 className="font-semibold my-3">What's included:</h4>
                 <ul className="space-y-2">
                   {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Free lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => <li key={idx} className="flex items-start gap-2">
@@ -139,10 +157,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
       <Testimonials />
 
-      {/* FAQ Section */}
       <FAQ />
 
       {/* Urgent Weekend Availability Section */}
