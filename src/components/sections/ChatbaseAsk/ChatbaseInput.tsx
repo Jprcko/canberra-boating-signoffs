@@ -19,30 +19,23 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
       // Open the chatbase widget
       window.chatbase("open");
       
-      // Wait for the widget to open, then try to populate the input
-      setTimeout(() => {
-        try {
-          // Look for the chatbase input field in the widget
-          const chatInput = document.querySelector('iframe[src*="chatbase.co"] + * input, iframe[src*="chatbase.co"] + * textarea, [placeholder*="Message"], [placeholder*="message"], textarea') as HTMLInputElement | HTMLTextAreaElement;
-          
-          if (chatInput) {
-            console.log("Found chat input, setting value");
-            chatInput.value = question;
-            chatInput.focus();
-            
-            // Trigger events to ensure the widget recognizes the input
-            const inputEvent = new Event('input', { bubbles: true });
-            const changeEvent = new Event('change', { bubbles: true });
-            chatInput.dispatchEvent(inputEvent);
-            chatInput.dispatchEvent(changeEvent);
-          } else {
-            console.log("Could not find chat input field");
-            // If we can't find the input, at least the widget is open for the user
-          }
-        } catch (error) {
-          console.log("Error setting chat input:", error);
+      // Since we can't programmatically send the message due to iframe restrictions,
+      // we'll copy the question to clipboard and show a helpful message
+      navigator.clipboard.writeText(question).then(() => {
+        console.log("Question copied to clipboard for pasting into chat");
+        
+        // Show a brief visual feedback that the question was copied
+        const button = document.querySelector('[data-ask-button]') as HTMLButtonElement;
+        if (button) {
+          const originalText = button.textContent;
+          button.textContent = "Copied!";
+          setTimeout(() => {
+            button.textContent = originalText;
+          }, 1500);
         }
-      }, 1500);
+      }).catch(() => {
+        console.log("Could not copy to clipboard, user will need to manually type the question");
+      });
       
       // Clear our input
       setQuestion("");
@@ -74,6 +67,7 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
             onClick={handleAsk}
             disabled={!question.trim() || !isLoaded}
             className="h-12 px-6 bg-water-blue hover:bg-deep-blue"
+            data-ask-button
           >
             Ask
           </Button>
@@ -84,6 +78,10 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
             Loading chat assistant...
           </p>
         )}
+        
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Click "Ask" to open the chat widget with your question copied to clipboard
+        </p>
       </CardContent>
     </Card>
   );
