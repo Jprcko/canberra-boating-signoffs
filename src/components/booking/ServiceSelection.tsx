@@ -36,7 +36,7 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
         "Full day on the water (9am to 4pm)",
         "Professional instructor/supervisor",
         "Complete logbook sign-offs",
-        "Free lunch + drink at the Light House Pub",
+        "Complimentary lunch + drink at the Light House Pub",
         "Exam preparation guidance"
       ],
       icon: Book,
@@ -52,7 +52,7 @@ const ServiceSelection = ({ selectedServices, onServiceSelection }: ServiceSelec
         "Shared full-day supervised session",
         "Per person discount",
         "Individual logbook sign-offs",
-        "Free lunch + drink at the Light House Pub",
+        "Complimentary lunch + drink at the Light House Pub",
         "Fun, social learning environment",
         "Group booking convenience"
       ],
