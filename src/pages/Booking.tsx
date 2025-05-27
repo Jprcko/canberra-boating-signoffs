@@ -21,7 +21,7 @@ const Booking = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <ServiceSelection 
               selectedServices={selectedServices}
-              setSelectedServices={setSelectedServices}
+              onServiceSelection={setSelectedServices}
             />
             
             {selectedServices.length > 0 && (
