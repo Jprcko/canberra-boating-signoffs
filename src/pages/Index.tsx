@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FAQ } from "@/components/sections/FAQ";
@@ -23,19 +24,7 @@ const Index = () => {
           </h2>
           <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-4xl mx-auto">Spend a full day on the water and walk away ready to book your boat licence test.</p>
           <Link to="/booking">
-            
-          </Link>
-        </div>
-      </section>
-
-      {/* Urgent Weekend Availability Section */}
-      <section className="py-12 bg-gradient-to-r from-water-blue to-deep-blue text-white">
-        <div className="container-custom text-center">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Want to complete your logbook this weekend? Spots are limited.
-          </h3>
-          <Link to="/booking">
-            <Button className="bg-white text-water-blue hover:bg-sky-light font-bold px-10 py-4 text-xl shadow-lg transform hover:scale-105 transition-all duration-200">
+            <Button className="bg-water-blue hover:bg-deep-blue text-white px-8 py-6 text-lg">
               Book Your Spot Now
             </Button>
           </Link>
@@ -147,6 +136,20 @@ const Index = () => {
 
       {/* FAQ Section */}
       <FAQ />
+
+      {/* Urgent Weekend Availability Section */}
+      <section className="py-12 bg-gradient-to-r from-water-blue to-deep-blue text-white">
+        <div className="container-custom text-center">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4">
+            Want to complete your logbook this weekend? Spots are limited.
+          </h3>
+          <Link to="/booking">
+            <Button className="bg-white text-water-blue hover:bg-sky-light font-bold px-10 py-4 text-xl shadow-lg transform hover:scale-105 transition-all duration-200">
+              Book Your Spot Now
+            </Button>
+          </Link>
+        </div>
+      </section>
 
       {/* Why Choose Us Section */}
       <section className="section-padding bg-white">
