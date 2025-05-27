@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { format, addMonths, startOfMonth, endOfMonth } from "date-fns";
+import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,22 +8,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getAvailability, getBookingCapacity, updateAvailability, Availability, BookingCapacity } from "@/services/availabilityService";
 
 const AvailabilityManager = () => {
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [bookingCapacity, setBookingCapacity] = useState<BookingCapacity[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const currentMonth = new Date();
   const startDate = startOfMonth(currentMonth);
   const endDate = endOfMonth(addMonths(currentMonth, 3));
 
   useEffect(() => {
     loadAvailabilityData();
-  }, []);
+  }, [currentMonth]);
 
   const loadAvailabilityData = async () => {
     try {
@@ -79,6 +79,14 @@ const AvailabilityManager = () => {
   const selectedAvailability = selectedDate ? getAvailabilityForDate(selectedDate) : null;
   const selectedBookingCount = selectedDate ? getBookingCountForDate(selectedDate) : 0;
 
+  const handlePreviousMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1));
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -102,12 +110,41 @@ const AvailabilityManager = () => {
             <CardHeader>
               <CardTitle>Select Date</CardTitle>
               <CardDescription>Click on a date to view and edit availability</CardDescription>
+              
+              {/* Month Navigation */}
+              <div className="flex items-center justify-between pt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePreviousMonth}
+                  className="flex items-center gap-1"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                
+                <h3 className="text-lg font-semibold">
+                  {format(currentMonth, 'MMMM yyyy')}
+                </h3>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleNextMonth}
+                  className="flex items-center gap-1"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
+                month={currentMonth}
+                onMonthChange={setCurrentMonth}
                 disabled={(date) => date < new Date()}
                 className="rounded-md border"
                 modifiers={{
