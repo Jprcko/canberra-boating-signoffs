@@ -1,5 +1,5 @@
 
-import { supabase } from "@/integrations/supabase/custom-client";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Availability {
   id: string;

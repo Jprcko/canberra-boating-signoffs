@@ -1,5 +1,4 @@
-
-import { supabase } from "@/integrations/supabase/custom-client";
+import { supabase } from "@/integrations/supabase/client";
 import { ParticipantInfo } from "@/types/booking";
 
 export interface BookingData {

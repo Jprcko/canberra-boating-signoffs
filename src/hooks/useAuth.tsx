@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/custom-client";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
