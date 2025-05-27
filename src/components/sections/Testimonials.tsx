@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Star } from "lucide-react";
@@ -24,6 +23,20 @@ const Testimonials = () => {
       name: "Emma Wilson",
       location: "Queanbeyan",
       text: "Highly recommend! The instructor was patient and knowledgeable. Made the whole process stress-free.",
+      rating: 5
+    },
+    {
+      id: 4,
+      name: "David Thompson",
+      location: "Belconnen",
+      text: "Fantastic experience! The on-water training was comprehensive and I felt completely prepared for my test.",
+      rating: 5
+    },
+    {
+      id: 5,
+      name: "Lisa Martinez",
+      location: "Tuggeranong",
+      text: "Best decision I made! The instructor was excellent and the lunch at the pub was a nice touch. Passed my test first try!",
       rating: 5
     }
   ];
