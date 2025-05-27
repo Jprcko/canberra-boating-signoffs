@@ -66,7 +66,7 @@ const ComparisonTable = () => {
   }, {
     feature: "Includes licence knowledge test",
     yourService: {
-      value: "No (book separately)",
+      value: "No (undertake at Service NSW Queanbeyan, licence printed same day)",
       isPositive: false
     },
     standardCourse: {
