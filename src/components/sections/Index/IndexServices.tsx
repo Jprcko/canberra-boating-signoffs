@@ -48,7 +48,7 @@ const IndexServices = () => {
               </div>
               <h4 className="font-semibold my-3">What's included:</h4>
               <ul className="space-y-2">
-                {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Free lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => (
+                {["Full day on the water (9am to 4pm)", "Professional instructor/supervisor", "Complete logbook sign-offs", "Complimentary lunch + drink at the Light House Pub", "Exam preparation guidance"].map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                     <span>{feature}</span>
@@ -75,7 +75,7 @@ const IndexServices = () => {
               <p className="text-2xl font-bold text-water-blue">Calculated by group size</p>
               <h4 className="font-semibold my-3">What's included:</h4>
               <ul className="space-y-2">
-                {["Full day on the water (9am to 4pm)", "Shared full-day supervised session", "Per person discount", "Individual logbook sign-offs", "Free lunch + drink at the Light House Pub", "Fun, social learning environment", "Group booking convenience"].map((feature, idx) => (
+                {["Full day on the water (9am to 4pm)", "Shared full-day supervised session", "Per person discount", "Individual logbook sign-offs", "Complimentary lunch + drink at the Light House Pub", "Fun, social learning environment", "Group booking convenience"].map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
                     <span>{feature}</span>
