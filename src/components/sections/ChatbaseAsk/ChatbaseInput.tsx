@@ -14,35 +14,38 @@ const ChatbaseInput = ({ isLoaded }: ChatbaseInputProps) => {
 
   const handleAsk = () => {
     if (question.trim() && isLoaded && window.chatbase) {
-      // First open the chatbase widget
+      console.log("Opening Chatbase with question:", question);
+      
+      // Open the chatbase widget
       window.chatbase("open");
       
-      // Wait a bit longer for the widget to fully load, then send the message
+      // Wait for the widget to open, then try to populate the input
       setTimeout(() => {
-        if (window.chatbase) {
-          // Try multiple methods to ensure the message gets sent
-          try {
-            window.chatbase("sendMessage", question);
-          } catch (error) {
-            console.log("First method failed, trying alternative:", error);
-            // Alternative method - try to set the input value directly
-            try {
-              const chatInput = document.querySelector('[data-chatbase-input], input[placeholder*="Message"], textarea[placeholder*="Message"]') as HTMLInputElement | HTMLTextAreaElement;
-              if (chatInput) {
-                chatInput.value = question;
-                chatInput.focus();
-                // Trigger input event to notify the widget
-                const event = new Event('input', { bubbles: true });
-                chatInput.dispatchEvent(event);
-              }
-            } catch (fallbackError) {
-              console.log("Fallback method also failed:", fallbackError);
-            }
+        try {
+          // Look for the chatbase input field in the widget
+          const chatInput = document.querySelector('iframe[src*="chatbase.co"] + * input, iframe[src*="chatbase.co"] + * textarea') || 
+                           document.querySelector('[placeholder*="Message"], [placeholder*="message"], textarea') as HTMLInputElement | HTMLTextAreaElement;
+          
+          if (chatInput) {
+            console.log("Found chat input, setting value");
+            chatInput.value = question;
+            chatInput.focus();
+            
+            // Trigger events to ensure the widget recognizes the input
+            const inputEvent = new Event('input', { bubbles: true });
+            const changeEvent = new Event('change', { bubbles: true });
+            chatInput.dispatchEvent(inputEvent);
+            chatInput.dispatchEvent(changeEvent);
+          } else {
+            console.log("Could not find chat input field");
+            // If we can't find the input, at least the widget is open for the user
           }
+        } catch (error) {
+          console.log("Error setting chat input:", error);
         }
-      }, 1000);
+      }, 1500);
       
-      // Clear the input after sending
+      // Clear our input
       setQuestion("");
     }
   };
