@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      availability: {
+        Row: {
+          capacity: number
+          created_at: string
+          date: string
+          end_time: string
+          id: string
+          is_available: boolean
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          date: string
+          end_time?: string
+          id?: string
+          is_available?: boolean
+          start_time?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          date?: string
+          end_time?: string
+          id?: string
+          is_available?: boolean
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       booking_participants: {
         Row: {
           booking_id: string
@@ -111,7 +144,13 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      booking_capacity_view: {
+        Row: {
+          booking_date: string | null
+          total_participants: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

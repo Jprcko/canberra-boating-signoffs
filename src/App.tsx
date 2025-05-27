@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import ClientPortal from "./pages/ClientPortal";
 import { useAuth } from "./hooks/useAuth";
+import AvailabilityManager from "./pages/AvailabilityManager";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -46,6 +46,14 @@ const App = () => {
             <Route path="/booking" element={<Booking />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
+            <Route 
+              path="/availability" 
+              element={
+                <ProtectedRoute>
+                  <AvailabilityManager />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/client-portal" 
               element={

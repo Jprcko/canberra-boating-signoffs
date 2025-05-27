@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -164,6 +163,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
               onDateChange={handleDateChange}
               preferredTime={preferredTime}
               onPreferredTimeChange={handlePreferredTimeChange}
+              participants={participants}
             />
             
             <AdditionalInfoSection />
