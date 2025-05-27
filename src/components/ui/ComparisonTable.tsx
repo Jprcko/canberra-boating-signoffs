@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,11 +88,11 @@ const ComparisonTable = () => {
   }, {
     feature: "Price",
     yourService: {
-      value: "$499",
+      value: "Logbook supervision: $330\nUse of commercial vessel & fuel: $90\nCertificate, support & resources: $79",
       isPositive: true
     },
     standardCourse: {
-      value: "$390–$470",
+      value: "$390–$470 (theory only)",
       isPositive: false
     }
   }];
@@ -109,11 +108,22 @@ const ComparisonTable = () => {
     // Check if this is the Service NSW text
     const isServiceNSWText = data.value.includes("Service NSW Queanbeyan");
     
+    // Check if this is the price breakdown text
+    const isPriceBreakdown = data.value.includes("Logbook supervision:");
+    
     return <div className="flex items-start gap-2">
         {icon}
-        <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
-          {data.value}
-        </span>
+        {isPriceBreakdown ? (
+          <div className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
+            {data.value.split('\n').map((line, index) => (
+              <div key={index}>{line}</div>
+            ))}
+          </div>
+        ) : (
+          <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
+            {data.value}
+          </span>
+        )}
       </div>;
   };
 
