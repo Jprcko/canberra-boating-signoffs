@@ -1,4 +1,3 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqCategories = [
@@ -113,8 +112,7 @@ const faqCategories = [
       },
       {
         question: "What is your cancellation policy?",
-        answer: `• Full refund available if cancelled 48+ hours before the scheduled session.
-        • No refund if cancelled within 48 hours, but one free reschedule is offered.`
+        answer: `• No refund if cancelled within 48 hours, but one free reschedule is offered.`
       }
     ]
   }
