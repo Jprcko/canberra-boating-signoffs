@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface ComparisonRow {
   feature: string;
   yourService: {
@@ -12,6 +13,7 @@ interface ComparisonRow {
     isPositive: boolean;
   };
 }
+
 const ComparisonTable = () => {
   const comparisonData: ComparisonRow[] = [{
     feature: "Full-day on-water training",
@@ -94,18 +96,26 @@ const ComparisonTable = () => {
       isPositive: false
     }
   }];
+
   const renderCell = (data: {
     value: string;
     isPositive: boolean;
   }, isYourService: boolean) => {
-    const icon = data.isPositive ? <CheckCircle className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4 text-red-500" />;
+    const icon = data.isPositive ? 
+      <CheckCircle className="h-5 w-5 text-green-600 shrink-0" /> : 
+      <X className="h-5 w-5 text-red-500 shrink-0" />;
+    
+    // Check if this is the Service NSW text
+    const isServiceNSWText = data.value.includes("Service NSW Queanbeyan");
+    
     return <div className="flex items-center gap-2">
         {icon}
-        <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
+        <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue' : ''}`}>
           {data.value}
         </span>
       </div>;
   };
+
   return <Card className="w-full">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Why Choose Our Service?</CardTitle>
@@ -137,4 +147,5 @@ const ComparisonTable = () => {
       </CardContent>
     </Card>;
 };
+
 export default ComparisonTable;
