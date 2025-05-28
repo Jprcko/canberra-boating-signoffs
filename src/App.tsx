@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import Auth from "./pages/Auth";
 import ClientPortal from "./pages/ClientPortal";
 import { useAuth } from "./hooks/useAuth";
 import AvailabilityManager from "./pages/AvailabilityManager";
+import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -49,9 +51,9 @@ const App = () => {
             <Route 
               path="/availability" 
               element={
-                <ProtectedRoute>
+                <AdminProtectedRoute>
                   <AvailabilityManager />
-                </ProtectedRoute>
+                </AdminProtectedRoute>
               } 
             />
             <Route 
