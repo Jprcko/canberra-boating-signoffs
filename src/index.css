@@ -51,9 +51,18 @@
     @apply border-border;
   }
 
-  body {
+  html, body {
     @apply bg-slate-light text-foreground;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -64,6 +73,9 @@
 @layer components {
   .container-custom {
     @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   
   .btn-primary {
@@ -99,6 +111,7 @@
   margin-bottom: -7px;
   min-height: 120px;
   max-height: 180px;
+  overflow: hidden;
 }
 
 .waves .parallax > use {
