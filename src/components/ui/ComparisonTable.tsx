@@ -102,8 +102,8 @@ const ComparisonTable = () => {
     isPositive: boolean;
   }, isYourService: boolean) => {
     const icon = data.isPositive ? 
-      <CheckCircle className="h-5 w-5 text-green-600 shrink-0" /> : 
-      <X className="h-5 w-5 text-red-500 shrink-0" />;
+      <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600 shrink-0" /> : 
+      <X className="h-4 w-4 md:h-5 md:w-5 text-red-500 shrink-0" />;
     
     // Check if this is the Service NSW text
     const isServiceNSWText = data.value.includes("Service NSW Queanbeyan");
@@ -114,7 +114,7 @@ const ComparisonTable = () => {
     return <div className="flex items-start gap-2">
         {icon}
         {isPriceBreakdown ? (
-          <div className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
+          <div className={`text-sm md:text-base ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
             {data.value.split('\n').map((line, index) => (
               <div key={index} className={line.startsWith('Total:') ? 'font-bold border-t pt-1 mt-1' : ''}>
                 {line}
@@ -122,7 +122,7 @@ const ComparisonTable = () => {
             ))}
           </div>
         ) : (
-          <span className={`${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
+          <span className={`text-sm md:text-base ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
             {data.value}
           </span>
         )}
@@ -130,32 +130,58 @@ const ComparisonTable = () => {
   };
 
   return <Card className="w-full">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Why Choose Our Service?</CardTitle>
-        <p className="text-gray-600">See how we compare to traditional boat licence courses</p>
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-xl md:text-2xl">Why Choose Our Service?</CardTitle>
+        <p className="text-gray-600 text-sm md:text-base">See how we compare to traditional boat licence courses</p>
       </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-light">
-                <TableHead className="font-bold text-navy text-left">Feature</TableHead>
-                <TableHead className="font-bold text-water-blue text-left">Our Service</TableHead>
-                <TableHead className="font-bold text-gray-600 text-left">Standard Boat Licence Course</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {comparisonData.map((row, index) => <TableRow key={index} className="hover:bg-sky-light/30">
-                  <TableCell className="font-medium text-left">{row.feature}</TableCell>
-                  <TableCell className="text-left">
+      <CardContent className="p-0 md:p-6">
+        {/* Mobile Cards View */}
+        <div className="block md:hidden space-y-4 p-4">
+          {comparisonData.map((row, index) => (
+            <Card key={index} className="border border-gray-200">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-navy mb-3 text-sm">{row.feature}</h3>
+                
+                <div className="space-y-3">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <h4 className="font-medium text-water-blue mb-2 text-xs">Our Service</h4>
                     {renderCell(row.yourService, true)}
-                  </TableCell>
-                  <TableCell className="text-left">
+                  </div>
+                  
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <h4 className="font-medium text-gray-600 mb-2 text-xs">Standard Course</h4>
                     {renderCell(row.standardCourse, false)}
-                  </TableCell>
-                </TableRow>)}
-            </TableBody>
-          </Table>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden md:block">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-light">
+                  <TableHead className="font-bold text-navy text-left min-w-[200px]">Feature</TableHead>
+                  <TableHead className="font-bold text-water-blue text-left min-w-[250px]">Our Service</TableHead>
+                  <TableHead className="font-bold text-gray-600 text-left min-w-[250px]">Standard Boat Licence Course</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {comparisonData.map((row, index) => <TableRow key={index} className="hover:bg-sky-light/30">
+                    <TableCell className="font-medium text-left align-top py-4">{row.feature}</TableCell>
+                    <TableCell className="text-left align-top py-4">
+                      {renderCell(row.yourService, true)}
+                    </TableCell>
+                    <TableCell className="text-left align-top py-4">
+                      {renderCell(row.standardCourse, false)}
+                    </TableCell>
+                  </TableRow>)}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </CardContent>
     </Card>;
