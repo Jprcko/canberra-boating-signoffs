@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -102,8 +103,8 @@ const ComparisonTable = () => {
     isPositive: boolean;
   }, isYourService: boolean) => {
     const icon = data.isPositive ? 
-      <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600 shrink-0" /> : 
-      <X className="h-4 w-4 md:h-5 md:w-5 text-red-500 shrink-0" />;
+      <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600 flex-shrink-0" /> : 
+      <X className="h-4 w-4 md:h-5 md:w-5 text-red-500 flex-shrink-0" />;
     
     // Check if this is the Service NSW text
     const isServiceNSWText = data.value.includes("Service NSW Queanbeyan");
@@ -111,10 +112,11 @@ const ComparisonTable = () => {
     // Check if this is the price breakdown text
     const isPriceBreakdown = data.value.includes("Logbook supervision:");
     
-    return <div className="flex items-start gap-2 w-full">
+    return (
+      <div className="flex items-start gap-2 w-full min-w-0">
         {icon}
         {isPriceBreakdown ? (
-          <div className={`text-sm md:text-base break-words w-full ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
+          <div className={`text-sm md:text-base w-full min-w-0 ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
             {data.value.split('\n').map((line, index) => (
               <div key={index} className={`break-words ${line.startsWith('Total:') ? 'font-bold border-t pt-1 mt-1' : ''}`}>
                 {line}
@@ -122,71 +124,76 @@ const ComparisonTable = () => {
             ))}
           </div>
         ) : (
-          <span className={`text-sm md:text-base break-words w-full ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
+          <span className={`text-sm md:text-base w-full min-w-0 break-words ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''} ${isServiceNSWText ? 'text-water-blue font-bold' : ''}`}>
             {data.value}
           </span>
         )}
-      </div>;
+      </div>
+    );
   };
 
-  return <div className="w-full">
-    <Card className="w-full">
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="text-xl md:text-2xl">Why Choose Our Service?</CardTitle>
-        <p className="text-gray-600 text-sm md:text-base">See how we compare to traditional boat licence courses</p>
-      </CardHeader>
-      <CardContent className="p-0 md:p-6">
-        {/* Mobile Cards View */}
-        <div className="block md:hidden space-y-4 p-4">
-          {comparisonData.map((row, index) => (
-            <Card key={index} className="border border-gray-200 w-full">
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-navy mb-3 text-sm break-words">{row.feature}</h3>
-                
-                <div className="space-y-3">
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <h4 className="font-medium text-water-blue mb-2 text-xs">Our Service</h4>
-                    {renderCell(row.yourService, true)}
-                  </div>
+  return (
+    <div className="w-full max-w-full">
+      <Card className="w-full max-w-full">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-xl md:text-2xl">Why Choose Our Service?</CardTitle>
+          <p className="text-gray-600 text-sm md:text-base">See how we compare to traditional boat licence courses</p>
+        </CardHeader>
+        <CardContent className="p-0 md:p-6 max-w-full">
+          {/* Mobile Cards View */}
+          <div className="block md:hidden space-y-4 p-4 max-w-full">
+            {comparisonData.map((row, index) => (
+              <Card key={index} className="border border-gray-200 w-full max-w-full">
+                <CardContent className="p-4 max-w-full">
+                  <h3 className="font-semibold text-navy mb-3 text-sm break-words">{row.feature}</h3>
                   
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h4 className="font-medium text-gray-600 mb-2 text-xs">Standard Course</h4>
-                    {renderCell(row.standardCourse, false)}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Desktop Table View */}
-        <div className="hidden md:block">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-light">
-                  <TableHead className="font-bold text-navy text-left min-w-[200px]">Feature</TableHead>
-                  <TableHead className="font-bold text-water-blue text-left min-w-[250px]">Our Service</TableHead>
-                  <TableHead className="font-bold text-gray-600 text-left min-w-[250px]">Standard Boat Licence Course</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {comparisonData.map((row, index) => <TableRow key={index} className="hover:bg-sky-light/30">
-                    <TableCell className="font-medium text-left align-top py-4">{row.feature}</TableCell>
-                    <TableCell className="text-left align-top py-4">
+                  <div className="space-y-3 max-w-full">
+                    <div className="bg-blue-50 p-3 rounded-lg max-w-full">
+                      <h4 className="font-medium text-water-blue mb-2 text-xs">Our Service</h4>
                       {renderCell(row.yourService, true)}
-                    </TableCell>
-                    <TableCell className="text-left align-top py-4">
+                    </div>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg max-w-full">
+                      <h4 className="font-medium text-gray-600 mb-2 text-xs">Standard Course</h4>
                       {renderCell(row.standardCourse, false)}
-                    </TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  </div>;
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block max-w-full">
+            <div className="w-full max-w-full">
+              <Table className="table-fixed w-full">
+                <TableHeader>
+                  <TableRow className="bg-slate-light">
+                    <TableHead className="font-bold text-navy text-left w-1/3">Feature</TableHead>
+                    <TableHead className="font-bold text-water-blue text-left w-1/3">Our Service</TableHead>
+                    <TableHead className="font-bold text-gray-600 text-left w-1/3">Standard Boat Licence Course</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {comparisonData.map((row, index) => (
+                    <TableRow key={index} className="hover:bg-sky-light/30">
+                      <TableCell className="font-medium text-left align-top py-4 w-1/3 break-words">{row.feature}</TableCell>
+                      <TableCell className="text-left align-top py-4 w-1/3">
+                        {renderCell(row.yourService, true)}
+                      </TableCell>
+                      <TableCell className="text-left align-top py-4 w-1/3">
+                        {renderCell(row.standardCourse, false)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default ComparisonTable;
