@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -112,7 +111,7 @@ const ComparisonTable = () => {
     // Check if this is the price breakdown text
     const isPriceBreakdown = data.value.includes("Logbook supervision:");
     
-    return <div className="flex items-start gap-2 w-full overflow-hidden">
+    return <div className="flex items-start gap-2 w-full">
         {icon}
         {isPriceBreakdown ? (
           <div className={`text-sm md:text-base break-words w-full ${isYourService && data.isPositive ? 'font-semibold text-water-blue' : ''}`}>
@@ -130,33 +129,29 @@ const ComparisonTable = () => {
       </div>;
   };
 
-  return <div className="w-full overflow-hidden">
+  return <div className="w-full">
     <Card className="w-full">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-xl md:text-2xl">Why Choose Our Service?</CardTitle>
         <p className="text-gray-600 text-sm md:text-base">See how we compare to traditional boat licence courses</p>
       </CardHeader>
-      <CardContent className="p-0 md:p-6 overflow-hidden">
+      <CardContent className="p-0 md:p-6">
         {/* Mobile Cards View */}
-        <div className="block md:hidden space-y-4 p-4 overflow-hidden">
+        <div className="block md:hidden space-y-4 p-4">
           {comparisonData.map((row, index) => (
-            <Card key={index} className="border border-gray-200 w-full overflow-hidden">
-              <CardContent className="p-4 overflow-hidden">
+            <Card key={index} className="border border-gray-200 w-full">
+              <CardContent className="p-4">
                 <h3 className="font-semibold text-navy mb-3 text-sm break-words">{row.feature}</h3>
                 
-                <div className="space-y-3 overflow-hidden">
-                  <div className="bg-blue-50 p-3 rounded-lg overflow-hidden">
+                <div className="space-y-3">
+                  <div className="bg-blue-50 p-3 rounded-lg">
                     <h4 className="font-medium text-water-blue mb-2 text-xs">Our Service</h4>
-                    <div className="overflow-hidden">
-                      {renderCell(row.yourService, true)}
-                    </div>
+                    {renderCell(row.yourService, true)}
                   </div>
                   
-                  <div className="bg-gray-50 p-3 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 p-3 rounded-lg">
                     <h4 className="font-medium text-gray-600 mb-2 text-xs">Standard Course</h4>
-                    <div className="overflow-hidden">
-                      {renderCell(row.standardCourse, false)}
-                    </div>
+                    {renderCell(row.standardCourse, false)}
                   </div>
                 </div>
               </CardContent>
