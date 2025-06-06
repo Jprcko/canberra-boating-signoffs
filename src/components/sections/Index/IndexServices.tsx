@@ -17,7 +17,7 @@ const IndexServices = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="card-hover">
+          <Card className="card-hover flex flex-col h-full">
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Book className="h-5 w-5 text-water-blue" />
@@ -25,7 +25,7 @@ const IndexServices = () => {
               </div>
               <CardDescription>Complete your logbook requirements in one day</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span>Logbook supervision:</span>
@@ -56,14 +56,14 @@ const IndexServices = () => {
                 ))}
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link to="/booking" className="w-full">
                 <Button className="w-full">Book Now</Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card className="card-hover">
+          <Card className="card-hover flex flex-col h-full">
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Users className="h-5 w-5 text-water-blue" />
@@ -71,7 +71,7 @@ const IndexServices = () => {
               </div>
               <CardDescription>Cost-effective option for friends or family members learning together</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <p className="text-2xl font-bold text-water-blue">Calculated by group size</p>
               <h4 className="font-semibold my-3">What's included:</h4>
               <ul className="space-y-2">
@@ -83,14 +83,14 @@ const IndexServices = () => {
                 ))}
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link to="/booking" className="w-full">
                 <Button className="w-full">Book Now</Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card className="card-hover">
+          <Card className="card-hover flex flex-col h-full">
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <TestTube className="h-5 w-5 text-water-blue" />
@@ -98,7 +98,7 @@ const IndexServices = () => {
               </div>
               <CardDescription>Online preparation for your Boat Licence Knowledge Test undertaken at Service NSW</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <p className="text-2xl font-bold text-water-blue">$149 per person</p>
               <h4 className="font-semibold my-3">What's included:</h4>
               <ul className="space-y-2">
@@ -110,7 +110,7 @@ const IndexServices = () => {
                 ))}
               </ul>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Link to="/booking" className="w-full">
                 <Button className="w-full">Book Now</Button>
               </Link>
