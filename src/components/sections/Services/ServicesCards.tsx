@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Book, TestTube, Users } from "lucide-react";
@@ -72,7 +73,7 @@ const ServicesCards = () => {
           {services.map((service) => (
             <Card 
               key={service.id} 
-              className={`${service.highlight ? 'border-water-blue shadow-lg' : ''} card-hover`}
+              className={`${service.highlight ? 'border-water-blue shadow-lg' : ''} card-hover flex flex-col h-full`}
             >
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
@@ -101,7 +102,7 @@ const ServicesCards = () => {
                 
                 <p className="text-gray-700">{service.description}</p>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-grow">
                 <h4 className="font-semibold mb-3">What's included:</h4>
                 <ul className="space-y-2">
                   {service.features.map((feature, idx) => (
@@ -112,7 +113,7 @@ const ServicesCards = () => {
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="mt-auto">
                 <Link to="/booking" className="w-full">
                   <Button className="w-full">Book Now</Button>
                 </Link>
