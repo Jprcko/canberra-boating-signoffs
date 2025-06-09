@@ -14,6 +14,14 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import ClientPortal from "./pages/ClientPortal";
+import Dashboard from "./pages/Dashboard";
+import Study from "./pages/Study";
+import Quizzes from "./pages/Quizzes";
+import MockExam from "./pages/MockExam";
+import Logbook from "./pages/Logbook";
+import BookTest from "./pages/BookTest";
+import Resources from "./pages/Resources";
+import Admin from "./pages/Admin";
 import { useAuth } from "./hooks/useAuth";
 import AvailabilityManager from "./pages/AvailabilityManager";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
@@ -22,7 +30,14 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-2"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
@@ -62,6 +77,70 @@ const App = () => {
                 <ProtectedRoute>
                   <ClientPortal />
                 </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/study" 
+              element={
+                <ProtectedRoute>
+                  <Study />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/quizzes" 
+              element={
+                <ProtectedRoute>
+                  <Quizzes />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/mock-exam" 
+              element={
+                <ProtectedRoute>
+                  <MockExam />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/logbook" 
+              element={
+                <ProtectedRoute>
+                  <Logbook />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/book-test" 
+              element={
+                <ProtectedRoute>
+                  <BookTest />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/resources" 
+              element={
+                <ProtectedRoute>
+                  <Resources />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <AdminProtectedRoute>
+                  <Admin />
+                </AdminProtectedRoute>
               } 
             />
             <Route path="*" element={<NotFound />} />
