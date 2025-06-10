@@ -1,8 +1,42 @@
 
 import { Card } from "@/components/ui/card";
 import { CheckCircle, Circle, BookOpen, Ship, FileText, Calendar, Upload } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 const ProgressRoadmap = () => {
+  const { user } = useAuth();
+
+  // Fetch user's booking data
+  const { data: bookingData } = useQuery({
+    queryKey: ['user-booking', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('booking_date')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching booking:', error);
+        return null;
+      }
+      
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  const bookingDate = bookingData?.booking_date ? new Date(bookingData.booking_date) : null;
+  const currentDate = new Date();
+  const isBookingDatePassed = bookingDate && currentDate > bookingDate;
+
   const steps = [
     {
       id: 1,
@@ -15,8 +49,9 @@ const ProgressRoadmap = () => {
       id: 2,
       title: "Log Trips",
       icon: Ship,
-      completed: false,
-      progress: 60
+      completed: isBookingDatePassed || false,
+      progress: isBookingDatePassed ? 100 : (bookingDate ? 50 : 0),
+      bookingDate: bookingDate
     },
     {
       id: 3,
@@ -75,6 +110,11 @@ const ProgressRoadmap = () => {
             
             <div className="mt-3 text-center">
               <p className="text-sm font-medium text-navy">{step.title}</p>
+              {step.id === 2 && step.bookingDate && (
+                <p className="text-xs text-gray-600 mt-1">
+                  Session: {format(step.bookingDate, 'MMM dd, yyyy')}
+                </p>
+              )}
               <div className="w-16 bg-gray-200 rounded-full h-2 mt-2">
                 <div 
                   className="bg-water-blue h-2 rounded-full transition-all duration-500"
