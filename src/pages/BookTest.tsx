@@ -1,41 +1,38 @@
-
-
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText } from "lucide-react";
-
 const BookTest = () => {
-  const requirements = [
-    { item: "Valid Photo ID", completed: true },
-    { item: "Logbook with 3+ trips", completed: true },
-    { item: "Study materials completed", completed: true },
-    { item: "Mock exam passed", completed: false }
-  ];
-
-  const testOptions = [
-    {
-      id: "boat",
-      name: "Boat Licence Knowledge Test",
-      price: "$42",
-      description: "Standard boat licence test"
-    },
-    {
-      id: "combined",
-      name: "Boat Licence + PWC Knowledge Test",
-      price: "$62",
-      description: "Combined fee for both tests"
-    },
-    {
-      id: "pwc",
-      name: "PWC Knowledge Test Only",
-      price: "$20",
-      description: "When upgrading to PWC licence"
-    }
-  ];
-
-  return (
-    <Layout>
+  const requirements = [{
+    item: "Valid Photo ID",
+    completed: true
+  }, {
+    item: "Logbook with 3+ trips",
+    completed: true
+  }, {
+    item: "Study materials completed",
+    completed: true
+  }, {
+    item: "Mock exam passed",
+    completed: false
+  }];
+  const testOptions = [{
+    id: "boat",
+    name: "Boat Licence Knowledge Test",
+    price: "$42",
+    description: "Standard boat licence test"
+  }, {
+    id: "combined",
+    name: "Boat Licence + PWC Knowledge Test",
+    price: "$62",
+    description: "Combined fee for both tests"
+  }, {
+    id: "pwc",
+    name: "PWC Knowledge Test Only",
+    price: "$20",
+    description: "When upgrading to PWC licence"
+  }];
+  return <Layout>
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="mb-8">
@@ -50,39 +47,17 @@ const BookTest = () => {
             <Card className="p-6 bg-white shadow-lg rounded-xl">
               <h2 className="text-xl font-bold text-navy mb-4">Before You Book</h2>
               <div className="space-y-3">
-                {requirements.map((req, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <CheckCircle className={`w-5 h-5 ${
-                      req.completed ? 'text-green-600' : 'text-gray-300'
-                    }`} />
+                {requirements.map((req, index) => <div key={index} className="flex items-center space-x-3">
+                    <CheckCircle className={`w-5 h-5 ${req.completed ? 'text-green-600' : 'text-gray-300'}`} />
                     <span className={req.completed ? 'text-navy' : 'text-gray-500'}>
                       {req.item}
                     </span>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </Card>
 
             {/* Test Type Information */}
-            <Card className="p-6 bg-white shadow-lg rounded-xl">
-              <h2 className="text-xl font-bold text-navy mb-4">Test Types & Fees</h2>
-              <div className="space-y-3">
-                {testOptions.map((test) => (
-                  <div 
-                    key={test.id}
-                    className="p-4 border border-gray-200 rounded-lg"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold text-navy">{test.name}</h3>
-                        <p className="text-sm text-gray-600">{test.description}</p>
-                      </div>
-                      <div className="text-lg font-bold text-navy">{test.price}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            
 
             {/* Booking Options */}
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
@@ -124,10 +99,7 @@ const BookTest = () => {
                   </div>
                 </div>
 
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full"
-                  onClick={() => window.open('https://www.service.nsw.gov.au/OnlineBookings/ServiceCentre/Select?unitId=21', '_blank')}
-                >
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full" onClick={() => window.open('https://www.service.nsw.gov.au/OnlineBookings/ServiceCentre/Select?unitId=21', '_blank')}>
                   Book at Service NSW
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </Button>
@@ -148,9 +120,6 @@ const BookTest = () => {
           </div>
         </div>
       </div>
-    </Layout>
-  );
+    </Layout>;
 };
-
 export default BookTest;
-
