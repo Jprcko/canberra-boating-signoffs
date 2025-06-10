@@ -96,6 +96,12 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     return Math.max(0, avail.capacity - currentBookings);
   };
 
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      onDateChange(selectedDate);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -114,6 +120,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
         <Popover>
           <PopoverTrigger asChild>
             <Button 
+              type="button"
               variant={"outline"} 
               className={cn(
                 "w-full justify-start text-left font-normal", 
@@ -124,12 +131,23 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               {date ? format(date, "PPP") : <span>Select a date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent 
+            className="w-auto p-0" 
+            align="start" 
+            side="bottom" 
+            sideOffset={5}
+            onClick={e => e.stopPropagation()}
+          >
             <Calendar 
               mode="single" 
               selected={date} 
-              onSelect={onDateChange} 
+              onSelect={handleDateSelect} 
               initialFocus 
+              captionLayout="dropdown-buttons"
+              fromYear={new Date().getFullYear()}
+              toYear={new Date().getFullYear() + 1}
+              defaultMonth={date || new Date()}
+              showOutsideDays={false}
               disabled={(checkDate) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -141,7 +159,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                        checkDate > maxDate || 
                        !isDateAvailable(checkDate);
               }}
-              className="pointer-events-auto"
+              className="rounded-md border shadow-sm p-3 pointer-events-auto"
               modifiers={{
                 available: (checkDate) => isDateAvailable(checkDate),
                 limitedCapacity: (checkDate) => {
