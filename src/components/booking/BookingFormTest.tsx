@@ -20,7 +20,6 @@ import { FormSubmission } from "./form-sections/FormSubmission";
 
 interface BookingFormValues {
   date: Date | undefined;
-  preferredTime: string;
   additionalInfo: string;
   promoCode: string;
   paymentIntentId?: string;
@@ -39,7 +38,6 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
   const methods = useForm<BookingFormValues>({
     defaultValues: {
       date: undefined,
-      preferredTime: "",
       additionalInfo: "",
       promoCode: "",
       paymentIntentId: undefined
@@ -49,7 +47,6 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
 
   const { handleSubmit, watch, setValue, formState } = methods;
   const date = watch("date");
-  const preferredTime = watch("preferredTime");
   const paymentIntentId = watch("paymentIntentId");
   
   useEffect(() => {
@@ -81,10 +78,6 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
     setValue("date", newDate);
   };
 
-  const handlePreferredTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue("preferredTime", e.target.value);
-  };
-
   const onSubmit = async (formData: BookingFormValues) => {
     if (!formData.paymentIntentId) {
       toast({
@@ -114,7 +107,7 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
         totalPrice: price,
         discountAmount: discount,
         userId: user?.id || null,
-        preferredTime: formData.preferredTime,
+        preferredTime: "", // No longer needed, sessions are full day
         selectedServices,
         participants,
         participantsInfo,
@@ -177,8 +170,6 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
             <DateTimeSection 
               date={date} 
               onDateChange={handleDateChange}
-              preferredTime={preferredTime}
-              onPreferredTimeChange={handlePreferredTimeChange}
               participants={participants}
             />
             
