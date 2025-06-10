@@ -1,25 +1,30 @@
 
 import Layout from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
+import ProgressRoadmap from "@/components/dashboard/ProgressRoadmap";
+import QuickStatsRow from "@/components/dashboard/QuickStatsRow";
+import CalloutCards from "@/components/dashboard/CalloutCards";
 
 const ClientPortal = () => {
   const { user } = useAuth();
 
   return (
     <Layout>
-      <div className="container-custom py-12">
-        <h1 className="text-3xl font-bold mb-6">Client Portal</h1>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Welcome, {user?.email}</h2>
-          <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded">
-              <h3 className="font-medium mb-2">Your Bookings</h3>
-              <p className="text-gray-600">View and manage your bookings here.</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded">
-              <h3 className="font-medium mb-2">Profile Settings</h3>
-              <p className="text-gray-600">Update your personal information and preferences.</p>
-            </div>
+      <div className="min-h-screen bg-slate-50">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-navy mb-2">
+              Welcome back, {user?.email?.split('@')[0]}!
+            </h1>
+            <p className="text-gray-600">
+              Continue your journey to getting your boat licence
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            <ProgressRoadmap />
+            <QuickStatsRow />
+            <CalloutCards />
           </div>
         </div>
       </div>
