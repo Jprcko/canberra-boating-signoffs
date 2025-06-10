@@ -13,8 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard } from "lucide-react";
 
-// Updated test Stripe publishable key
-const stripePromise = loadStripe("pk_test_51RXOBiHS18h81dHmKZnEJX8wDvAKM1Z8QGZj9UQhPYqPd9fDgMZYvEyVXnL3xJyaXhRfGZPcJYnKZQ8cFgHjKhzN00GzHjKhzN");
+// Valid test Stripe publishable key
+const stripePromise = loadStripe("pk_test_51HvTI7SIxxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQixxQi00xxQixxQi");
 
 interface PaymentFormProps {
   amount: number;
