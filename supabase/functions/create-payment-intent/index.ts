@@ -1,5 +1,4 @@
 
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -18,7 +17,7 @@ serve(async (req) => {
     const { amount, currency = "aud", metadata = {} } = await req.json();
 
     // Initialize Stripe with secret key - using the correct secret name
-    const stripeSecretKey = Deno.env.get("stipe_key");
+    const stripeSecretKey = Deno.env.get("Stripe_Key");
     if (!stripeSecretKey) {
       console.error("Stripe secret key not found");
       throw new Error("Stripe configuration error");
@@ -63,4 +62,3 @@ serve(async (req) => {
     );
   }
 });
-
