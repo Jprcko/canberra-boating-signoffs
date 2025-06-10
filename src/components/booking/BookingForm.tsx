@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -22,6 +23,7 @@ interface BookingFormValues {
   preferredTime: string;
   additionalInfo: string;
   promoCode: string;
+  paymentIntentId?: string;
 }
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
@@ -39,7 +41,8 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       date: undefined,
       preferredTime: "",
       additionalInfo: "",
-      promoCode: ""
+      promoCode: "",
+      paymentIntentId: undefined
     },
     mode: "onBlur" // Validate fields when they lose focus
   });
@@ -47,6 +50,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const { handleSubmit, watch, setValue, formState } = methods;
   const date = watch("date");
   const preferredTime = watch("preferredTime");
+  const paymentIntentId = watch("paymentIntentId");
   
   // Log form errors when they change
   useEffect(() => {
@@ -83,12 +87,23 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   };
 
   const onSubmit = async (formData: BookingFormValues) => {
+    // Only submit if we have a successful payment
+    if (!formData.paymentIntentId) {
+      toast({
+        title: "Payment Required",
+        description: "Please complete your payment before submitting the booking.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       console.log("Form is being submitted with data:", formData);
       console.log("Selected services:", selectedServices);
       console.log("Participants info:", participantsInfo);
+      console.log("Payment Intent ID:", formData.paymentIntentId);
       
       // Format the date for PostgreSQL
       const formattedDate = formData.date ? formData.date.toISOString() : null;
@@ -114,7 +129,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
 
       toast({
         title: "Booking Submitted Successfully",
-        description: "We've received your booking request.",
+        description: "We've received your booking request and payment.",
       });
 
       // Redirect to a confirmation page or clear the form
@@ -130,6 +145,13 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Set payment intent ID when payment is successful
+  const handlePaymentSuccess = (paymentId: string) => {
+    setValue("paymentIntentId", paymentId);
+    // Automatically submit the form after successful payment
+    handleSubmit(onSubmit)();
   };
 
   useEffect(() => {

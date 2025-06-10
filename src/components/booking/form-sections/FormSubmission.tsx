@@ -1,12 +1,14 @@
-
 import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { useFormContext } from "react-hook-form";
-import { ChevronDown, ChevronUp, CreditCard, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { StripePaymentForm } from "../StripePaymentForm";
+import { useBookingPrice } from "@/hooks/useBookingPrice";
+import { CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface FormSubmissionProps {
@@ -18,16 +20,38 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   selectedServices,
   isSubmitting
 }) => {
-  const { formState } = useFormContext();
+  const { formState, handleSubmit, setValue } = useFormContext();
   const { isValid, errors } = formState;
   const [open, setOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const isMobile = useIsMobile();
+
+  // Get the booking price - you'll need to pass participants count here
+  const { price } = useBookingPrice(selectedServices, "2"); // Default to 2 participants for now
 
   // Log form errors to help with debugging
   if (Object.keys(errors).length > 0) {
     console.log("Form validation errors:", errors);
   }
+
+  const handlePaymentSuccess = (paymentId: string) => {
+    console.log("Payment successful:", paymentId);
+    setPaymentIntentId(paymentId);
+    setValue("paymentIntentId", paymentId);
+    
+    // Now submit the booking form with the payment ID
+    handleSubmit((data) => {
+      console.log("Submitting booking with payment ID:", paymentId);
+      // The parent form will handle the actual booking submission
+      // You can access the payment ID via paymentIntentId state
+    })();
+  };
+
+  const handlePaymentError = (error: string) => {
+    console.error("Payment failed:", error);
+    // Handle payment error
+  };
 
   return (
     <CardFooter className="flex flex-col gap-4">
@@ -64,40 +88,13 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                 </TabsList>
                 
                 <TabsContent value="card" className="space-y-6">
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Card Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border rounded-md"
-                        placeholder="1234 5678 9012 3456"
-                      />
-                    </div>
-                    <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-2 gap-4'}`}>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Expiry Date
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full p-2 border rounded-md"
-                          placeholder="MM/YY"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          CVC
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full p-2 border rounded-md"
-                          placeholder="123"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <StripePaymentForm
+                    amount={price}
+                    onPaymentSuccess={handlePaymentSuccess}
+                    onPaymentError={handlePaymentError}
+                    isSubmitting={isSubmitting}
+                    disabled={selectedServices.length === 0 || Object.keys(errors).length > 0}
+                  />
                 </TabsContent>
                 
                 <TabsContent value="afterpay" className="text-center py-6">
@@ -168,20 +165,6 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
                 </TabsContent>
               </Tabs>
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-green-600 hover:bg-green-700 flex items-center justify-center mt-6" 
-              disabled={selectedServices.length === 0 || isSubmitting || Object.keys(errors).length > 0}
-            >
-              {isSubmitting ? "Processing..." : (
-                <>
-                  <span className="mr-2">Complete Booking & Pay</span>
-                  {paymentMethod === "card" && <CreditCard className="h-4 w-4" />}
-                  {paymentMethod !== "card" && <ArrowRight className="h-4 w-4" />}
-                </>
-              )}
-            </Button>
           </div>
         </CollapsibleContent>
       </Collapsible>
@@ -193,6 +176,11 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
       {/* Show any validation errors if they exist */}
       {Object.keys(errors).length > 0 && (
         <p className="text-sm text-red-500 mt-2">Please fix the form errors before submitting</p>
+      )}
+      
+      {/* Show payment success message */}
+      {paymentIntentId && (
+        <p className="text-sm text-green-600 mt-2">Payment completed successfully! Payment ID: {paymentIntentId}</p>
       )}
     </CardFooter>
   );
