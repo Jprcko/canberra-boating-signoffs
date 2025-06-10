@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -13,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard } from "lucide-react";
 
-// Your actual Stripe publishable key
+// Updated to use the live publishable key that matches your live secret key
 const stripePromise = loadStripe("pk_live_51RXOBiHS18h81dHmswoTnnoqK91yqxR834DBBywrP06yr45qWMQSBrb3JW2LVpK7VrlobG4ao9z6YrIiyZFFFyWR00B9rvJtpB");
 
 interface PaymentFormProps {
