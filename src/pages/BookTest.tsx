@@ -1,4 +1,5 @@
 
+
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -96,9 +97,22 @@ const BookTest = () => {
                 </div>
 
                 <div className="space-y-3 mb-6">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <DollarSign className="w-4 h-4 mr-2" />
-                    Test fees as listed above
+                  <div className="text-sm text-gray-700 space-y-2">
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span>Boat Licence Knowledge Test</span>
+                      <span className="font-semibold">$42</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span>Boat Licence + PWC Knowledge Test</span>
+                      <span className="font-semibold">$62</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span>PWC Knowledge Test Only</span>
+                      <span className="font-semibold">$20</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-3 italic">
+                      All fees are payable to Service NSW at time of booking
+                    </p>
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
@@ -139,3 +153,4 @@ const BookTest = () => {
 };
 
 export default BookTest;
+
