@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,7 +13,6 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import ClientPortal from "./pages/ClientPortal";
-import Dashboard from "./pages/Dashboard";
 import Study from "./pages/Study";
 import Quizzes from "./pages/Quizzes";
 import MockExam from "./pages/MockExam";
@@ -76,14 +74,6 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <ClientPortal />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
                 </ProtectedRoute>
               } 
             />
