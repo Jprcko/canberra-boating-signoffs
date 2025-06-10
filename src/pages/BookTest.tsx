@@ -112,7 +112,7 @@ const BookTest = () => {
               <div className="space-y-2 text-sm text-gray-700">
                 <p>• You must bring valid photo identification (driver's licence or passport)</p>
                 <p>• Your completed logbook with at least 3 verified trips</p>
-                <p>• The test includes both theory and practical components</p>
+                
                 <p>• Results are available immediately upon completion</p>
                 <p>• Your licence will be posted within 10 business days if you pass</p>
               </div>
