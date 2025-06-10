@@ -42,7 +42,7 @@ const BookTest = () => {
             </Card>
 
             {/* Booking Options */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
               {/* Service NSW Option */}
               <Card className="p-6 bg-white shadow-lg rounded-xl">
                 <div className="text-center mb-6">
@@ -75,45 +75,6 @@ const BookTest = () => {
                   Book at Service NSW
                   <ExternalLink className="w-4 h-4 ml-2" />
                 </Button>
-              </Card>
-
-              {/* Private Trainer Option */}
-              <Card className="p-6 bg-white shadow-lg rounded-xl border-2 border-water-blue">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-r from-water-blue to-deep-blue rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-navy mb-2">Our Trainer</h3>
-                  <p className="text-gray-600">Personalised testing with our qualified instructor</p>
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <DollarSign className="w-4 h-4 mr-2" />
-                    All-inclusive: $120
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Flexible scheduling
-                  </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <FileText className="w-4 h-4 mr-2" />
-                    On-water practical included
-                  </div>
-                </div>
-
-                <Button 
-                  className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
-                  onClick={() => {/* Open Setmore modal */}}
-                >
-                  Book with Our Trainer
-                </Button>
-
-                <div className="mt-3 text-center">
-                  <span className="inline-block bg-water-blue/10 text-water-blue text-xs px-2 py-1 rounded-full">
-                    RECOMMENDED
-                  </span>
-                </div>
               </Card>
             </div>
 
