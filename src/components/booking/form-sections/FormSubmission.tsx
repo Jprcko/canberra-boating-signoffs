@@ -7,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { StripePaymentForm } from "../StripePaymentForm";
-import { useBookingPrice } from "@/hooks/useBookingPrice";
+import { useBookingPriceTest } from "@/hooks/useBookingPriceTest";
 import { CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -27,8 +27,8 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
-  // Get the booking price - you'll need to pass participants count here
-  const { price } = useBookingPrice(selectedServices, "2"); // Default to 2 participants for now
+  // Use the test pricing hook for the test booking page
+  const { price } = useBookingPriceTest(selectedServices, "2"); // Default to 2 participants for now
 
   // Log form errors to help with debugging
   if (Object.keys(errors).length > 0) {
