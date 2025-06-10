@@ -5,23 +5,19 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAvailability, getBookingCapacity, Availability, BookingCapacity } from "@/services/availabilityService";
 
 interface DateTimeSectionProps {
   date: Date | undefined;
   onDateChange: (date: Date | undefined) => void;
-  preferredTime: string;
-  onPreferredTimeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   participants?: string;
 }
 
 export const DateTimeSection: FC<DateTimeSectionProps> = ({
   date,
   onDateChange,
-  preferredTime,
-  onPreferredTimeChange,
   participants = "2"
 }) => {
   const [availability, setAvailability] = useState<Availability[]>([]);
@@ -66,23 +62,6 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const requestedParticipants = parseInt(participants);
     
     return (currentBookings + requestedParticipants) <= avail.capacity;
-  };
-
-  const getAvailableTimeSlots = () => {
-    if (!date) return [];
-
-    const dateString = format(date, 'yyyy-MM-dd');
-    const avail = availability.find(a => a.date === dateString);
-    
-    if (!avail) return [];
-
-    // For now, we'll show the full day time range
-    // You can extend this to show specific time slots
-    return [
-      { value: "morning", label: `Morning (${avail.start_time} - 12:00)` },
-      { value: "afternoon", label: `Afternoon (12:00 - ${avail.end_time})` },
-      { value: "full-day", label: `Full Day (${avail.start_time} - ${avail.end_time})` }
-    ];
   };
 
   const getRemainingCapacity = (checkDate: Date) => {
@@ -182,22 +161,14 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
         )}
       </div>
 
-      {date && getAvailableTimeSlots().length > 0 && (
+      {date && (
         <div className="space-y-2">
-          <Label htmlFor="preferredTime">Preferred Time</Label>
-          <select
-            id="preferredTime"
-            value={preferredTime}
-            onChange={onPreferredTimeChange}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select a time slot</option>
-            {getAvailableTimeSlots().map((slot) => (
-              <option key={slot.value} value={slot.value}>
-                {slot.label}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-md border border-blue-200">
+            <Clock className="h-4 w-4 text-blue-600" />
+            <span className="text-sm text-blue-800">
+              Session runs from <strong>9:00 AM to 4:00 PM</strong>
+            </span>
+          </div>
         </div>
       )}
     </div>
