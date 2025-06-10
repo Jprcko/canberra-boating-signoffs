@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { CheckCircle, Circle, BookOpen, Ship, FileText, Calendar, Upload } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -50,7 +49,7 @@ const ProgressRoadmap = () => {
       title: "Log Trips",
       icon: Ship,
       completed: isBookingDatePassed || false,
-      progress: isBookingDatePassed ? 100 : (bookingDate ? 50 : 0),
+      progress: isBookingDatePassed ? 100 : 0,
       bookingDate: bookingDate
     },
     {
