@@ -16,10 +16,18 @@ serve(async (req) => {
   try {
     const { amount, currency = "aud", metadata = {} } = await req.json();
 
-    // Initialize Stripe with secret key
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    // Initialize Stripe with secret key - using the correct secret name
+    const stripeSecretKey = Deno.env.get("Stripe_Key");
+    if (!stripeSecretKey) {
+      console.error("Stripe secret key not found");
+      throw new Error("Stripe configuration error");
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
       apiVersion: "2023-10-16",
     });
+
+    console.log("Creating payment intent for amount:", amount);
 
     // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
