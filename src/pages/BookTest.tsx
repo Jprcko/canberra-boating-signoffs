@@ -1,4 +1,3 @@
-
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,7 +69,7 @@ const BookTest = () => {
 
                 <Button 
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full"
-                  onClick={() => window.open('https://www.service.nsw.gov.au/transaction/book-boat-driving-licence-test', '_blank')}
+                  onClick={() => window.open('https://www.service.nsw.gov.au/OnlineBookings/ServiceCentre/Select?unitId=21', '_blank')}
                 >
                   Book at Service NSW
                   <ExternalLink className="w-4 h-4 ml-2" />
