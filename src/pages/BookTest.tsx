@@ -1,12 +1,10 @@
+
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText } from "lucide-react";
-import { useState } from "react";
 
 const BookTest = () => {
-  const [selectedTest, setSelectedTest] = useState("boat");
-
   const requirements = [
     { item: "Valid Photo ID", completed: true },
     { item: "Logbook with 3+ trips", completed: true },
@@ -34,8 +32,6 @@ const BookTest = () => {
       description: "When upgrading to PWC licence"
     }
   ];
-
-  const selectedTestOption = testOptions.find(test => test.id === selectedTest);
 
   return (
     <Layout>
@@ -66,19 +62,14 @@ const BookTest = () => {
               </div>
             </Card>
 
-            {/* Test Type Selection */}
+            {/* Test Type Information */}
             <Card className="p-6 bg-white shadow-lg rounded-xl">
-              <h2 className="text-xl font-bold text-navy mb-4">Select Test Type</h2>
+              <h2 className="text-xl font-bold text-navy mb-4">Test Types & Fees</h2>
               <div className="space-y-3">
                 {testOptions.map((test) => (
                   <div 
                     key={test.id}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      selectedTest === test.id 
-                        ? 'border-blue-500 bg-blue-50' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => setSelectedTest(test.id)}
+                    className="p-4 border border-gray-200 rounded-lg"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -107,7 +98,7 @@ const BookTest = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center text-sm text-gray-600">
                     <DollarSign className="w-4 h-4 mr-2" />
-                    Test fee: {selectedTestOption?.price}
+                    Test fees as listed above
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
