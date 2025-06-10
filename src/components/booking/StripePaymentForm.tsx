@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CreditCard } from "lucide-react";
 
-// Your test Stripe publishable key
+// Updated test Stripe publishable key
 const stripePromise = loadStripe("pk_test_51RXOBiHS18h81dHmKZnEJX8wDvAKM1Z8QGZj9UQhPYqPd9fDgMZYvEyVXnL3xJyaXhRfGZPcJYnKZQ8cFgHjKhzN00GzHjKhzN");
 
 interface PaymentFormProps {
@@ -39,6 +39,8 @@ const PaymentForm = ({ amount, onPaymentSuccess, onPaymentError, isSubmitting, d
     setProcessing(true);
 
     try {
+      console.log("Starting payment process for amount:", amount);
+
       // Create payment intent on the server
       const { data: paymentData, error: paymentError } = await supabase.functions.invoke(
         'create-payment-intent',
@@ -54,14 +56,19 @@ const PaymentForm = ({ amount, onPaymentSuccess, onPaymentError, isSubmitting, d
       );
 
       if (paymentError) {
+        console.error("Payment intent creation error:", paymentError);
         throw new Error(paymentError.message);
       }
+
+      console.log("Payment intent created successfully:", paymentData);
 
       // Confirm payment with the card element
       const cardElement = elements.getElement(CardNumberElement);
       if (!cardElement) {
         throw new Error("Card element not found");
       }
+
+      console.log("Confirming payment with client secret:", paymentData.client_secret);
 
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
         paymentData.client_secret,
@@ -73,10 +80,12 @@ const PaymentForm = ({ amount, onPaymentSuccess, onPaymentError, isSubmitting, d
       );
 
       if (stripeError) {
+        console.error("Stripe confirmation error:", stripeError);
         throw new Error(stripeError.message);
       }
 
       if (paymentIntent?.status === "succeeded") {
+        console.log("Payment succeeded:", paymentIntent.id);
         onPaymentSuccess(paymentIntent.id);
         toast({
           title: "Payment Successful",
