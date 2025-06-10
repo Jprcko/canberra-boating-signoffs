@@ -1,16 +1,41 @@
-
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText } from "lucide-react";
+import { useState } from "react";
 
 const BookTest = () => {
+  const [selectedTest, setSelectedTest] = useState("boat");
+
   const requirements = [
     { item: "Valid Photo ID", completed: true },
     { item: "Logbook with 3+ trips", completed: true },
     { item: "Study materials completed", completed: true },
     { item: "Mock exam passed", completed: false }
   ];
+
+  const testOptions = [
+    {
+      id: "boat",
+      name: "Boat Licence Knowledge Test",
+      price: "$42",
+      description: "Standard boat licence test"
+    },
+    {
+      id: "combined",
+      name: "Boat Licence + PWC Knowledge Test",
+      price: "$62",
+      description: "Combined fee for both tests"
+    },
+    {
+      id: "pwc",
+      name: "PWC Knowledge Test Only",
+      price: "$20",
+      description: "When upgrading to PWC licence"
+    }
+  ];
+
+  const selectedTestOption = testOptions.find(test => test.id === selectedTest);
 
   return (
     <Layout>
@@ -41,6 +66,32 @@ const BookTest = () => {
               </div>
             </Card>
 
+            {/* Test Type Selection */}
+            <Card className="p-6 bg-white shadow-lg rounded-xl">
+              <h2 className="text-xl font-bold text-navy mb-4">Select Test Type</h2>
+              <div className="space-y-3">
+                {testOptions.map((test) => (
+                  <div 
+                    key={test.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      selectedTest === test.id 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setSelectedTest(test.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-navy">{test.name}</h3>
+                        <p className="text-sm text-gray-600">{test.description}</p>
+                      </div>
+                      <div className="text-lg font-bold text-navy">{test.price}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
             {/* Booking Options */}
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
               {/* Service NSW Option */}
@@ -56,7 +107,7 @@ const BookTest = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center text-sm text-gray-600">
                     <DollarSign className="w-4 h-4 mr-2" />
-                    Test fee: $42
+                    Test fee: {selectedTestOption?.price}
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
