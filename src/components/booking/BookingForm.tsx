@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -9,13 +10,13 @@ import { BookingFormProps } from "@/types/booking";
 import { useBookingPrice } from "@/hooks/useBookingPrice";
 import { submitBooking, BookingData } from "@/services/bookingService";
 import { useForm, FormProvider } from "react-hook-form";
+import StripePayment from "./StripePayment";
 
 // Import refactored sections
 import { DateTimeSection } from "./form-sections/DateTimeSection";
 import { AdditionalInfoSection } from "./form-sections/AdditionalInfoSection";
 import { PricingSection } from "./form-sections/PricingSection";
 import { ParticipantListSection } from "./form-sections/ParticipantListSection";
-import { FormSubmission } from "./form-sections/FormSubmission";
 
 interface BookingFormValues {
   date: Date | undefined;
@@ -26,6 +27,9 @@ interface BookingFormValues {
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [participants, setParticipants] = useState<string>("2");
   const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
@@ -41,14 +45,13 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       additionalInfo: "",
       promoCode: ""
     },
-    mode: "onBlur" // Validate fields when they lose focus
+    mode: "onBlur"
   });
 
   const { handleSubmit, watch, setValue, formState } = methods;
   const date = watch("date");
   const preferredTime = watch("preferredTime");
   
-  // Log form errors when they change
   useEffect(() => {
     if (Object.keys(formState.errors).length > 0) {
       console.log("Current form errors:", formState.errors);
@@ -82,6 +85,8 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     setValue("preferredTime", e.target.value);
   };
 
+  const shouldShowPayment = selectedServices.includes("full");
+
   const onSubmit = async (formData: BookingFormValues) => {
     setIsSubmitting(true);
 
@@ -90,14 +95,13 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       console.log("Selected services:", selectedServices);
       console.log("Participants info:", participantsInfo);
       
-      // Format the date for PostgreSQL
       const formattedDate = formData.date ? formData.date.toISOString() : null;
       
       if (!formattedDate) {
         throw new Error("Please select a valid booking date");
       }
 
-      const bookingData: BookingData = {
+      const newBookingData: BookingData = {
         bookingDate: formattedDate,
         totalPrice: price,
         discountAmount: discount,
@@ -110,15 +114,22 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         promoCode: formData.promoCode
       };
 
-      await submitBooking(bookingData);
+      if (shouldShowPayment) {
+        // Store booking data and show payment form
+        setBookingData(newBookingData);
+        setShowPayment(true);
+        setIsSubmitting(false);
+      } else {
+        // Submit booking directly for non-payment services
+        await submitBooking(newBookingData);
+        
+        toast({
+          title: "Booking Submitted Successfully",
+          description: "We've received your booking request.",
+        });
 
-      toast({
-        title: "Booking Submitted Successfully",
-        description: "We've received your booking request.",
-      });
-
-      // Redirect to a confirmation page or clear the form
-      navigate("/");
+        navigate("/");
+      }
 
     } catch (error: any) {
       console.error('Booking error:', error);
@@ -127,9 +138,38 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
         description: error.message || "There was an error submitting your booking",
         variant: "destructive"
       });
-    } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handlePaymentSuccess = async () => {
+    if (!bookingData) return;
+
+    try {
+      await submitBooking(bookingData);
+      
+      toast({
+        title: "Booking Confirmed & Paid",
+        description: "Your booking has been successfully confirmed and payment processed!",
+      });
+
+      navigate("/");
+    } catch (error: any) {
+      console.error('Final booking submission error:', error);
+      toast({
+        title: "Payment Successful but Booking Error",
+        description: "Your payment was processed but there was an issue with the booking. Please contact support.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handlePaymentError = (error: string) => {
+    toast({
+      title: "Payment Failed",
+      description: error,
+      variant: "destructive"
+    });
   };
 
   useEffect(() => {
@@ -140,6 +180,37 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       );
     setParticipantsInfo(newParticipantsInfo);
   }, [participants]);
+
+  if (showPayment && bookingData) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Complete Your Payment</CardTitle>
+            <CardDescription>Secure payment for your full logbook session</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+              <h3 className="font-semibold text-lg">Booking Summary</h3>
+              <p>Service: Full Logbook Package</p>
+              <p>Participants: {participants}</p>
+              <p>Date: {bookingData.bookingDate ? new Date(bookingData.bookingDate).toLocaleDateString() : 'Not selected'}</p>
+              <p>Time: {bookingData.preferredTime}</p>
+              <p className="font-bold mt-2">Total: ${price}</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <StripePayment
+          amount={price}
+          onPaymentSuccess={handlePaymentSuccess}
+          onPaymentError={handlePaymentError}
+          isProcessing={isProcessingPayment}
+          setIsProcessing={setIsProcessingPayment}
+        />
+      </div>
+    );
+  }
 
   return (
     <Card>
@@ -176,11 +247,25 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
                 discount={discount}
               />
             )}
+
+            <div className="pt-6">
+              <button 
+                type="submit" 
+                className="w-full bg-water-blue hover:bg-deep-blue text-white py-3 px-6 rounded-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={selectedServices.length === 0 || isSubmitting || Object.keys(formState.errors).length > 0}
+              >
+                {isSubmitting ? "Processing..." : shouldShowPayment ? "Continue to Payment" : "Submit Booking"}
+              </button>
+            </div>
+
+            {selectedServices.length === 0 && (
+              <p className="text-sm text-red-500 mt-2">Please select at least one service</p>
+            )}
+            
+            {Object.keys(formState.errors).length > 0 && (
+              <p className="text-sm text-red-500 mt-2">Please fix the form errors before submitting</p>
+            )}
           </CardContent>
-          <FormSubmission 
-            selectedServices={selectedServices}
-            isSubmitting={isSubmitting}
-          />
         </form>
       </FormProvider>
     </Card>
