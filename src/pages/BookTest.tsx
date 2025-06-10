@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ const BookTest = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center text-sm text-gray-600">
                     <DollarSign className="w-4 h-4 mr-2" />
-                    Test fee: $45
+                    Test fee: $42
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
