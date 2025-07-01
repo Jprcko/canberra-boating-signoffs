@@ -1,3 +1,4 @@
+
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -33,42 +34,24 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 3);
 
-      console.log('=== AVAILABILITY DATA LOADING ===');
-      console.log('Loading availability data from:', startDate.toISOString().split('T')[0], 'to:', endDate.toISOString().split('T')[0]);
-
       const [availabilityData, capacityData] = await Promise.all([
         getAvailability(startDate, endDate),
         getBookingCapacity(startDate, endDate)
       ]);
       
-      console.log('=== RAW AVAILABILITY DATA ===');
-      console.log('Raw availability data:', availabilityData);
-      console.log('Number of availability records:', availabilityData.length);
-      
-      console.log('=== DETAILED AVAILABILITY RECORDS ===');
-      availabilityData.forEach((record, index) => {
-        const testDate = new Date(record.date + 'T00:00:00');
-        console.log(`Record ${index + 1}:`, {
-          date: record.date,
-          is_available: record.is_available,
-          capacity: record.capacity,
-          start_time: record.start_time,
-          end_time: record.end_time,
-          dateObject: testDate,
-          dayOfWeek: testDate.getDay(),
-          dayName: testDate.toLocaleDateString('en-AU', { weekday: 'long' }),
-          timezoneOffset: testDate.getTimezoneOffset()
-        });
-      });
-      
-      console.log('=== RAW CAPACITY DATA ===');
-      console.log('Raw capacity data:', capacityData);
-      console.log('Number of capacity records:', capacityData.length);
+      console.log('=== DATE DIAGNOSIS ===');
+      // Test July 5th specifically
+      const july5 = new Date('2025-07-05T00:00:00');
+      const july5String = '2025-07-05';
+      console.log('July 5th 2025 analysis:');
+      console.log('- Date object:', july5);
+      console.log('- getDay():', july5.getDay(), '(0=Sunday, 6=Saturday)');
+      console.log('- Should be Saturday (6)');
+      console.log('- Found in DB:', availabilityData.some(a => a.date === july5String));
       
       setAvailability(availabilityData);
       setBookingCapacity(capacityData);
     } catch (error) {
-      console.error('=== ERROR LOADING AVAILABILITY ===');
       console.error('Error loading availability data:', error);
     } finally {
       setIsLoading(false);
@@ -79,32 +62,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const dateString = format(checkDate, 'yyyy-MM-dd');
     const avail = availability.find(a => a.date === dateString);
     
-    console.log(`=== CHECKING DATE: ${dateString} ===`);
-    console.log('Input checkDate:', checkDate);
-    console.log('Input checkDate getDay():', checkDate.getDay());
-    console.log('Input checkDate day name:', checkDate.toLocaleDateString('en-AU', { weekday: 'long' }));
-    console.log('Input checkDate timezone offset:', checkDate.getTimezoneOffset());
-    console.log('Found availability record:', !!avail);
-    
-    if (avail) {
-      const dbDate = new Date(avail.date + 'T00:00:00');
-      console.log('DB date object:', dbDate);
-      console.log('DB date getDay():', dbDate.getDay());
-      console.log('DB date day name:', dbDate.toLocaleDateString('en-AU', { weekday: 'long' }));
-      console.log('Availability record details:', {
-        date: avail.date,
-        is_available: avail.is_available,
-        capacity: avail.capacity,
-        start_time: avail.start_time,
-        end_time: avail.end_time
-      });
-    } else {
-      console.log('No availability record found for:', dateString);
-      console.log('Available dates in system:', availability.map(a => a.date));
-    }
-    
     if (!avail || !avail.is_available) {
-      console.log(`Date ${dateString} NOT AVAILABLE:`, avail ? 'marked as unavailable' : 'no record found');
       return false;
     }
 
@@ -114,14 +72,6 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const requestedParticipants = parseInt(participants);
     
     const hasCapacity = (currentBookings + requestedParticipants) <= avail.capacity;
-    console.log(`Date ${dateString} capacity check:`, {
-      currentBookings,
-      requestedParticipants,
-      totalCapacity: avail.capacity,
-      hasCapacity
-    });
-    
-    console.log(`=== FINAL RESULT FOR ${dateString}: ${hasCapacity ? 'AVAILABLE' : 'NOT AVAILABLE'} ===`);
     return hasCapacity;
   };
 
@@ -139,10 +89,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       console.log('=== DATE SELECTED ===');
-      console.log('Selected date:', selectedDate);
-      console.log('Selected date getDay():', selectedDate.getDay());
-      console.log('Selected date day name:', selectedDate.toLocaleDateString('en-AU', { weekday: 'long' }));
-      console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
+      console.log('Selected:', selectedDate, 'Day:', selectedDate.getDay());
       onDateChange(selectedDate);
     }
   };
@@ -200,15 +147,9 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 const maxDate = new Date();
                 maxDate.setMonth(maxDate.getMonth() + 3);
                 
-                const isDisabled = checkDate < today || 
+                return checkDate < today || 
                        checkDate > maxDate || 
                        !isDateAvailable(checkDate);
-                
-                if (isDisabled) {
-                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
-                }
-                
-                return isDisabled;
               }}
               className="rounded-md border shadow-sm p-3 pointer-events-auto"
               modifiers={{
