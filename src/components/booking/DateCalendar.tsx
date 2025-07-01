@@ -65,7 +65,6 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           showOutsideDays={false}
           weekStartsOn={1}
           fixedWeeks={true}
-          ISOWeek={true}
           disabled={(checkDate) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -77,7 +76,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
                    checkDate > maxDate || 
                    !isDateAvailable(checkDate, availability, bookingCapacity, participants);
           }}
-          className="rounded-md border shadow-sm p-3 pointer-events-auto"
+          className="rounded-md border shadow-sm"
           modifiers={{
             available: (checkDate) => isDateAvailable(checkDate, availability, bookingCapacity, participants),
             limitedCapacity: (checkDate) => {
