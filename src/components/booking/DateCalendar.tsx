@@ -87,15 +87,6 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             available: { backgroundColor: '#dcfce7' },
             limitedCapacity: { backgroundColor: '#fef3c7' }
           }}
-          locale={{
-            formatLong: {},
-            formatRelative: {},
-            localize: {},
-            match: {},
-            options: {
-              weekStartsOn: 1
-            }
-          }}
         />
       </PopoverContent>
     </Popover>
