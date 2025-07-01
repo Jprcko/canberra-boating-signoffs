@@ -12,6 +12,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -44,6 +45,76 @@ const Auth = () => {
       setLoading(false);
     }
   };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Password reset email sent!",
+        description: "Please check your email for password reset instructions.",
+      });
+      setIsForgotPassword(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isForgotPassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Reset Password</CardTitle>
+            <CardDescription>
+              Enter your email address and we'll send you a link to reset your password.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              <div>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send Reset Email"}
+              </Button>
+              <Button
+                type="button"
+                variant="link"
+                className="w-full"
+                onClick={() => setIsForgotPassword(false)}
+              >
+                Back to Sign In
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -83,6 +154,16 @@ const Auth = () => {
             >
               {loading ? "Processing..." : (isLogin ? "Sign In" : "Sign Up")}
             </Button>
+            {isLogin && (
+              <Button
+                type="button"
+                variant="link"
+                className="w-full text-sm"
+                onClick={() => setIsForgotPassword(true)}
+              >
+                Forgot your password?
+              </Button>
+            )}
             <Button
               type="button"
               variant="link"
