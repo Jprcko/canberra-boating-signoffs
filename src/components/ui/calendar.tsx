@@ -2,7 +2,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
-import { enGB } from "react-day-picker/locale";
+import { enGB } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -18,6 +18,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       locale={enGB}
+      weekStartsOn={1}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
