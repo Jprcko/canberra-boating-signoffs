@@ -12,12 +12,13 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  locale = enGB,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={enGB}
+      locale={locale}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
