@@ -1,23 +1,32 @@
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { enGB } from "date-fns/locale";
+import { enGB as baseEnGB } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
+// Build a locale that starts weeks on Monday
+const customLocale = {
+  ...baseEnGB,
+  options: {
+    ...baseEnGB.options,
+    weekStartsOn: 1,
+  },
+};
+
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-export default function Calendar({
+export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  locale = customLocale,  // default to our Monday-start locale
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={enGB}           // Uses date-fns locale that has weekStartsOn: 1
-      weekStartsOn={1}        // Ensures Monday is first column
+      locale={locale}         // applies weekStartsOn:1
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
@@ -34,7 +43,8 @@ export default function Calendar({
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
-        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] uppercase",
+        head_cell:
+          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] uppercase",
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
@@ -60,4 +70,5 @@ export default function Calendar({
     />
   );
 }
+
 Calendar.displayName = "Calendar";
