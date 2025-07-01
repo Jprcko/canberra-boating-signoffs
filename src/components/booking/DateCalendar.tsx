@@ -109,9 +109,6 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             mode="single"
             selected={date}
             onSelect={handleDateSelect}
-            month={currentMonth}
-            onMonthChange={setCurrentMonth}
-            showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);
