@@ -47,12 +47,17 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       
       console.log('=== DETAILED AVAILABILITY RECORDS ===');
       availabilityData.forEach((record, index) => {
+        const testDate = new Date(record.date + 'T00:00:00');
         console.log(`Record ${index + 1}:`, {
           date: record.date,
           is_available: record.is_available,
           capacity: record.capacity,
           start_time: record.start_time,
-          end_time: record.end_time
+          end_time: record.end_time,
+          dateObject: testDate,
+          dayOfWeek: testDate.getDay(),
+          dayName: testDate.toLocaleDateString('en-AU', { weekday: 'long' }),
+          timezoneOffset: testDate.getTimezoneOffset()
         });
       });
       
@@ -75,10 +80,17 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const avail = availability.find(a => a.date === dateString);
     
     console.log(`=== CHECKING DATE: ${dateString} ===`);
-    console.log('Day of week:', checkDate.toLocaleDateString('en-US', { weekday: 'long' }));
+    console.log('Input checkDate:', checkDate);
+    console.log('Input checkDate getDay():', checkDate.getDay());
+    console.log('Input checkDate day name:', checkDate.toLocaleDateString('en-AU', { weekday: 'long' }));
+    console.log('Input checkDate timezone offset:', checkDate.getTimezoneOffset());
     console.log('Found availability record:', !!avail);
     
     if (avail) {
+      const dbDate = new Date(avail.date + 'T00:00:00');
+      console.log('DB date object:', dbDate);
+      console.log('DB date getDay():', dbDate.getDay());
+      console.log('DB date day name:', dbDate.toLocaleDateString('en-AU', { weekday: 'long' }));
       console.log('Availability record details:', {
         date: avail.date,
         is_available: avail.is_available,
@@ -128,8 +140,9 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     if (selectedDate) {
       console.log('=== DATE SELECTED ===');
       console.log('Selected date:', selectedDate);
+      console.log('Selected date getDay():', selectedDate.getDay());
+      console.log('Selected date day name:', selectedDate.toLocaleDateString('en-AU', { weekday: 'long' }));
       console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
-      console.log('Day of week:', selectedDate.toLocaleDateString('en-US', { weekday: 'long' }));
       onDateChange(selectedDate);
     }
   };
