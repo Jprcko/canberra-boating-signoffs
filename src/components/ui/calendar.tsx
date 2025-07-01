@@ -61,18 +61,6 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
-      locale={{
-        localize: {
-          day: (n: number) => {
-            const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-            // Shift array to start with Monday
-            const mondayFirstDays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-            return mondayFirstDays[n];
-          }
-        },
-        formatLong: {},
-        match: {}
-      }}
       {...props}
     />
   );
