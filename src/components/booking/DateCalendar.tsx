@@ -64,6 +64,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           defaultMonth={date || new Date()}
           showOutsideDays={false}
           weekStartsOn={1}
+          fixedWeeks={true}
           disabled={(checkDate) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
