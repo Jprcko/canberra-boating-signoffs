@@ -11,7 +11,6 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -21,20 +20,11 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = isLogin 
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) throw error;
 
-      if (!isLogin) {
-        toast({
-          title: "Sign up successful!",
-          description: "Please check your email to verify your account.",
-        });
-      } else {
-        navigate("/booking");
-      }
+      navigate("/booking");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -120,11 +110,9 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>{isLogin ? "Sign In" : "Create Account"}</CardTitle>
+          <CardTitle>Admin Sign In</CardTitle>
           <CardDescription>
-            {isLogin 
-              ? "Sign in to your account to make a booking" 
-              : "Create an account to start booking"}
+            Sign in to your admin account to access the dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -152,25 +140,15 @@ const Auth = () => {
               className="w-full" 
               disabled={loading}
             >
-              {loading ? "Processing..." : (isLogin ? "Sign In" : "Sign Up")}
+              {loading ? "Signing In..." : "Sign In"}
             </Button>
-            {isLogin && (
-              <Button
-                type="button"
-                variant="link"
-                className="w-full text-sm"
-                onClick={() => setIsForgotPassword(true)}
-              >
-                Forgot your password?
-              </Button>
-            )}
             <Button
               type="button"
               variant="link"
-              className="w-full"
-              onClick={() => setIsLogin(!isLogin)}
+              className="w-full text-sm"
+              onClick={() => setIsForgotPassword(true)}
             >
-              {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+              Forgot your password?
             </Button>
           </form>
         </CardContent>
