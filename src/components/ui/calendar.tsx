@@ -11,7 +11,7 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  locale = enGB,
+  locale = enGB, // ✅ enGB passed with weekStartsOn: 1 already
   ...props
 }: CalendarProps) {
   return (
@@ -34,7 +34,8 @@ function Calendar({
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
-        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] uppercase",
+        head_cell:
+          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] uppercase",
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
