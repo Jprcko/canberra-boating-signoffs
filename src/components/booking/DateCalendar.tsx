@@ -1,6 +1,7 @@
 
 import { FC, useState } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
+import { enGB } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -64,7 +65,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Select a date</span>}
+          {date ? format(date, "PPP", { locale: enGB }) : <span>Select a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent 
@@ -89,7 +90,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             </Button>
             
             <h3 className="text-lg font-semibold">
-              {format(currentMonth, 'MMMM yyyy')}
+              {format(currentMonth, 'MMMM yyyy', { locale: enGB })}
             </h3>
             
             <Button
@@ -110,7 +111,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect} 
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            weekStartsOn={1}
+            locale={enGB}
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
