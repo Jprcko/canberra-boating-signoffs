@@ -68,7 +68,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-auto p-0" 
+        className="w-auto p-0 bg-white z-50" 
         align="start" 
         side="bottom" 
         sideOffset={5}
@@ -110,7 +110,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect} 
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            weekStartsOn={1}
+            weekStartsOn={1} // Monday = 1 (ISO standard)
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
