@@ -1,6 +1,6 @@
+
 import { FC, useState } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
-import { enGB } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -110,7 +110,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect} 
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            locale={enGB}
+            weekStartsOn={1}
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
