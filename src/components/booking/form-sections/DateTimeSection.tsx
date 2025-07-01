@@ -1,3 +1,4 @@
+
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -33,6 +34,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 3);
 
+      console.log('=== AVAILABILITY DATA LOADING ===');
       console.log('Loading availability data from:', startDate.toISOString().split('T')[0], 'to:', endDate.toISOString().split('T')[0]);
 
       const [availabilityData, capacityData] = await Promise.all([
@@ -40,12 +42,29 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
         getBookingCapacity(startDate, endDate)
       ]);
       
-      console.log('Availability data loaded:', availabilityData);
-      console.log('Capacity data loaded:', capacityData);
+      console.log('=== RAW AVAILABILITY DATA ===');
+      console.log('Raw availability data:', availabilityData);
+      console.log('Number of availability records:', availabilityData.length);
+      
+      console.log('=== DETAILED AVAILABILITY RECORDS ===');
+      availabilityData.forEach((record, index) => {
+        console.log(`Record ${index + 1}:`, {
+          date: record.date,
+          is_available: record.is_available,
+          capacity: record.capacity,
+          start_time: record.start_time,
+          end_time: record.end_time
+        });
+      });
+      
+      console.log('=== RAW CAPACITY DATA ===');
+      console.log('Raw capacity data:', capacityData);
+      console.log('Number of capacity records:', capacityData.length);
       
       setAvailability(availabilityData);
       setBookingCapacity(capacityData);
     } catch (error) {
+      console.error('=== ERROR LOADING AVAILABILITY ===');
       console.error('Error loading availability data:', error);
     } finally {
       setIsLoading(false);
@@ -56,15 +75,25 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const dateString = format(checkDate, 'yyyy-MM-dd');
     const avail = availability.find(a => a.date === dateString);
     
-    console.log(`Checking date ${dateString}:`, {
-      found: !!avail,
-      isAvailable: avail?.is_available,
-      capacity: avail?.capacity,
-      participants: parseInt(participants)
-    });
+    console.log(`=== CHECKING DATE: ${dateString} ===`);
+    console.log('Day of week:', checkDate.toLocaleDateString('en-US', { weekday: 'long' }));
+    console.log('Found availability record:', !!avail);
+    
+    if (avail) {
+      console.log('Availability record details:', {
+        date: avail.date,
+        is_available: avail.is_available,
+        capacity: avail.capacity,
+        start_time: avail.start_time,
+        end_time: avail.end_time
+      });
+    } else {
+      console.log('No availability record found for:', dateString);
+      console.log('Available dates in system:', availability.map(a => a.date));
+    }
     
     if (!avail || !avail.is_available) {
-      console.log(`Date ${dateString} not available:`, avail ? 'not marked as available' : 'no record found');
+      console.log(`Date ${dateString} NOT AVAILABLE:`, avail ? 'marked as unavailable' : 'no record found');
       return false;
     }
 
@@ -81,6 +110,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       hasCapacity
     });
     
+    console.log(`=== FINAL RESULT FOR ${dateString}: ${hasCapacity ? 'AVAILABLE' : 'NOT AVAILABLE'} ===`);
     return hasCapacity;
   };
 
@@ -97,7 +127,10 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      console.log('Date selected:', selectedDate);
+      console.log('=== DATE SELECTED ===');
+      console.log('Selected date:', selectedDate);
+      console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
+      console.log('Day of week:', selectedDate.toLocaleDateString('en-US', { weekday: 'long' }));
       onDateChange(selectedDate);
     }
   };
@@ -160,7 +193,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                        !isDateAvailable(checkDate);
                 
                 if (isDisabled) {
-                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is disabled`);
+                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
                 }
                 
                 return isDisabled;
