@@ -1,4 +1,3 @@
-
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -181,7 +180,6 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               toYear={new Date().getFullYear() + 1}
               defaultMonth={date || new Date()}
               showOutsideDays={false}
-              weekStartsOn={1}
               disabled={(checkDate) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
