@@ -43,14 +43,6 @@ export const DateCalendar: FC<DateCalendarProps> = ({
     return booking?.total_participants || 0;
   };
 
-  const handlePreviousMonth = () => {
-    setCurrentMonth((m) => subMonths(m, 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentMonth((m) => addMonths(m, 1));
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -80,7 +72,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             <Button
               variant="outline"
               size="sm"
-              onClick={handlePreviousMonth}
+              onClick={() => setCurrentMonth((m) => subMonths(m, 1))}
               className="flex items-center gap-1"
               type="button"
             >
@@ -95,7 +87,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             <Button
               variant="outline"
               size="sm"
-              onClick={handleNextMonth}
+              onClick={() => setCurrentMonth((m) => addMonths(m, 1))}
               className="flex items-center gap-1"
               type="button"
             >
