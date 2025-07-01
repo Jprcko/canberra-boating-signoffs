@@ -1,32 +1,24 @@
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { enGB as baseEnGB } from "date-fns/locale";
+import { enGB } from "react-day-picker/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-// Build a locale that starts weeks on Monday
-const customLocale = {
-  ...baseEnGB,
-  options: {
-    ...baseEnGB.options,
-    weekStartsOn: 1,
-  },
-};
-
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+// We default to the react-day-picker enGB locale, which already has Monday as day 1
 export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  locale = customLocale,  // default to our Monday-start locale
+  locale = enGB,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={locale}         // applies weekStartsOn:1
+      locale={locale}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
