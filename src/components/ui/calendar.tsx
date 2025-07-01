@@ -1,29 +1,24 @@
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { enGB } from "react-day-picker/locale";   // ← must come from react-day-picker
+import { enGB } from "date-fns/locale";   // ← from date-fns, not react-day-picker
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-/**
- * A drop‐in DayPicker that always:
- *   • uses the built-in enGB locale (Monday = day 1)
- *   • shows outside days if you ask for it
- */
 export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  locale = enGB,      // ← defaults to the react-day-picker locale
+  locale = enGB,            // ← date-fns locale
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={locale}         // ← Monday start lives in here
-      weekStartsOn={1}        // ← explicit override in case locale is ignored
+      locale={locale}         // ← Monday/Friday/etc from enGB
+      weekStartsOn={1}        // ← ensure Monday is first column
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
@@ -67,4 +62,5 @@ export function Calendar({
     />
   );
 }
+
 Calendar.displayName = "Calendar";
