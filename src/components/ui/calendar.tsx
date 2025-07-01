@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
@@ -13,7 +12,6 @@ function Calendar({
   classNames,
   showOutsideDays = true,
   locale = enGB,
-  weekStartsOn = 1,
   ...props
 }: CalendarProps) {
   return (
@@ -47,14 +45,17 @@ function Calendar({
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
         ),
-        day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-full",
+        day_selected:
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-full",
         day_today: "bg-accent/50 text-accent-foreground",
         day_outside: "text-muted-foreground opacity-50",
         day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_range_middle:
+          "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         vhidden: "sr-only",
-        dropdown: "w-[110px] h-9 appearance-none bg-transparent border border-input rounded-md px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        dropdown:
+          "w-[110px] h-9 appearance-none bg-transparent border border-input rounded-md px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
         dropdown_month: "w-[110px]",
         dropdown_year: "w-[80px]",
         ...classNames,
