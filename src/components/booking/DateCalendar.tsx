@@ -1,3 +1,4 @@
+
 import { FC, useState } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
 import { enGB } from "react-day-picker/locale";
@@ -64,7 +65,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP", { locale: enGB }) : <span>Select a date</span>}
+          {date ? format(date, "PPP") : <span>Select a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent 
@@ -89,7 +90,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             </Button>
             
             <h3 className="text-lg font-semibold">
-              {format(currentMonth, 'MMMM yyyy', { locale: enGB })}
+              {format(currentMonth, 'MMMM yyyy')}
             </h3>
             
             <Button
