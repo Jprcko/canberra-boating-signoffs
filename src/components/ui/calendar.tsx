@@ -11,13 +11,13 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  weekStartsOn = 1, // Monday = 1
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      weekStartsOn={1} // Explicitly set to Monday
+      weekStartsOn={1} // Monday = 1
+      firstDayOfWeek={1} // Explicitly set Monday as first day
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
@@ -62,6 +62,7 @@ function Calendar({
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
       {...props}
+      weekStartsOn={1}
     />
   );
 }

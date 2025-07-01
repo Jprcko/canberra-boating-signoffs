@@ -110,7 +110,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect} 
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            weekStartsOn={1} // Monday = 1 (ISO standard)
+            weekStartsOn={1}
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
