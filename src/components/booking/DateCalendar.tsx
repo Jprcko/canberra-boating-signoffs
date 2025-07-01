@@ -63,7 +63,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           toYear={new Date().getFullYear() + 1}
           defaultMonth={date || new Date()}
           showOutsideDays={false}
-          weekStartsOn={0}
+          weekStartsOn={1}
           disabled={(checkDate) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -86,6 +86,15 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           modifiersStyles={{
             available: { backgroundColor: '#dcfce7' },
             limitedCapacity: { backgroundColor: '#fef3c7' }
+          }}
+          locale={{
+            formatLong: {},
+            formatRelative: {},
+            localize: {},
+            match: {},
+            options: {
+              weekStartsOn: 1
+            }
           }}
         />
       </PopoverContent>
