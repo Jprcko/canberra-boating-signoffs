@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { format, addMonths, subMonths } from "date-fns";
-import { enGB as baseEnGB } from "react-day-picker/locale";
+import { enGB } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -8,15 +8,6 @@ import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Availability, BookingCapacity } from "@/services/availabilityService";
 import { isDateAvailable } from "@/utils/calendarUtils";
-
-// ✅ This overrides week start to Monday
-const enGB = {
-  ...baseEnGB,
-  options: {
-    ...baseEnGB.options,
-    weekStartsOn: 1,
-  },
-};
 
 interface DateCalendarProps {
   date: Date | undefined;
@@ -26,30 +17,33 @@ interface DateCalendarProps {
   participants: string;
 }
 
+// Override the week start to Monday
+const customLocale = { ...enGB, options: { ...enGB.options, weekStartsOn: 1 } };
+
 export const DateCalendar: FC<DateCalendarProps> = ({
   date,
   onDateChange,
   availability,
   bookingCapacity,
-  participants,
+  participants
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      console.log("Date selected:", selectedDate, "Day:", selectedDate.getDay());
+      console.log('Date selected:', selectedDate, 'Day:', selectedDate.getDay());
       onDateChange(selectedDate);
     }
   };
 
   const getAvailabilityForDate = (checkDate: Date) => {
-    const dateString = format(checkDate, "yyyy-MM-dd");
-    return availability.find((a) => a.date === dateString);
+    const dateString = format(checkDate, 'yyyy-MM-dd');
+    return availability.find(a => a.date === dateString);
   };
 
   const getBookingCountForDate = (checkDate: Date) => {
-    const dateString = format(checkDate, "yyyy-MM-dd");
-    const booking = bookingCapacity.find((b) => b.booking_date === dateString);
+    const dateString = format(checkDate, 'yyyy-MM-dd');
+    const booking = bookingCapacity.find(b => b.booking_date === dateString);
     return booking?.total_participants || 0;
   };
 
@@ -66,7 +60,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant={"outline"}
+          variant="outline"
           className={cn(
             "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
@@ -81,7 +75,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
         align="start"
         side="bottom"
         sideOffset={5}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className="p-4">
           {/* Month Navigation */}
@@ -119,7 +113,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect}
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            locale={enGB}
+            locale={customLocale} // ✅ Applies weekStartsOn: 1 (Monday)
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
@@ -145,11 +139,11 @@ export const DateCalendar: FC<DateCalendarProps> = ({
                 const avail = getAvailabilityForDate(checkDate);
                 const bookingCount = getBookingCountForDate(checkDate);
                 return avail?.is_available && bookingCount >= (avail?.capacity || 0);
-              },
+              }
             }}
             modifiersStyles={{
-              available: { backgroundColor: "#dcfce7", color: "#166534" },
-              fullyBooked: { backgroundColor: "#fecaca", color: "#dc2626" },
+              available: { backgroundColor: '#dcfce7', color: '#166534' },
+              fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
             }}
           />
 
