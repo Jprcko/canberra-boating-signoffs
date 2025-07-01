@@ -1,10 +1,13 @@
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Clock } from "lucide-react";
-import { useAvailability } from "@/hooks/useAvailability";
-import { DateCalendar } from "@/components/booking/DateCalendar";
-import { getRemainingCapacity } from "@/utils/calendarUtils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getAvailability, getBookingCapacity, Availability, BookingCapacity } from "@/services/availabilityService";
 
 interface DateTimeSectionProps {
   date: Date | undefined;
@@ -17,7 +20,120 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
   onDateChange,
   participants = "2"
 }) => {
-  const { availability, bookingCapacity, isLoading } = useAvailability();
+  const [availability, setAvailability] = useState<Availability[]>([]);
+  const [bookingCapacity, setBookingCapacity] = useState<BookingCapacity[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadAvailabilityData();
+  }, []);
+
+  const loadAvailabilityData = async () => {
+    try {
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 3);
+
+      console.log('=== AVAILABILITY DATA LOADING ===');
+      console.log('Loading availability data from:', startDate.toISOString().split('T')[0], 'to:', endDate.toISOString().split('T')[0]);
+
+      const [availabilityData, capacityData] = await Promise.all([
+        getAvailability(startDate, endDate),
+        getBookingCapacity(startDate, endDate)
+      ]);
+      
+      console.log('=== RAW AVAILABILITY DATA ===');
+      console.log('Raw availability data:', availabilityData);
+      console.log('Number of availability records:', availabilityData.length);
+      
+      console.log('=== DETAILED AVAILABILITY RECORDS ===');
+      availabilityData.forEach((record, index) => {
+        console.log(`Record ${index + 1}:`, {
+          date: record.date,
+          is_available: record.is_available,
+          capacity: record.capacity,
+          start_time: record.start_time,
+          end_time: record.end_time
+        });
+      });
+      
+      console.log('=== RAW CAPACITY DATA ===');
+      console.log('Raw capacity data:', capacityData);
+      console.log('Number of capacity records:', capacityData.length);
+      
+      setAvailability(availabilityData);
+      setBookingCapacity(capacityData);
+    } catch (error) {
+      console.error('=== ERROR LOADING AVAILABILITY ===');
+      console.error('Error loading availability data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isDateAvailable = (checkDate: Date) => {
+    const dateString = format(checkDate, 'yyyy-MM-dd');
+    const avail = availability.find(a => a.date === dateString);
+    
+    console.log(`=== CHECKING DATE: ${dateString} ===`);
+    console.log('Day of week:', checkDate.toLocaleDateString('en-US', { weekday: 'long' }));
+    console.log('Found availability record:', !!avail);
+    
+    if (avail) {
+      console.log('Availability record details:', {
+        date: avail.date,
+        is_available: avail.is_available,
+        capacity: avail.capacity,
+        start_time: avail.start_time,
+        end_time: avail.end_time
+      });
+    } else {
+      console.log('No availability record found for:', dateString);
+      console.log('Available dates in system:', availability.map(a => a.date));
+    }
+    
+    if (!avail || !avail.is_available) {
+      console.log(`Date ${dateString} NOT AVAILABLE:`, avail ? 'marked as unavailable' : 'no record found');
+      return false;
+    }
+
+    // Check capacity
+    const booking = bookingCapacity.find(b => b.booking_date === dateString);
+    const currentBookings = booking?.total_participants || 0;
+    const requestedParticipants = parseInt(participants);
+    
+    const hasCapacity = (currentBookings + requestedParticipants) <= avail.capacity;
+    console.log(`Date ${dateString} capacity check:`, {
+      currentBookings,
+      requestedParticipants,
+      totalCapacity: avail.capacity,
+      hasCapacity
+    });
+    
+    console.log(`=== FINAL RESULT FOR ${dateString}: ${hasCapacity ? 'AVAILABLE' : 'NOT AVAILABLE'} ===`);
+    return hasCapacity;
+  };
+
+  const getRemainingCapacity = (checkDate: Date) => {
+    const dateString = format(checkDate, 'yyyy-MM-dd');
+    const avail = availability.find(a => a.date === dateString);
+    const booking = bookingCapacity.find(b => b.booking_date === dateString);
+    
+    if (!avail) return 0;
+    
+    const currentBookings = booking?.total_participants || 0;
+    return Math.max(0, avail.capacity - currentBookings);
+  };
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      console.log('=== DATE SELECTED ===');
+      console.log('Selected date:', selectedDate);
+      console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
+      console.log('Day of week:', selectedDate.toLocaleDateString('en-US', { weekday: 'long' }));
+      onDateChange(selectedDate);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -34,17 +150,73 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label>Preferred Date</Label>
-        <DateCalendar
-          date={date}
-          onDateChange={onDateChange}
-          availability={availability}
-          bookingCapacity={bookingCapacity}
-          participants={participants}
-        />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button 
+              type="button"
+              variant={"outline"} 
+              className={cn(
+                "w-full justify-start text-left font-normal", 
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Select a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent 
+            className="w-auto p-0" 
+            align="start" 
+            side="bottom" 
+            sideOffset={5}
+            onClick={e => e.stopPropagation()}
+          >
+            <Calendar 
+              mode="single" 
+              selected={date} 
+              onSelect={handleDateSelect} 
+              initialFocus 
+              captionLayout="dropdown-buttons"
+              fromYear={new Date().getFullYear()}
+              toYear={new Date().getFullYear() + 1}
+              defaultMonth={date || new Date()}
+              showOutsideDays={false}
+              disabled={(checkDate) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const maxDate = new Date();
+                maxDate.setMonth(maxDate.getMonth() + 3);
+                
+                const isDisabled = checkDate < today || 
+                       checkDate > maxDate || 
+                       !isDateAvailable(checkDate);
+                
+                if (isDisabled) {
+                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
+                }
+                
+                return isDisabled;
+              }}
+              className="rounded-md border shadow-sm p-3 pointer-events-auto"
+              modifiers={{
+                available: (checkDate) => isDateAvailable(checkDate),
+                limitedCapacity: (checkDate) => {
+                  const remaining = getRemainingCapacity(checkDate);
+                  return remaining > 0 && remaining <= 6;
+                }
+              }}
+              modifiersStyles={{
+                available: { backgroundColor: '#dcfce7' },
+                limitedCapacity: { backgroundColor: '#fef3c7' }
+              }}
+            />
+          </PopoverContent>
+        </Popover>
         
         {date && (
           <div className="text-sm text-gray-600">
-            <p>Remaining capacity: {getRemainingCapacity(date, availability, bookingCapacity)} people</p>
+            <p>Remaining capacity: {getRemainingCapacity(date)} people</p>
           </div>
         )}
       </div>
