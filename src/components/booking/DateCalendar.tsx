@@ -63,7 +63,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           toYear={new Date().getFullYear() + 1}
           defaultMonth={date || new Date()}
           showOutsideDays={false}
-          weekStartsOn={1}
+          weekStartsOn={0}
           disabled={(checkDate) => {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
