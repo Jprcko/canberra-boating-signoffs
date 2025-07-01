@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { format, addMonths, subMonths } from "date-fns";
-import { enGB } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -17,42 +16,39 @@ interface DateCalendarProps {
   participants: string;
 }
 
-// Override the week start to Monday
-const customLocale = { ...enGB, options: { ...enGB.options, weekStartsOn: 1 } };
-
 export const DateCalendar: FC<DateCalendarProps> = ({
   date,
   onDateChange,
   availability,
   bookingCapacity,
-  participants
+  participants,
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      console.log('Date selected:', selectedDate, 'Day:', selectedDate.getDay());
+      console.log("Date selected:", selectedDate, "Day:", selectedDate.getDay());
       onDateChange(selectedDate);
     }
   };
 
   const getAvailabilityForDate = (checkDate: Date) => {
-    const dateString = format(checkDate, 'yyyy-MM-dd');
-    return availability.find(a => a.date === dateString);
+    const dateString = format(checkDate, "yyyy-MM-dd");
+    return availability.find((a) => a.date === dateString);
   };
 
   const getBookingCountForDate = (checkDate: Date) => {
-    const dateString = format(checkDate, 'yyyy-MM-dd');
-    const booking = bookingCapacity.find(b => b.booking_date === dateString);
+    const dateString = format(checkDate, "yyyy-MM-dd");
+    const booking = bookingCapacity.find((b) => b.booking_date === dateString);
     return booking?.total_participants || 0;
   };
 
   const handlePreviousMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
+    setCurrentMonth((m) => subMonths(m, 1));
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
+    setCurrentMonth((m) => addMonths(m, 1));
   };
 
   return (
@@ -70,12 +66,13 @@ export const DateCalendar: FC<DateCalendarProps> = ({
           {date ? format(date, "PPP") : <span>Select a date</span>}
         </Button>
       </PopoverTrigger>
+
       <PopoverContent
         className="w-auto p-0 bg-white z-50"
         align="start"
         side="bottom"
         sideOffset={5}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4">
           {/* Month Navigation */}
@@ -113,7 +110,6 @@ export const DateCalendar: FC<DateCalendarProps> = ({
             onSelect={handleDateSelect}
             month={currentMonth}
             onMonthChange={setCurrentMonth}
-            locale={customLocale} // ✅ Applies weekStartsOn: 1 (Monday)
             showOutsideDays={false}
             disabled={(checkDate) => {
               const today = new Date();
@@ -139,22 +135,22 @@ export const DateCalendar: FC<DateCalendarProps> = ({
                 const avail = getAvailabilityForDate(checkDate);
                 const bookingCount = getBookingCountForDate(checkDate);
                 return avail?.is_available && bookingCount >= (avail?.capacity || 0);
-              }
+              },
             }}
             modifiersStyles={{
-              available: { backgroundColor: '#dcfce7', color: '#166534' },
-              fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
+              available: { backgroundColor: "#dcfce7", color: "#166534" },
+              fullyBooked: { backgroundColor: "#fecaca", color: "#dc2626" },
             }}
           />
 
           {/* Legend */}
           <div className="mt-4 text-sm text-gray-600">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
+              <div className="w-4 h-4 bg-green-100 border border-green-300 rounded" />
               <span>Available</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+              <div className="w-4 h-4 bg-red-100 border border-red-300 rounded" />
               <span>Fully Booked</span>
             </div>
           </div>
