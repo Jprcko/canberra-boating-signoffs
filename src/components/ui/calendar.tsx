@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
 import { enGB } from "date-fns/locale";
@@ -11,14 +12,13 @@ export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  locale = enGB,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={locale}      // Monday-first locale
-      weekStartsOn={1}     // explicit fallback
+      locale={enGB}
+      weekStartsOn={1}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
