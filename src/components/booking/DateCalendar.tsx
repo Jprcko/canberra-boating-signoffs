@@ -25,11 +25,13 @@ export const DateCalendar: FC<DateCalendarProps> = ({
   participants,
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
+  const [open, setOpen] = useState(false);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       console.log("Date selected:", selectedDate, "Day:", selectedDate.getDay());
       onDateChange(selectedDate);
+      setOpen(false); // Close the popover when a date is selected
     }
   };
 
@@ -53,7 +55,7 @@ export const DateCalendar: FC<DateCalendarProps> = ({
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           type="button"
