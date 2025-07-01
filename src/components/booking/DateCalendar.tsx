@@ -121,7 +121,12 @@ export const DateCalendar: FC<DateCalendarProps> = ({
               return (
                 checkDate < today ||
                 checkDate > maxDate ||
-                !isDateAvailable(checkDate, availability, bookingCapacity, participants)
+                !isDateAvailable(
+                  checkDate,
+                  availability,
+                  bookingCapacity,
+                  participants
+                )
               );
             }}
             className="rounded-md border p-3 pointer-events-auto"
@@ -129,12 +134,16 @@ export const DateCalendar: FC<DateCalendarProps> = ({
               available: (checkDate) => {
                 const avail = getAvailabilityForDate(checkDate);
                 const bookingCount = getBookingCountForDate(checkDate);
-                return avail?.is_available && bookingCount < (avail?.capacity || 0);
+                return (
+                  avail?.is_available && bookingCount < (avail?.capacity || 0)
+                );
               },
               fullyBooked: (checkDate) => {
                 const avail = getAvailabilityForDate(checkDate);
                 const bookingCount = getBookingCountForDate(checkDate);
-                return avail?.is_available && bookingCount >= (avail?.capacity || 0);
+                return (
+                  avail?.is_available && bookingCount >= (avail?.capacity || 0)
+                );
               },
             }}
             modifiersStyles={{
