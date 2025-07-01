@@ -1,4 +1,3 @@
-
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -34,10 +33,15 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 3);
 
+      console.log('Loading availability data from:', startDate.toISOString().split('T')[0], 'to:', endDate.toISOString().split('T')[0]);
+
       const [availabilityData, capacityData] = await Promise.all([
         getAvailability(startDate, endDate),
         getBookingCapacity(startDate, endDate)
       ]);
+      
+      console.log('Availability data loaded:', availabilityData);
+      console.log('Capacity data loaded:', capacityData);
       
       setAvailability(availabilityData);
       setBookingCapacity(capacityData);
@@ -52,7 +56,15 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const dateString = format(checkDate, 'yyyy-MM-dd');
     const avail = availability.find(a => a.date === dateString);
     
+    console.log(`Checking date ${dateString}:`, {
+      found: !!avail,
+      isAvailable: avail?.is_available,
+      capacity: avail?.capacity,
+      participants: parseInt(participants)
+    });
+    
     if (!avail || !avail.is_available) {
+      console.log(`Date ${dateString} not available:`, avail ? 'not marked as available' : 'no record found');
       return false;
     }
 
@@ -61,7 +73,15 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     const currentBookings = booking?.total_participants || 0;
     const requestedParticipants = parseInt(participants);
     
-    return (currentBookings + requestedParticipants) <= avail.capacity;
+    const hasCapacity = (currentBookings + requestedParticipants) <= avail.capacity;
+    console.log(`Date ${dateString} capacity check:`, {
+      currentBookings,
+      requestedParticipants,
+      totalCapacity: avail.capacity,
+      hasCapacity
+    });
+    
+    return hasCapacity;
   };
 
   const getRemainingCapacity = (checkDate: Date) => {
@@ -77,6 +97,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
+      console.log('Date selected:', selectedDate);
       onDateChange(selectedDate);
     }
   };
@@ -134,9 +155,15 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 const maxDate = new Date();
                 maxDate.setMonth(maxDate.getMonth() + 3);
                 
-                return checkDate < today || 
+                const isDisabled = checkDate < today || 
                        checkDate > maxDate || 
                        !isDateAvailable(checkDate);
+                
+                if (isDisabled) {
+                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is disabled`);
+                }
+                
+                return isDisabled;
               }}
               className="rounded-md border shadow-sm p-3 pointer-events-auto"
               modifiers={{
