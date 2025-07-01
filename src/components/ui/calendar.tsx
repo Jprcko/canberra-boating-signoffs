@@ -12,13 +12,15 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  locale = enGB,
+  weekStartsOn = 1,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      locale={enGB}
-      weekStartsOn={1}
+      locale={locale}
+      weekStartsOn={weekStartsOn}
       className={cn("p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
