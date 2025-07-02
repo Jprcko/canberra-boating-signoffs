@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
+import { enGB } from "date-fns/locale";
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -147,6 +148,8 @@ const AvailabilityManager = () => {
                 onMonthChange={setCurrentMonth}
                 disabled={(date) => date < new Date()}
                 className="rounded-md border"
+                locale={enGB}
+                weekStartsOn={1}
                 modifiers={{
                   available: (date) => {
                     const avail = getAvailabilityForDate(date);
