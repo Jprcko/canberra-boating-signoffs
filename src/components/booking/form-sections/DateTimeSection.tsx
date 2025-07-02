@@ -1,6 +1,7 @@
 
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
+import { enGB } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -181,6 +182,8 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               toYear={new Date().getFullYear() + 1}
               defaultMonth={date || new Date()}
               showOutsideDays={false}
+              locale={enGB}
+              weekStartsOn={1}
               disabled={(checkDate) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -211,6 +214,18 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 limitedCapacity: { backgroundColor: '#fef3c7' }
               }}
             />
+            <div className="p-3 border-t text-sm text-gray-600">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
+                  <span>Available</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
+                  <span>Limited Capacity</span>
+                </div>
+              </div>
+            </div>
           </PopoverContent>
         </Popover>
         
