@@ -1,3 +1,4 @@
+
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
@@ -161,7 +162,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Select a date</span>}
+              {date ? format(date, "PPP", { locale: enGB }) : <span>Select a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent 
@@ -200,7 +201,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 
                 return isDisabled;
               }}
-              className="rounded-md border shadow-sm p-3 pointer-events-auto"
+              className="rounded-md border shadow-sm p-3"
               modifiers={{
                 available: (checkDate) => isDateAvailable(checkDate),
                 limitedCapacity: (checkDate) => {
