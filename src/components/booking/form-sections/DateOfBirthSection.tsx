@@ -45,7 +45,7 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {participant.dateOfBirth ? (
-              format(participant.dateOfBirth, "PPP")
+              format(participant.dateOfBirth, "dd MMMM yyyy")
             ) : (
               <span>Select your date of birth</span>
             )}
