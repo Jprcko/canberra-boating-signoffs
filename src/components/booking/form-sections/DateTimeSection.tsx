@@ -178,13 +178,6 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               onSelect={handleDateSelect} 
               month={currentMonth}
               onMonthChange={setCurrentMonth}
-              initialFocus 
-              captionLayout="dropdown-buttons"
-              fromYear={new Date().getFullYear()}
-              toYear={new Date().getFullYear() + 1}
-              showOutsideDays={false}
-              locale={enGB}
-              weekStartsOn={1}
               disabled={(checkDate) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -203,6 +196,8 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 return isDisabled;
               }}
               className="rounded-md border shadow-sm p-3"
+              locale={enGB}
+              weekStartsOn={1}
               modifiers={{
                 available: (checkDate) => isDateAvailable(checkDate),
                 limitedCapacity: (checkDate) => {
@@ -211,7 +206,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 }
               }}
               modifiersStyles={{
-                available: { backgroundColor: '#dcfce7' },
+                available: { backgroundColor: '#dcfce7', color: '#166534' },
                 limitedCapacity: { backgroundColor: '#fef3c7' }
               }}
             />
