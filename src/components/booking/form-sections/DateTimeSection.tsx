@@ -1,3 +1,4 @@
+
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
@@ -203,11 +204,19 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 limitedCapacity: (checkDate) => {
                   const remaining = getRemainingCapacity(checkDate);
                   return remaining > 0 && remaining <= 6;
+                },
+                fullyBooked: (checkDate) => {
+                  const dateString = format(checkDate, 'yyyy-MM-dd');
+                  const avail = availability.find(a => a.date === dateString);
+                  const booking = bookingCapacity.find(b => b.booking_date === dateString);
+                  const currentBookings = booking?.total_participants || 0;
+                  return avail?.is_available && currentBookings >= (avail?.capacity || 0);
                 }
               }}
               modifiersStyles={{
                 available: { backgroundColor: '#dcfce7', color: '#166534' },
-                limitedCapacity: { backgroundColor: '#fef3c7' }
+                limitedCapacity: { backgroundColor: '#fef3c7' },
+                fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
               }}
             />
             <div className="p-3 border-t text-sm text-gray-600">
@@ -219,6 +228,10 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
                   <span>Limited Capacity</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+                  <span>Fully Booked</span>
                 </div>
               </div>
             </div>
