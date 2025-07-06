@@ -1,5 +1,3 @@
-
-
 import { FC, useEffect, useState } from "react";
 import { format, addMonths, subMonths } from "date-fns";
 import { enGB } from "date-fns/locale";
@@ -230,7 +228,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 
                 return isDisabled;
               }}
-              className="rounded-md p-3 [&_.rdp-nav]:hidden [&_.rdp-nav_button]:hidden"
+              className="w-full [&_.rdp-nav]:!hidden [&_.rdp-nav_button]:!hidden [&_.rdp-button_reset]:!hidden [&_button[name='previous-month']]:!hidden [&_button[name='next-month']]:!hidden [&_.rdp]:w-full [&_.rdp-months]:w-full [&_.rdp-month]:w-full [&_.rdp-table]:w-full"
               locale={enGB}
               weekStartsOn={1}
               modifiers={{
@@ -293,4 +291,3 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     </div>
   );
 };
-
