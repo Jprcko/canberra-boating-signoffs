@@ -24,10 +24,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
   const [bookingCapacity, setBookingCapacity] = useState<BookingCapacity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
-
-  useEffect(() => {
-    loadAvailabilityData();
-  }, []);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const loadAvailabilityData = async () => {
     try {
@@ -71,6 +68,10 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadAvailabilityData();
+  }, []);
 
   const isDateAvailable = (checkDate: Date) => {
     const dateString = format(checkDate, 'yyyy-MM-dd');
@@ -133,6 +134,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
       console.log('Day of week:', selectedDate.toLocaleDateString('en-US', { weekday: 'long' }));
       onDateChange(selectedDate);
+      setIsPopoverOpen(false); // Close the popover when date is selected
     }
   };
 
@@ -159,7 +161,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label>Preferred Date</Label>
-        <Popover>
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
             <Button 
               type="button"
