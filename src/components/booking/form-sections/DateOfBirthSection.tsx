@@ -16,11 +16,14 @@ interface DateOfBirthSectionProps {
 }
 
 export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfBirthSectionProps) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   // Handle date selection with stopPropagation to prevent unintended form submission
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       // Prevent event propagation to avoid triggering form validation
       onDateChange(date);
+      setIsPopoverOpen(false); // Close the popover when date is selected
     }
   };
   
@@ -29,7 +32,7 @@ export const DateOfBirthSection = ({ participant, index, onDateChange }: DateOfB
       <Label htmlFor={`dateOfBirth-${index}`} className="text-sm font-medium">
         Date of Birth *
       </Label>
-      <Popover>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
             id={`dateOfBirth-${index}`}
