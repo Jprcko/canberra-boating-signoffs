@@ -1,4 +1,5 @@
 
+
 import { FC, useEffect, useState } from "react";
 import { format, addMonths, subMonths } from "date-fns";
 import { enGB } from "date-fns/locale";
@@ -206,54 +207,52 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               </Button>
             </div>
 
-            <div className="[&_.rdp-nav]:hidden">
-              <Calendar 
-                mode="single" 
-                selected={date} 
-                onSelect={handleDateSelect} 
-                month={currentMonth}
-                onMonthChange={setCurrentMonth}
-                disabled={(checkDate) => {
-                  const today = new Date();
-                  today.setHours(0, 0, 0, 0);
-                  
-                  const maxDate = new Date();
-                  maxDate.setMonth(maxDate.getMonth() + 3);
-                  
-                  const isDisabled = checkDate < today || 
-                         checkDate > maxDate || 
-                         !isDateAvailable(checkDate);
-                  
-                  if (isDisabled) {
-                    console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
-                  }
-                  
-                  return isDisabled;
-                }}
-                className="rounded-md p-3"
-                locale={enGB}
-                weekStartsOn={1}
-                modifiers={{
-                  available: (checkDate) => isDateAvailable(checkDate),
-                  limitedCapacity: (checkDate) => {
-                    const remaining = getRemainingCapacity(checkDate);
-                    return remaining > 0 && remaining <= 6;
-                  },
-                  fullyBooked: (checkDate) => {
-                    const dateString = format(checkDate, 'yyyy-MM-dd');
-                    const avail = availability.find(a => a.date === dateString);
-                    const booking = bookingCapacity.find(b => b.booking_date === dateString);
-                    const currentBookings = booking?.total_participants || 0;
-                    return avail?.is_available && currentBookings >= (avail?.capacity || 0);
-                  }
-                }}
-                modifiersStyles={{
-                  available: { backgroundColor: '#dcfce7', color: '#166534' },
-                  limitedCapacity: { backgroundColor: '#fef3c7' },
-                  fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
-                }}
-              />
-            </div>
+            <Calendar 
+              mode="single" 
+              selected={date} 
+              onSelect={handleDateSelect} 
+              month={currentMonth}
+              onMonthChange={setCurrentMonth}
+              disabled={(checkDate) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const maxDate = new Date();
+                maxDate.setMonth(maxDate.getMonth() + 3);
+                
+                const isDisabled = checkDate < today || 
+                       checkDate > maxDate || 
+                       !isDateAvailable(checkDate);
+                
+                if (isDisabled) {
+                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
+                }
+                
+                return isDisabled;
+              }}
+              className="rounded-md p-3 [&_.rdp-nav]:hidden [&_.rdp-nav_button]:hidden"
+              locale={enGB}
+              weekStartsOn={1}
+              modifiers={{
+                available: (checkDate) => isDateAvailable(checkDate),
+                limitedCapacity: (checkDate) => {
+                  const remaining = getRemainingCapacity(checkDate);
+                  return remaining > 0 && remaining <= 6;
+                },
+                fullyBooked: (checkDate) => {
+                  const dateString = format(checkDate, 'yyyy-MM-dd');
+                  const avail = availability.find(a => a.date === dateString);
+                  const booking = bookingCapacity.find(b => b.booking_date === dateString);
+                  const currentBookings = booking?.total_participants || 0;
+                  return avail?.is_available && currentBookings >= (avail?.capacity || 0);
+                }
+              }}
+              modifiersStyles={{
+                available: { backgroundColor: '#dcfce7', color: '#166534' },
+                limitedCapacity: { backgroundColor: '#fef3c7' },
+                fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
+              }}
+            />
             
             <div className="p-3 border-t text-sm text-gray-600">
               <div className="flex items-center gap-4">
@@ -294,3 +293,4 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     </div>
   );
 };
+
