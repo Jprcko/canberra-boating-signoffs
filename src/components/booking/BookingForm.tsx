@@ -1,15 +1,11 @@
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { ParticipantInfo } from "@/types/booking";
-import { useAgeValidation } from "@/hooks/useAgeValidation";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { BookingFormProps } from "@/types/booking";
 import { useBookingPrice } from "@/hooks/useBookingPrice";
-import { submitBooking, BookingData } from "@/services/bookingService";
 import { useForm, FormProvider } from "react-hook-form";
+import { useBookingFormState } from "@/hooks/useBookingFormState";
+import { useBookingSubmission } from "@/hooks/useBookingSubmission";
 
 // Import refactored sections
 import { DateTimeSection } from "./form-sections/DateTimeSection";
@@ -26,14 +22,14 @@ interface BookingFormValues {
 }
 
 const BookingForm = ({ selectedServices }: BookingFormProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [participants, setParticipants] = useState<string>("2");
-  const [participantsInfo, setParticipantsInfo] = useState<ParticipantInfo[]>([
-    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
-    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
-    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
-    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
-  ]);
+  const {
+    participants,
+    setParticipants,
+    participantsInfo,
+    handleParticipantChange
+  } = useBookingFormState();
+
+  const { isSubmitting, submitBookingForm } = useBookingSubmission();
 
   const methods = useForm<BookingFormValues>({
     defaultValues: {
@@ -42,7 +38,7 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
       promoCode: "",
       paymentIntentId: undefined
     },
-    mode: "onBlur" // Validate fields when they lose focus
+    mode: "onBlur"
   });
 
   const { handleSubmit, watch, setValue, formState } = methods;
@@ -56,88 +52,21 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     }
   }, [formState.errors]);
 
-  const { toast } = useToast();
-  const { validateAge } = useAgeValidation();
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const { price, discount } = useBookingPrice(selectedServices, participants);
-
-  const handleParticipantChange = (
-    index: number,
-    field: keyof ParticipantInfo,
-    value: string | Date | boolean
-  ) => {
-    const newParticipantsInfo = [...participantsInfo];
-    newParticipantsInfo[index] = {
-      ...newParticipantsInfo[index],
-      [field]: value,
-    };
-    setParticipantsInfo(newParticipantsInfo);
-  };
 
   const handleDateChange = (newDate: Date | undefined) => {
     setValue("date", newDate);
   };
 
   const onSubmit = async (formData: BookingFormValues) => {
-    // Only submit if we have a successful payment
-    if (!formData.paymentIntentId) {
-      toast({
-        title: "Payment Required",
-        description: "Please complete your payment before submitting the booking.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      console.log("Form is being submitted with data:", formData);
-      console.log("Selected services:", selectedServices);
-      console.log("Participants info:", participantsInfo);
-      console.log("Payment Intent ID:", formData.paymentIntentId);
-      
-      // Format the date for PostgreSQL
-      const formattedDate = formData.date ? formData.date.toISOString() : null;
-      
-      if (!formattedDate) {
-        throw new Error("Please select a valid booking date");
-      }
-
-      const bookingData: BookingData = {
-        bookingDate: formattedDate,
-        totalPrice: price,
-        discountAmount: discount,
-        userId: user?.id || null,
-        preferredTime: "", // No longer needed, sessions are full day
-        selectedServices,
-        participants,
-        participantsInfo,
-        additionalInfo: formData.additionalInfo,
-        promoCode: formData.promoCode
-      };
-
-      await submitBooking(bookingData);
-
-      toast({
-        title: "Booking Submitted Successfully",
-        description: "We've received your booking request and payment.",
-      });
-
-      // Redirect to a confirmation page or clear the form
-      navigate("/");
-
-    } catch (error: any) {
-      console.error('Booking error:', error);
-      toast({
-        title: "Error Submitting Booking",
-        description: error.message || "There was an error submitting your booking",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    await submitBookingForm(
+      formData,
+      selectedServices,
+      participants,
+      participantsInfo,
+      price,
+      discount
+    );
   };
 
   // Set payment intent ID when payment is successful
@@ -146,15 +75,6 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
     // Automatically submit the form after successful payment
     handleSubmit(onSubmit)();
   };
-
-  useEffect(() => {
-    const newParticipantsInfo = Array(Number(participants))
-      .fill(null)
-      .map((_, index) => 
-        participantsInfo[index] || { firstName: "", middleName: "", lastName: "", email: "", phone: "" }
-      );
-    setParticipantsInfo(newParticipantsInfo);
-  }, [participants]);
 
   return (
     <Card>

@@ -1,13 +1,16 @@
-import { FC, useEffect, useState } from "react";
+
+import { FC, useState } from "react";
 import { format, addMonths, subMonths } from "date-fns";
 import { enGB } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getAvailability, getBookingCapacity, Availability, BookingCapacity } from "@/services/availabilityService";
+import { CalendarNavigation } from "./calendar/CalendarNavigation";
+import { CalendarLegend } from "./calendar/CalendarLegend";
+import { AvailabilityCalendar } from "./calendar/AvailabilityCalendar";
+import { useAvailabilityData } from "./calendar/useAvailabilityData";
 
 interface DateTimeSectionProps {
   date: Date | undefined;
@@ -20,101 +23,9 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
   onDateChange,
   participants = "2"
 }) => {
-  const [availability, setAvailability] = useState<Availability[]>([]);
-  const [bookingCapacity, setBookingCapacity] = useState<BookingCapacity[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { availability, bookingCapacity, isLoading } = useAvailabilityData();
   const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  const loadAvailabilityData = async () => {
-    try {
-      const startDate = new Date();
-      const endDate = new Date();
-      endDate.setMonth(endDate.getMonth() + 3);
-
-      console.log('=== AVAILABILITY DATA LOADING ===');
-      console.log('Loading availability data from:', startDate.toISOString().split('T')[0], 'to:', endDate.toISOString().split('T')[0]);
-
-      const [availabilityData, capacityData] = await Promise.all([
-        getAvailability(startDate, endDate),
-        getBookingCapacity(startDate, endDate)
-      ]);
-      
-      console.log('=== RAW AVAILABILITY DATA ===');
-      console.log('Raw availability data:', availabilityData);
-      console.log('Number of availability records:', availabilityData.length);
-      
-      console.log('=== DETAILED AVAILABILITY RECORDS ===');
-      availabilityData.forEach((record, index) => {
-        console.log(`Record ${index + 1}:`, {
-          date: record.date,
-          is_available: record.is_available,
-          capacity: record.capacity,
-          start_time: record.start_time,
-          end_time: record.end_time
-        });
-      });
-      
-      console.log('=== RAW CAPACITY DATA ===');
-      console.log('Raw capacity data:', capacityData);
-      console.log('Number of capacity records:', capacityData.length);
-      
-      setAvailability(availabilityData);
-      setBookingCapacity(capacityData);
-    } catch (error) {
-      console.error('=== ERROR LOADING AVAILABILITY ===');
-      console.error('Error loading availability data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadAvailabilityData();
-  }, []);
-
-  const isDateAvailable = (checkDate: Date) => {
-    const dateString = format(checkDate, 'yyyy-MM-dd');
-    const avail = availability.find(a => a.date === dateString);
-    
-    console.log(`=== CHECKING DATE: ${dateString} ===`);
-    console.log('Day of week:', checkDate.toLocaleDateString('en-US', { weekday: 'long' }));
-    console.log('Found availability record:', !!avail);
-    
-    if (avail) {
-      console.log('Availability record details:', {
-        date: avail.date,
-        is_available: avail.is_available,
-        capacity: avail.capacity,
-        start_time: avail.start_time,
-        end_time: avail.end_time
-      });
-    } else {
-      console.log('No availability record found for:', dateString);
-      console.log('Available dates in system:', availability.map(a => a.date));
-    }
-    
-    if (!avail || !avail.is_available) {
-      console.log(`Date ${dateString} NOT AVAILABLE:`, avail ? 'marked as unavailable' : 'no record found');
-      return false;
-    }
-
-    // Check capacity
-    const booking = bookingCapacity.find(b => b.booking_date === dateString);
-    const currentBookings = booking?.total_participants || 0;
-    const requestedParticipants = parseInt(participants);
-    
-    const hasCapacity = (currentBookings + requestedParticipants) <= avail.capacity;
-    console.log(`Date ${dateString} capacity check:`, {
-      currentBookings,
-      requestedParticipants,
-      totalCapacity: avail.capacity,
-      hasCapacity
-    });
-    
-    console.log(`=== FINAL RESULT FOR ${dateString}: ${hasCapacity ? 'AVAILABLE' : 'NOT AVAILABLE'} ===`);
-    return hasCapacity;
-  };
 
   const getRemainingCapacity = (checkDate: Date) => {
     const dateString = format(checkDate, 'yyyy-MM-dd');
@@ -134,7 +45,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
       console.log('Formatted date:', format(selectedDate, 'yyyy-MM-dd'));
       console.log('Day of week:', selectedDate.toLocaleDateString('en-US', { weekday: 'long' }));
       onDateChange(selectedDate);
-      setIsPopoverOpen(false); // Close the popover when date is selected
+      setIsPopoverOpen(false);
     }
   };
 
@@ -182,94 +93,23 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
             sideOffset={5}
             onClick={e => e.stopPropagation()}
           >
-            {/* Month Navigation */}
-            <div className="flex items-center justify-between p-3 border-b">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePreviousMonth}
-                className="flex items-center gap-1 h-7 w-7 p-0"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              
-              <h3 className="text-sm font-semibold">
-                {format(currentMonth, 'MMMM yyyy')}
-              </h3>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNextMonth}
-                className="flex items-center gap-1 h-7 w-7 p-0"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+            <CalendarNavigation
+              currentMonth={currentMonth}
+              onPreviousMonth={handlePreviousMonth}
+              onNextMonth={handleNextMonth}
+            />
 
-            <Calendar 
-              mode="single" 
-              selected={date} 
-              onSelect={handleDateSelect} 
-              month={currentMonth}
+            <AvailabilityCalendar
+              date={date}
+              currentMonth={currentMonth}
+              availability={availability}
+              bookingCapacity={bookingCapacity}
+              participants={participants}
+              onDateSelect={handleDateSelect}
               onMonthChange={setCurrentMonth}
-              disabled={(checkDate) => {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                const maxDate = new Date();
-                maxDate.setMonth(maxDate.getMonth() + 3);
-                
-                const isDisabled = checkDate < today || 
-                       checkDate > maxDate || 
-                       !isDateAvailable(checkDate);
-                
-                if (isDisabled) {
-                  console.log(`Date ${format(checkDate, 'yyyy-MM-dd')} is DISABLED`);
-                }
-                
-                return isDisabled;
-              }}
-              className="w-full [&_.rdp-nav]:!hidden [&_.rdp-nav_button]:!hidden [&_.rdp-button_reset]:!hidden [&_button[name='previous-month']]:!hidden [&_button[name='next-month']]:!hidden [&_.rdp]:w-full [&_.rdp-months]:w-full [&_.rdp-month]:w-full [&_.rdp-table]:w-full"
-              locale={enGB}
-              weekStartsOn={1}
-              modifiers={{
-                available: (checkDate) => isDateAvailable(checkDate),
-                limitedCapacity: (checkDate) => {
-                  const remaining = getRemainingCapacity(checkDate);
-                  return remaining > 0 && remaining <= 6;
-                },
-                fullyBooked: (checkDate) => {
-                  const dateString = format(checkDate, 'yyyy-MM-dd');
-                  const avail = availability.find(a => a.date === dateString);
-                  const booking = bookingCapacity.find(b => b.booking_date === dateString);
-                  const currentBookings = booking?.total_participants || 0;
-                  return avail?.is_available && currentBookings >= (avail?.capacity || 0);
-                }
-              }}
-              modifiersStyles={{
-                available: { backgroundColor: '#dcfce7', color: '#166534' },
-                limitedCapacity: { backgroundColor: '#fef3c7' },
-                fullyBooked: { backgroundColor: '#fecaca', color: '#dc2626' }
-              }}
             />
             
-            <div className="p-3 border-t text-sm text-gray-600">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
-                  <span>Available</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
-                  <span>Limited Capacity</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-                  <span>Fully Booked</span>
-                </div>
-              </div>
-            </div>
+            <CalendarLegend />
           </PopoverContent>
         </Popover>
         
