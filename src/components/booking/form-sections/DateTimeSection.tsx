@@ -1,4 +1,3 @@
-
 import { FC, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { enGB } from "date-fns/locale";
@@ -24,6 +23,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
   const [availability, setAvailability] = useState<Availability[]>([]);
   const [bookingCapacity, setBookingCapacity] = useState<BookingCapacity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState<Date>(date || new Date());
 
   useEffect(() => {
     loadAvailabilityData();
@@ -176,11 +176,12 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               mode="single" 
               selected={date} 
               onSelect={handleDateSelect} 
+              month={currentMonth}
+              onMonthChange={setCurrentMonth}
               initialFocus 
               captionLayout="dropdown-buttons"
               fromYear={new Date().getFullYear()}
               toYear={new Date().getFullYear() + 1}
-              defaultMonth={date || new Date()}
               showOutsideDays={false}
               locale={enGB}
               weekStartsOn={1}
