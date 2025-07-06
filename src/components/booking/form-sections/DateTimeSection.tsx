@@ -1,12 +1,11 @@
-
 import { FC, useEffect, useState } from "react";
-import { format } from "date-fns";
+import { format, addMonths, subMonths } from "date-fns";
 import { enGB } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getAvailability, getBookingCapacity, Availability, BookingCapacity } from "@/services/availabilityService";
 
@@ -137,6 +136,14 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
     }
   };
 
+  const handlePreviousMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1));
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -173,6 +180,31 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
             sideOffset={5}
             onClick={e => e.stopPropagation()}
           >
+            {/* Month Navigation */}
+            <div className="flex items-center justify-between p-3 border-b">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePreviousMonth}
+                className="flex items-center gap-1 h-7 w-7 p-0"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              
+              <h3 className="text-sm font-semibold">
+                {format(currentMonth, 'MMMM yyyy')}
+              </h3>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNextMonth}
+                className="flex items-center gap-1 h-7 w-7 p-0"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+
             <Calendar 
               mode="single" 
               selected={date} 
@@ -196,7 +228,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
                 
                 return isDisabled;
               }}
-              className="rounded-md border shadow-sm p-3"
+              className="rounded-md p-3"
               locale={enGB}
               weekStartsOn={1}
               modifiers={{
