@@ -231,6 +231,7 @@ export const DateTimeSection: FC<DateTimeSectionProps> = ({
               className="rounded-md p-3"
               locale={enGB}
               weekStartsOn={1}
+              hideNavigation
               modifiers={{
                 available: (checkDate) => isDateAvailable(checkDate),
                 limitedCapacity: (checkDate) => {
