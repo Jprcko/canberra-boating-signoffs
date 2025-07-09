@@ -84,7 +84,9 @@ Belconnen ACT 2617</p>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Sunday</span>
-                      <span>9:00 AM - 2:00 PM</span>
+                      <Button asChild variant="link" className="p-0 h-auto text-water-blue">
+                        <a href="/booking">Book Online</a>
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
