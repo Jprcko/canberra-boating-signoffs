@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
@@ -11,34 +10,25 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { FAQ } from "@/components/sections/FAQ";
 import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
-
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       toast({
         title: "Message Sent",
-        description: "Thanks for reaching out! We'll get back to you shortly.",
+        description: "Thanks for reaching out! We'll get back to you shortly."
       });
       setIsSubmitting(false);
       // Reset form
       (e.target as HTMLFormElement).reset();
     }, 1500);
   };
-
-  return (
-    <Layout>
-      <Hero
-        title="Contact Us"
-        subtitle="Get in touch with our team for inquiries and support"
-        backgroundImage="https://images.unsplash.com/photo-1518877593221-1f28583780b4?auto=format&fit=crop&w=1920&q=80"
-        showButton={false}
-      />
+  return <Layout>
+      <Hero title="Contact Us" subtitle="Get in touch with our team for inquiries and support" backgroundImage="https://images.unsplash.com/photo-1518877593221-1f28583780b4?auto=format&fit=crop&w=1920&q=80" showButton={false} />
 
       <section className="section-padding bg-white">
         <div className="container-custom">
@@ -71,7 +61,8 @@ const Contact = () => {
                   <MapPin className="h-5 w-5 text-water-blue mt-1" />
                   <div>
                     <p className="font-semibold">Location</p>
-                    <p className="text-gray-700">Lake Ginninderra, Canberra ACT</p>
+                    <p className="text-gray-700">Macdermott Place Boat Ramp
+Belconnen ACT 2617</p>
                   </div>
                 </div>
               </div>
@@ -99,18 +90,9 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              {/* Embedded Google Map */}
-              <div className="h-64 rounded-lg overflow-hidden shadow-md">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3247.8!2d149.0715!3d-35.2366!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b164d5c4b4b5555%3A0x69e7a91a5d5e7e5e!2sMacdermott%20Place%20Boat%20Ramp%2C%20Belconnen%20ACT%202617!5e0!3m2!1sen!2sau!4v1647890123456!5m2!1sen!2sau"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Macdermott Place Boat Ramp, Lake Ginninderra"
-                ></iframe>
+              {/* Map (Placeholder) - Would be replaced with actual Google Maps embed */}
+              <div className="h-64 bg-slate-light rounded-lg flex items-center justify-center">
+                <p className="text-gray-600">Google Map would be embedded here</p>
               </div>
             </div>
             
@@ -144,19 +126,10 @@ const Contact = () => {
                     
                     <div className="space-y-2">
                       <Label htmlFor="message">Message</Label>
-                      <Textarea 
-                        id="message" 
-                        placeholder="Type your message here..." 
-                        className="min-h-[150px]"
-                        required
-                      />
+                      <Textarea id="message" placeholder="Type your message here..." className="min-h-[150px]" required />
                     </div>
                     
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-water-blue hover:bg-deep-blue"
-                      disabled={isSubmitting}
-                    >
+                    <Button type="submit" className="w-full bg-water-blue hover:bg-deep-blue" disabled={isSubmitting}>
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </Button>
                   </form>
@@ -187,8 +160,6 @@ const Contact = () => {
           </Button>
         </div>
       </section>
-    </Layout>
-  );
+    </Layout>;
 };
-
 export default Contact;
