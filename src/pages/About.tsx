@@ -1,4 +1,3 @@
-
 import Layout from "@/components/layout/Layout";
 import Hero from "@/components/ui/Hero";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,6 @@ import { Link } from "react-router-dom";
 import { CheckCircle, Award, Users, Clock } from "lucide-react";
 import { FAQ } from "@/components/sections/FAQ";
 import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
-
 const About = () => {
   return <Layout>
       <Hero title="About Canberra Boating Sign-Offs" subtitle="Your trusted partner for professional boat licence logbook supervision in the ACT" backgroundImage="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80" showButton={false} />
@@ -50,7 +48,7 @@ const About = () => {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
-                  <span>Small classes of only 12 students maximum</span>
+                  <span>Small classes of only 7 students maximum</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-water-blue shrink-0 mt-0.5" />
