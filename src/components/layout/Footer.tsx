@@ -39,7 +39,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start">
                 <Mail className="h-5 w-5 mr-2 text-water-blue" />
-                <span>info@canberraboating.com.au</span>
+                <span>team@actboatlicencesignoff.com.au</span>
               </li>
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 text-water-blue" />

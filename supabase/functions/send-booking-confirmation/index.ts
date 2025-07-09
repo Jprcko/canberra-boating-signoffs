@@ -142,7 +142,7 @@ serve(async (req) => {
 
         // Send individual email
         const { data: emailResult, error: emailError } = await resend.emails.send({
-          from: "Boating Sessions <onboarding@resend.dev>",
+          from: "Boating Sessions <team@actboatlicencesignoff.com.au>",
           to: participant.email,
           subject: `Booking Confirmed - ${new Date(booking.booking_date).toLocaleDateString('en-AU')}`,
           html: emailContent,
