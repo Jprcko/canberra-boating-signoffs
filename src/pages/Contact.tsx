@@ -102,14 +102,14 @@ const Contact = () => {
               {/* Embedded Google Map */}
               <div className="h-64 rounded-lg overflow-hidden shadow-md">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3245.5!2d149.0715!3d-35.2366!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b164d5c4b4b5555%3A0x6a8a8a8a8a8a8a8a!2sMacdermott%20Place%20Boat%20Ramp!5e0!3m2!1sen!2sau!4v1234567890!5m2!1sen!2sau"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3247.8!2d149.0715!3d-35.2366!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b164d5c4b4b5555%3A0x69e7a91a5d5e7e5e!2sMacdermott%20Place%20Boat%20Ramp%2C%20Belconnen%20ACT%202617!5e0!3m2!1sen!2sau!4v1647890123456!5m2!1sen!2sau"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Macdermott Place Boat Ramp Location"
+                  title="Macdermott Place Boat Ramp, Lake Ginninderra"
                 ></iframe>
               </div>
             </div>
