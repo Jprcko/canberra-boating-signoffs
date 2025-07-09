@@ -95,7 +95,7 @@ Belconnen ACT 2617</p>
               {/* Map showing Macdermott Place Boat Ramp */}
               <div className="h-64 bg-slate-light rounded-lg flex items-center justify-center">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3256.5!2d149.0775!3d-35.2286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b164c98f1234567%3A0x9876543210abcdef!2sMacdermott%20Place%20Boat%20Ramp%2C%20Lake%20Ginninderra!5e0!3m2!1sen!2sau!4v1234567890!5m2!1sen!2sau&zoom=16&center=-35.2286,149.0775"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2234.9713245856124!2d149.0618760095852!3d-35.228320053744994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b17ad0b6385146b%3A0x69bffcca7d5de4fa!2sMacdermott%20Place%20Boat%20Ramp!5e1!3m2!1sen!2sau!4v1752041454665!5m2!1sen!2sau"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
