@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,16 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check if we came from an admin route
+    const from = location.state?.from?.pathname;
+    setIsAdminLogin(from === '/admin' || from === '/availability');
+  }, [location]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +32,15 @@ const Auth = () => {
 
       if (error) throw error;
 
-      navigate("/booking");
+      // Navigate based on where user came from or admin status
+      const from = location.state?.from?.pathname;
+      if (from) {
+        navigate(from);
+      } else if (isAdminLogin) {
+        navigate("/admin");
+      } else {
+        navigate("/client-portal");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -110,9 +126,12 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Admin Sign In</CardTitle>
+          <CardTitle>{isAdminLogin ? "Admin Sign In" : "Client Sign In"}</CardTitle>
           <CardDescription>
-            Sign in to your admin account to access the dashboard
+            {isAdminLogin 
+              ? "Sign in to your admin account to access the dashboard"
+              : "Sign in to your client account to access your portal"
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
