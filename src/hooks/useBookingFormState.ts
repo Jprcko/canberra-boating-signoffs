@@ -9,6 +9,9 @@ export const useBookingFormState = () => {
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
     { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
+    { firstName: "", middleName: "", lastName: "", email: "", phone: "" },
   ]);
 
   const handleParticipantChange = (

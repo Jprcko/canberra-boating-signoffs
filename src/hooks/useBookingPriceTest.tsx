@@ -28,6 +28,15 @@ export const useBookingPriceTest = (selectedServices: string[], participants: st
         case "4":
           discountPercent = 15;
           break;
+        case "5":
+          discountPercent = 17;
+          break;
+        case "6":
+          discountPercent = 20;
+          break;
+        case "7":
+          discountPercent = 22;
+          break;
         default:
           discountPercent = 0;
       }
@@ -53,6 +62,15 @@ export const useBookingPriceTest = (selectedServices: string[], participants: st
             break;
           case "4":
             discountPercent = 15;
+            break;
+          case "5":
+            discountPercent = 17;
+            break;
+          case "6":
+            discountPercent = 20;
+            break;
+          case "7":
+            discountPercent = 22;
             break;
         }
         const testDiscountAmount = (testTotalPrice * discountPercent) / 100;

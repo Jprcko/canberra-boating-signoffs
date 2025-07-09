@@ -23,6 +23,9 @@ export const ParticipantCountSection: FC<ParticipantCountSectionProps> = ({
           <SelectItem value="2">2 Participants</SelectItem>
           <SelectItem value="3">3 Participants</SelectItem>
           <SelectItem value="4">4 Participants</SelectItem>
+          <SelectItem value="5">5 Participants</SelectItem>
+          <SelectItem value="6">6 Participants</SelectItem>
+          <SelectItem value="7">7 Participants</SelectItem>
         </SelectContent>
       </Select>
     </div>
