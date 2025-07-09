@@ -137,6 +137,7 @@ const App = () => {
                 </AdminProtectedRoute>
               } 
             />
+            <Route path="/sitemap.xml" element={null} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
