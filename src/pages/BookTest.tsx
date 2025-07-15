@@ -1,7 +1,8 @@
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText } from "lucide-react";
+import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 const BookTest = () => {
   const requirements = [{
     item: "Valid Photo ID",
@@ -36,6 +37,12 @@ const BookTest = () => {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="mb-8">
+            <Link to="/client-portal">
+              <Button variant="ghost" className="mb-4 text-gray-600 hover:text-navy">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </Link>
             <h1 className="text-3xl font-bold text-navy mb-2">Book Your Test</h1>
             <p className="text-gray-600">
               Ready to take your official boating licence test? Choose your preferred option below.

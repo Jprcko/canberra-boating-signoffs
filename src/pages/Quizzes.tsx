@@ -3,7 +3,8 @@ import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, XCircle, Play } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Play, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Quizzes = () => {
   const quizzes = [
@@ -38,6 +39,12 @@ const Quizzes = () => {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
+            <Link to="/client-portal">
+              <Button variant="ghost" className="mb-4 text-gray-600 hover:text-navy">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </Link>
             <h1 className="text-3xl font-bold text-navy mb-2">Module Quizzes</h1>
             <p className="text-gray-600">
               Complete all quizzes with 80% or higher to unlock the mock exam
