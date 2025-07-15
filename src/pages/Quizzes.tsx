@@ -39,16 +39,20 @@ const Quizzes = () => {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <Link to="/client-portal">
-              <Button variant="ghost" className="mb-4 text-gray-600 hover:text-navy">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-bold text-navy mb-2">Module Quizzes</h1>
-            <p className="text-gray-600">
-              Complete all quizzes with 80% or higher to unlock the mock exam
-            </p>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-navy mb-2">Module Quizzes</h1>
+                <p className="text-gray-600">
+                  Complete all quizzes with 80% or higher to unlock the mock exam
+                </p>
+              </div>
+              <Link to="/client-portal">
+                <Button variant="default" className="bg-navy hover:bg-navy/90 text-white px-6 py-2 shadow-lg">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Dashboard
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

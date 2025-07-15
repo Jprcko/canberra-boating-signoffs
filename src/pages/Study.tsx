@@ -26,16 +26,20 @@ const Study = () => {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <Link to="/client-portal">
-              <Button variant="ghost" className="mb-4 text-gray-600 hover:text-navy">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-bold text-navy mb-2">Study Library</h1>
-            <p className="text-gray-600">
-              Complete all modules to unlock your mock exam
-            </p>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-navy mb-2">Study Library</h1>
+                <p className="text-gray-600">
+                  Complete all modules to unlock your mock exam
+                </p>
+              </div>
+              <Link to="/client-portal">
+                <Button variant="default" className="bg-navy hover:bg-navy/90 text-white px-6 py-2 shadow-lg">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Dashboard
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <Tabs defaultValue="boating" className="space-y-6">
