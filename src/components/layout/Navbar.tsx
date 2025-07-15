@@ -26,7 +26,7 @@ const Navbar = () => {
         <Link to="/" className="flex items-center space-x-2">
           <div className="h-12 w-12 rounded-full bg-water-blue flex items-center justify-center text-white font-bold text-xl">CB</div>
           <div>
-            <h1 className="text-xl font-bold text-navy">Canberra Boating</h1>
+            <h1 className="text-xl font-bold text-navy">ACT Boat Licence</h1>
             <p className="text-xs text-gray-600">Logbook Sign-offs</p>
           </div>
         </Link>
