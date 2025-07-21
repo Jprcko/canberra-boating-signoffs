@@ -45,10 +45,14 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
     const fetchQuestions = async () => {
       try {
         setLoading(true);
+        console.log('Fetching questions for category:', category);
+        
         const { data, error } = await supabase
           .from('quiz_questions')
           .select('*')
           .eq('category', category);
+
+        console.log('Query result:', { data, error, category });
 
         if (error) {
           console.error('Error fetching questions:', error);
@@ -60,6 +64,8 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
           return;
         }
 
+        console.log('Fetched questions:', data);
+
         // Transform database questions to match QuizQuestion interface
         const transformedQuestions: QuizQuestion[] = (data || []).map((q, index) => ({
           id: index + 1,
@@ -69,6 +75,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
           image: q.image_url || undefined
         }));
 
+        console.log('Transformed questions:', transformedQuestions);
         setQuestions(transformedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
