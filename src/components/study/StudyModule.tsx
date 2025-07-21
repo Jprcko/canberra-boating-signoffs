@@ -12,6 +12,10 @@ interface StudyModuleProps {
     title: string;
     completed: boolean;
     locked: boolean;
+    description?: string;
+    learningObjectives?: string[];
+    videoTitle?: string;
+    quizQuestions?: QuizQuestion[];
   };
 }
 
@@ -19,60 +23,90 @@ const StudyModule = ({ module }: StudyModuleProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
-  // Sample quiz questions - you can easily add more questions here
-  const quizQuestions: QuizQuestion[] = [
-    {
-      id: 1,
-      question: "If you fall overboard into cold water, what can you do to extend survival time?",
-      options: [
-        "Move constantly and do not remove clothing.",
-        "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing.",
-        "Remove clothing and float on your back."
-      ],
-      correctAnswer: "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing."
-    },
-    {
-      id: 2,
-      question: "What does a red navigation mark indicate?",
-      options: [
-        "Port side when returning to harbour",
-        "Starboard side when returning to harbour", 
-        "A hazard to navigation"
-      ],
-      correctAnswer: "Port side when returning to harbour"
-    },
-    {
-      id: 3,
-      question: "Which of these lights would you see on the port side of a vessel at night?",
-      options: [
-        "Green light",
-        "Red light",
-        "White light"
-      ],
-      correctAnswer: "Red light"
-    },
-    {
-      id: 4,
-      question: "What should you do when you hear one short blast from another vessel?",
-      options: [
-        "I am turning to starboard (right)",
-        "I am turning to port (left)",
-        "I am going astern"
-      ],
-      correctAnswer: "I am turning to starboard (right)"
-    },
-    {
-      id: 5,
-      question: "A vessel showing these lights is seen ahead. It is a:",
-      options: [
-        "Powered vessel underway.",
-        "Sailing vessel underway.",
-        "Powered vessel at anchor."
-      ],
-      correctAnswer: "Sailing vessel underway.",
-      image: "/lovable-uploads/578f1734-826f-4ae1-b4cc-05e61b04b108.png"
+  // Default content for Navigation Marks module
+  const getModuleContent = () => {
+    switch (module.id) {
+      case 1: // Navigation Marks, Lights and Sound
+        return {
+          description: "This module introduces the key navigational aids, lighting systems, and sound signals you'll encounter on NSW waterways and how to use them for safe and legal boating.",
+          learningObjectives: [
+            "The different types of navigation marks and their meanings",
+            "How to identify marks by shape, colour, and lights",
+            "Understanding navigation lights on vessels and their significance",
+            "Sound signals and their proper use in different situations",
+            "What the law says about passing and obeying marks",
+            "Practical safety tips and real-world examples"
+          ],
+          quizQuestions: [
+            {
+              id: 1,
+              question: "If you fall overboard into cold water, what can you do to extend survival time?",
+              options: [
+                "Move constantly and do not remove clothing.",
+                "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing.",
+                "Remove clothing and float on your back."
+              ],
+              correctAnswer: "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing."
+            },
+            {
+              id: 2,
+              question: "What does a red navigation mark indicate?",
+              options: [
+                "Port side when returning to harbour",
+                "Starboard side when returning to harbour", 
+                "A hazard to navigation"
+              ],
+              correctAnswer: "Port side when returning to harbour"
+            },
+            {
+              id: 3,
+              question: "Which of these lights would you see on the port side of a vessel at night?",
+              options: [
+                "Green light",
+                "Red light",
+                "White light"
+              ],
+              correctAnswer: "Red light"
+            },
+            {
+              id: 4,
+              question: "What should you do when you hear one short blast from another vessel?",
+              options: [
+                "I am turning to starboard (right)",
+                "I am turning to port (left)",
+                "I am going astern"
+              ],
+              correctAnswer: "I am turning to starboard (right)"
+            },
+            {
+              id: 5,
+              question: "A vessel showing these lights is seen ahead. It is a:",
+              options: [
+                "Powered vessel underway.",
+                "Sailing vessel underway.",
+                "Powered vessel at anchor."
+              ],
+              correctAnswer: "Sailing vessel underway.",
+              image: "/lovable-uploads/578f1734-826f-4ae1-b4cc-05e61b04b108.png"
+            }
+          ]
+        };
+      default:
+        return {
+          description: `This module covers important aspects of ${module.title} for safe boating practices.`,
+          learningObjectives: [
+            `Key concepts in ${module.title}`,
+            "Safety considerations and best practices",
+            "Legal requirements and regulations",
+            "Practical applications and examples"
+          ],
+          quizQuestions: []
+        };
     }
-  ];
+  };
+
+  const moduleContent = getModuleContent();
+  const quizQuestions = module.quizQuestions || moduleContent.quizQuestions;
 
   const handleTakeQuiz = () => {
     setShowQuiz(true);
@@ -126,35 +160,32 @@ const StudyModule = ({ module }: StudyModuleProps) => {
               <div className="aspect-video bg-black rounded-lg flex items-center justify-center">
                 <div className="text-white text-center">
                   <Play className="w-12 h-12 mx-auto mb-2" />
-                  <p>Video: {module.title}</p>
+                  <p>Video: {module.videoTitle || module.title}</p>
                 </div>
               </div>
               
               <div className="prose max-w-none">
-                <h4 className="text-lg font-semibold text-navy mb-3">Module: Navigation Marks, Lights and Sound</h4>
+                <h4 className="text-lg font-semibold text-navy mb-3">Module: {module.title}</h4>
                 <p className="text-gray-700 mb-4">
-                  This module introduces the key navigational aids, lighting systems, and sound signals you'll encounter on NSW waterways and how to use them for safe and legal boating.
+                  {module.description || moduleContent.description}
                 </p>
                 <h5 className="text-md font-semibold text-navy mb-2">What You'll Learn:</h5>
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
-                  <li>The different types of navigation marks and their meanings</li>
-                  <li>How to identify marks by shape, colour, and lights</li>
-                  <li>Understanding navigation lights on vessels and their significance</li>
-                  <li>Sound signals and their proper use in different situations</li>
-                  <li>What the law says about passing and obeying marks</li>
-                  <li>Practical safety tips and real-world examples</li>
+                  {(module.learningObjectives || moduleContent.learningObjectives).map((objective, index) => (
+                    <li key={index}>{objective}</li>
+                  ))}
                 </ul>
               </div>
               
               <Button 
                 onClick={handleTakeQuiz}
                 className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
-                disabled={module.locked}
+                disabled={module.locked || quizQuestions.length === 0}
               >
-                Take Module Quiz
+                {quizQuestions.length === 0 ? 'Quiz Coming Soon' : 'Take Module Quiz'}
               </Button>
 
-              {showQuiz && (
+              {showQuiz && quizQuestions.length > 0 && (
                 <ModuleQuiz
                   moduleId={module.id.toString()}
                   moduleTitle={module.title}
