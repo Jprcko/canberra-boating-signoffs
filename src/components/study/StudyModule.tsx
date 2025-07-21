@@ -130,11 +130,11 @@ const StudyModule = ({ module }: StudyModuleProps) => {
       case 1: 
         return "navigation_marks";
       case 2:
-        return "collision_rules";
+        return "rules";
       case 3:
         return "lifejackets_safety";
       case 4:
-        return "preparation_behaviour";
+        return "preparation_behavior";
       case 5:
         return "waterways_areas";
       case 6:
