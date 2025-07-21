@@ -147,6 +147,42 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_results: {
+        Row: {
+          answers: Json
+          completed_at: string
+          created_at: string
+          id: string
+          module_id: string
+          percentage: number
+          score: number
+          total_questions: number
+          user_id: string | null
+        }
+        Insert: {
+          answers?: Json
+          completed_at?: string
+          created_at?: string
+          id?: string
+          module_id: string
+          percentage: number
+          score: number
+          total_questions: number
+          user_id?: string | null
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          created_at?: string
+          id?: string
+          module_id?: string
+          percentage?: number
+          score?: number
+          total_questions?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

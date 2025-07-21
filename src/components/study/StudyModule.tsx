@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CheckCircle, Lock, ChevronDown, Play } from "lucide-react";
 import { useState } from "react";
+import ModuleQuiz, { QuizQuestion } from "./ModuleQuiz";
 
 interface StudyModuleProps {
   module: {
@@ -16,6 +17,59 @@ interface StudyModuleProps {
 
 const StudyModule = ({ module }: StudyModuleProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+
+  // Sample quiz questions - you can easily add more questions here
+  const quizQuestions: QuizQuestion[] = [
+    {
+      id: 1,
+      question: "If you fall overboard into cold water, what can you do to extend survival time?",
+      options: [
+        "Move constantly and do not remove clothing.",
+        "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing.",
+        "Remove clothing and float on your back."
+      ],
+      correctAnswer: "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing."
+    },
+    {
+      id: 2,
+      question: "What does a red navigation mark indicate?",
+      options: [
+        "Port side when returning to harbour",
+        "Starboard side when returning to harbour", 
+        "A hazard to navigation"
+      ],
+      correctAnswer: "Port side when returning to harbour"
+    },
+    {
+      id: 3,
+      question: "Which of these lights would you see on the port side of a vessel at night?",
+      options: [
+        "Green light",
+        "Red light",
+        "White light"
+      ],
+      correctAnswer: "Red light"
+    },
+    {
+      id: 4,
+      question: "What should you do when you hear one short blast from another vessel?",
+      options: [
+        "I am turning to starboard (right)",
+        "I am turning to port (left)",
+        "I am going astern"
+      ],
+      correctAnswer: "I am turning to starboard (right)"
+    }
+  ];
+
+  const handleTakeQuiz = () => {
+    setShowQuiz(true);
+  };
+
+  const handleCloseQuiz = () => {
+    setShowQuiz(false);
+  };
 
   return (
     <Card className="overflow-hidden shadow-lg rounded-xl">
@@ -80,11 +134,21 @@ const StudyModule = ({ module }: StudyModuleProps) => {
               </div>
               
               <Button 
+                onClick={handleTakeQuiz}
                 className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
                 disabled={module.locked}
               >
                 Take Module Quiz
               </Button>
+
+              {showQuiz && (
+                <ModuleQuiz
+                  moduleId={module.id.toString()}
+                  moduleTitle={module.title}
+                  questions={quizQuestions}
+                  onClose={handleCloseQuiz}
+                />
+              )}
             </div>
           </div>
         </CollapsibleContent>
