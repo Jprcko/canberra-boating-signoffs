@@ -23,10 +23,9 @@ const StudyModule = ({ module }: StudyModuleProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
-  // Default content for Navigation Marks module
   const getModuleContent = () => {
     switch (module.id) {
-      case 1: // Navigation Marks, Lights and Sound
+      case 1: // Navigation marks, lights & sounds
         return {
           description: "This module introduces the key navigational aids, lighting systems, and sound signals you'll encounter on NSW waterways and how to use them for safe and legal boating.",
           learningObjectives: [
@@ -36,6 +35,78 @@ const StudyModule = ({ module }: StudyModuleProps) => {
             "Sound signals and their proper use in different situations",
             "What the law says about passing and obeying marks",
             "Practical safety tips and real-world examples"
+          ]
+        };
+      case 2: // Collision Rules
+        return {
+          description: "Learn the essential rules for avoiding collisions on the water, including right-of-way rules, overtaking procedures, and safe navigation practices.",
+          learningObjectives: [
+            "Understanding right-of-way rules between different vessel types",
+            "Safe overtaking and crossing procedures",
+            "Navigation rules in different waterway conditions",
+            "Responsibilities of power-driven and sailing vessels",
+            "Emergency collision avoidance techniques",
+            "Legal requirements and penalties for rule violations"
+          ]
+        };
+      case 3: // Lifejackets and safety equipment
+        return {
+          description: "Comprehensive guide to personal flotation devices and essential safety equipment required for different types of vessels and water activities.",
+          learningObjectives: [
+            "Types of lifejackets and their appropriate uses",
+            "Legal requirements for safety equipment on different vessels",
+            "Proper fitting and maintenance of lifejackets",
+            "Emergency signaling devices and communication equipment",
+            "Fire safety equipment and procedures",
+            "First aid equipment and basic emergency response"
+          ]
+        };
+      case 4: // Preparation, behaviour and decisions
+        return {
+          description: "Develop crucial decision-making skills and responsible boating behaviors for safe and enjoyable water experiences.",
+          learningObjectives: [
+            "Pre-departure planning and safety checks",
+            "Risk assessment and decision-making on the water",
+            "Responsible alcohol and drug policies",
+            "Weather assessment and trip planning",
+            "Passenger safety briefings and responsibilities",
+            "Emergency action planning and communication"
+          ]
+        };
+      case 5: // Waterways and designated areas
+        return {
+          description: "Navigate different types of waterways safely and understand the various designated areas, restrictions, and special rules that apply.",
+          learningObjectives: [
+            "Types of waterways and their specific rules",
+            "Understanding designated swimming and skiing areas",
+            "Speed limits and restricted zones",
+            "Marine park and sanctuary regulations",
+            "Commercial vessel right-of-way areas",
+            "Anchoring and mooring regulations"
+          ]
+        };
+      case 6: // Emergencies and incidents
+        return {
+          description: "Prepare for and respond effectively to various emergency situations that may occur while boating.",
+          learningObjectives: [
+            "Emergency communication procedures and equipment",
+            "Man overboard recovery techniques",
+            "Fire response and prevention on vessels",
+            "Grounding and collision response procedures",
+            "Search and rescue coordination",
+            "Incident reporting requirements and procedures"
+          ]
+        };
+      case 7: // Protecting the environment
+        return {
+          description: "Learn how to minimize your environmental impact while boating and help protect our precious marine ecosystems.",
+          learningObjectives: [
+            "Waste disposal and pollution prevention",
+            "Fuel and oil spill prevention and response",
+            "Protecting marine wildlife and habitats",
+            "Sustainable fishing and water recreation practices",
+            "Ballast water and invasive species prevention",
+            "Legal environmental obligations for boaters"
           ]
         };
       default:
@@ -57,7 +128,19 @@ const StudyModule = ({ module }: StudyModuleProps) => {
   const getQuizCategory = () => {
     switch (module.id) {
       case 1: 
-        return "navigation_marks"; // Use the database category value, not the label
+        return "navigation_marks";
+      case 2:
+        return "collision_rules";
+      case 3:
+        return "lifejackets_safety";
+      case 4:
+        return "preparation_behaviour";
+      case 5:
+        return "waterways_areas";
+      case 6:
+        return "emergencies_incidents";
+      case 7:
+        return "protecting_environment";
       default:
         return null;
     }

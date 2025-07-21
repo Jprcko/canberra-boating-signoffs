@@ -8,11 +8,13 @@ import StudyModule from "@/components/study/StudyModule";
 
 const Study = () => {
   const boatingModules = [
-    { id: 1, title: "Navigation Marks, Lights and Sound", completed: true, locked: false },
+    { id: 1, title: "Navigation marks, lights & sounds", completed: true, locked: false },
     { id: 2, title: "Collision Rules", completed: false, locked: false },
-    { id: 3, title: "Safety Equipment", completed: false, locked: true },
-    { id: 4, title: "Weather and Tides", completed: false, locked: true },
-    { id: 5, title: "Emergency Procedures", completed: false, locked: true }
+    { id: 3, title: "Lifejackets and safety equipment", completed: false, locked: false },
+    { id: 4, title: "Preparation, behaviour and decisions", completed: false, locked: false },
+    { id: 5, title: "Waterways and designated areas", completed: false, locked: false },
+    { id: 6, title: "Emergencies and incidents", completed: false, locked: false },
+    { id: 7, title: "Protecting the environment", completed: false, locked: false }
   ];
 
   const pwcModules = [
