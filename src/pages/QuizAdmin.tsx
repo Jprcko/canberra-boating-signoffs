@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,9 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Plus, Download } from "lucide-react";
+import { Upload, Plus, Download, Filter, Search, Trash2 } from "lucide-react";
 
 interface ParsedQuestion {
   question: string;
@@ -18,6 +20,18 @@ interface ParsedQuestion {
   correct_answer: string;
   section: string;
   category: string;
+}
+
+interface DatabaseQuestion {
+  id: string;
+  question: string;
+  options: string;
+  correct_answer: string;
+  section: string | null;
+  category: string | null;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 const QuizAdmin = () => {
@@ -32,6 +46,10 @@ const QuizAdmin = () => {
     category: '',
     image: null as File | null
   });
+  const [questions, setQuestions] = useState<DatabaseQuestion[]>([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<DatabaseQuestion[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
   const categories = [
@@ -43,6 +61,50 @@ const QuizAdmin = () => {
     { value: 'protecting_environment', label: 'Protecting the environment' },
     { value: 'emergencies_incidents', label: 'Emergencies and incidents' }
   ];
+
+  // Fetch all questions from database
+  const fetchQuestions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('quiz_questions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setQuestions(data || []);
+      setFilteredQuestions(data || []);
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch questions",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Load questions on component mount
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  // Filter questions based on category and search term
+  useEffect(() => {
+    let filtered = questions;
+
+    if (selectedCategory) {
+      filtered = filtered.filter(q => q.category === selectedCategory);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(q => 
+        q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        q.correct_answer.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredQuestions(filtered);
+  }, [questions, selectedCategory, searchTerm]);
 
   const sections = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
@@ -132,6 +194,9 @@ const QuizAdmin = () => {
 
       setBulkText('');
       setParsedQuestions([]);
+      
+      // Refresh questions list
+      fetchQuestions();
     } catch (error) {
       console.error('Error saving questions:', error);
       toast({
@@ -203,6 +268,9 @@ const QuizAdmin = () => {
         category: '',
         image: null
       });
+
+      // Refresh questions list
+      fetchQuestions();
     } catch (error) {
       console.error('Error saving question:', error);
       toast({
@@ -215,17 +283,164 @@ const QuizAdmin = () => {
     }
   };
 
+  const deleteQuestion = async (questionId: string) => {
+    try {
+      const { error } = await supabase
+        .from('quiz_questions')
+        .delete()
+        .eq('id', questionId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Question deleted successfully"
+      });
+
+      fetchQuestions();
+    } catch (error) {
+      console.error('Error deleting question:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete question",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getCategoryLabel = (value: string) => {
+    const category = categories.find(cat => cat.value === value);
+    return category ? category.label : value;
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <h1 className="text-3xl font-bold text-navy mb-8">Quiz Question Admin</h1>
           
-          <Tabs defaultValue="bulk" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs defaultValue="log" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="log">Questions Log</TabsTrigger>
               <TabsTrigger value="bulk">Bulk Import</TabsTrigger>
               <TabsTrigger value="single">Single Question</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="log">
+              <Card className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">All Questions ({filteredQuestions.length})</h2>
+                  <Button onClick={fetchQuestions} variant="outline">
+                    <Download className="w-4 h-4 mr-2" />
+                    Refresh
+                  </Button>
+                </div>
+
+                {/* Filters */}
+                <div className="flex gap-4 mb-6">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <Input
+                        placeholder="Search questions..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="w-64">
+                      <Filter className="w-4 h-4 mr-2" />
+                      <SelectValue placeholder="Filter by category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="">All Categories</SelectItem>
+                      {categories.map(cat => (
+                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Questions Table */}
+                <div className="border rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Question</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Section</TableHead>
+                        <TableHead>Correct Answer</TableHead>
+                        <TableHead>Image</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredQuestions.map((question) => (
+                        <TableRow key={question.id}>
+                          <TableCell className="max-w-md">
+                            <div className="truncate" title={question.question}>
+                              {question.question}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {question.category && (
+                              <Badge variant="secondary">
+                                {getCategoryLabel(question.category)}
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {question.section && (
+                              <Badge variant="outline">{question.section}</Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="max-w-xs">
+                            <div className="truncate" title={question.correct_answer}>
+                              {question.correct_answer}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {question.image_url ? (
+                              <img 
+                                src={question.image_url} 
+                                alt="Question" 
+                                className="w-8 h-8 object-cover rounded cursor-pointer"
+                                onClick={() => window.open(question.image_url!, '_blank')}
+                              />
+                            ) : (
+                              <span className="text-gray-400">None</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(question.created_at).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <Button 
+                              onClick={() => deleteQuestion(question.id)}
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+
+                  {filteredQuestions.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      {questions.length === 0 ? 'No questions found' : 'No questions match your filters'}
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="bulk">
               <Card className="p-6">
