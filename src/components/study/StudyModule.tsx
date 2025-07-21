@@ -57,7 +57,7 @@ const StudyModule = ({ module }: StudyModuleProps) => {
   const getQuizCategory = () => {
     switch (module.id) {
       case 1: 
-        return "Navigation marks, lights & sounds";
+        return "navigation_marks"; // Use the database category value, not the label
       default:
         return null;
     }
