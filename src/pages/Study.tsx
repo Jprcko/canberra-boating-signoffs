@@ -8,7 +8,7 @@ import StudyModule from "@/components/study/StudyModule";
 
 const Study = () => {
   const boatingModules = [
-    { id: 1, title: "Navigation Marks", completed: true, locked: false },
+    { id: 1, title: "Navigation Marks, Lights and Sound", completed: true, locked: false },
     { id: 2, title: "Collision Rules", completed: false, locked: false },
     { id: 3, title: "Safety Equipment", completed: false, locked: true },
     { id: 4, title: "Weather and Tides", completed: false, locked: true },

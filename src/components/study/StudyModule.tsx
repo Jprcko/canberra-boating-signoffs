@@ -131,14 +131,16 @@ const StudyModule = ({ module }: StudyModuleProps) => {
               </div>
               
               <div className="prose max-w-none">
-                <h4 className="text-lg font-semibold text-navy mb-3">Module: Navigational Marks</h4>
+                <h4 className="text-lg font-semibold text-navy mb-3">Module: Navigation Marks, Lights and Sound</h4>
                 <p className="text-gray-700 mb-4">
-                  This module introduces the key navigational aids you'll encounter on NSW waterways and how to use them for safe and legal boating.
+                  This module introduces the key navigational aids, lighting systems, and sound signals you'll encounter on NSW waterways and how to use them for safe and legal boating.
                 </p>
                 <h5 className="text-md font-semibold text-navy mb-2">What You'll Learn:</h5>
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
                   <li>The different types of navigation marks and their meanings</li>
                   <li>How to identify marks by shape, colour, and lights</li>
+                  <li>Understanding navigation lights on vessels and their significance</li>
+                  <li>Sound signals and their proper use in different situations</li>
                   <li>What the law says about passing and obeying marks</li>
                   <li>Practical safety tips and real-world examples</li>
                 </ul>
