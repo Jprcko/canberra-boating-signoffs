@@ -48,7 +48,7 @@ const QuizAdmin = () => {
   });
   const [questions, setQuestions] = useState<DatabaseQuestion[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<DatabaseQuestion[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
