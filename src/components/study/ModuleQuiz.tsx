@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, RotateCcw } from "lucide-react";
+import { CheckCircle, XCircle, RotateCcw, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +17,7 @@ export interface QuizQuestion {
 interface ModuleQuizProps {
   moduleId: string;
   moduleTitle: string;
-  questions: QuizQuestion[];
+  category: string;
   onClose: () => void;
 }
 
@@ -29,14 +29,61 @@ interface QuizAnswer {
   isCorrect: boolean;
 }
 
-const ModuleQuiz = ({ moduleId, moduleTitle, questions, onClose }: ModuleQuizProps) => {
+const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProps) => {
   const [quizState, setQuizState] = useState<QuizState>('intro');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
   const [showFeedback, setShowFeedback] = useState(false);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  // Fetch questions from database based on category
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('quiz_questions')
+          .select('*')
+          .eq('category', category);
+
+        if (error) {
+          console.error('Error fetching questions:', error);
+          toast({
+            title: "Error",
+            description: "Failed to load quiz questions",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        // Transform database questions to match QuizQuestion interface
+        const transformedQuestions: QuizQuestion[] = (data || []).map((q, index) => ({
+          id: index + 1,
+          question: q.question,
+          options: JSON.parse(q.options),
+          correctAnswer: q.correct_answer,
+          image: q.image_url || undefined
+        }));
+
+        setQuestions(transformedQuestions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load quiz questions",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [category, toast]);
 
   const score = answers.filter(answer => answer.isCorrect).length;
   const percentage = Math.round((score / questions.length) * 100);
@@ -118,21 +165,31 @@ const ModuleQuiz = ({ moduleId, moduleTitle, questions, onClose }: ModuleQuizPro
   const renderIntro = () => (
     <div className="p-6 text-center space-y-6">
       <h3 className="text-xl font-semibold text-navy">
-        Navigational Marks, Lights and Sounds Test
+        {moduleTitle} Test
       </h3>
       <p className="text-gray-700">
-        You are about to attempt the Navigational Marks, Lights and Sounds Test. 
+        You are about to attempt the {moduleTitle} Test. 
         You will be asked questions based on information in the Boating Handbook.
       </p>
-      <p className="text-sm text-gray-600">
-        This quiz contains {questions.length} questions.
-      </p>
-      <Button 
-        onClick={startQuiz}
-        className="bg-water-blue hover:bg-water-blue/90 text-white px-8 py-2 rounded-full"
-      >
-        Start Test
-      </Button>
+      {loading ? (
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin text-water-blue" />
+          <span className="ml-2 text-gray-600">Loading questions...</span>
+        </div>
+      ) : (
+        <>
+          <p className="text-sm text-gray-600">
+            This quiz contains {questions.length} questions.
+          </p>
+          <Button 
+            onClick={startQuiz}
+            className="bg-water-blue hover:bg-water-blue/90 text-white px-8 py-2 rounded-full"
+            disabled={questions.length === 0}
+          >
+            {questions.length === 0 ? 'No Questions Available' : 'Start Test'}
+          </Button>
+        </>
+      )}
     </div>
   );
 
@@ -283,7 +340,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, questions, onClose }: ModuleQuizPro
   return (
     <Card className="mt-6 overflow-hidden shadow-lg">
       {quizState === 'intro' && renderIntro()}
-      {quizState === 'quiz' && renderQuiz()}
+      {quizState === 'quiz' && !loading && questions.length > 0 && renderQuiz()}
       {quizState === 'results' && renderResults()}
     </Card>
   );

@@ -36,59 +36,6 @@ const StudyModule = ({ module }: StudyModuleProps) => {
             "Sound signals and their proper use in different situations",
             "What the law says about passing and obeying marks",
             "Practical safety tips and real-world examples"
-          ],
-          quizQuestions: [
-            {
-              id: 1,
-              question: "If you fall overboard into cold water, what can you do to extend survival time?",
-              options: [
-                "Move constantly and do not remove clothing.",
-                "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing.",
-                "Remove clothing and float on your back."
-              ],
-              correctAnswer: "Assume the Heat Escape Lessening Posture (HELP) and do not remove clothing."
-            },
-            {
-              id: 2,
-              question: "What does a red navigation mark indicate?",
-              options: [
-                "Port side when returning to harbour",
-                "Starboard side when returning to harbour", 
-                "A hazard to navigation"
-              ],
-              correctAnswer: "Port side when returning to harbour"
-            },
-            {
-              id: 3,
-              question: "Which of these lights would you see on the port side of a vessel at night?",
-              options: [
-                "Green light",
-                "Red light",
-                "White light"
-              ],
-              correctAnswer: "Red light"
-            },
-            {
-              id: 4,
-              question: "What should you do when you hear one short blast from another vessel?",
-              options: [
-                "I am turning to starboard (right)",
-                "I am turning to port (left)",
-                "I am going astern"
-              ],
-              correctAnswer: "I am turning to starboard (right)"
-            },
-            {
-              id: 5,
-              question: "A vessel showing these lights is seen ahead. It is a:",
-              options: [
-                "Powered vessel underway.",
-                "Sailing vessel underway.",
-                "Powered vessel at anchor."
-              ],
-              correctAnswer: "Sailing vessel underway.",
-              image: "/lovable-uploads/578f1734-826f-4ae1-b4cc-05e61b04b108.png"
-            }
           ]
         };
       default:
@@ -99,14 +46,22 @@ const StudyModule = ({ module }: StudyModuleProps) => {
             "Safety considerations and best practices",
             "Legal requirements and regulations",
             "Practical applications and examples"
-          ],
-          quizQuestions: []
+          ]
         };
     }
   };
 
   const moduleContent = getModuleContent();
-  const quizQuestions = module.quizQuestions || moduleContent.quizQuestions;
+  
+  // Get category for quiz questions
+  const getQuizCategory = () => {
+    switch (module.id) {
+      case 1: 
+        return "Navigation marks, lights & sounds";
+      default:
+        return null;
+    }
+  };
 
   const handleTakeQuiz = () => {
     setShowQuiz(true);
@@ -180,16 +135,16 @@ const StudyModule = ({ module }: StudyModuleProps) => {
               <Button 
                 onClick={handleTakeQuiz}
                 className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
-                disabled={module.locked || quizQuestions.length === 0}
+                disabled={module.locked || !getQuizCategory()}
               >
-                {quizQuestions.length === 0 ? 'Quiz Coming Soon' : 'Take Module Quiz'}
+                {!getQuizCategory() ? 'Quiz Coming Soon' : 'Take Module Quiz'}
               </Button>
 
-              {showQuiz && quizQuestions.length > 0 && (
+              {showQuiz && getQuizCategory() && (
                 <ModuleQuiz
                   moduleId={module.id.toString()}
                   moduleTitle={module.title}
-                  questions={quizQuestions}
+                  category={getQuizCategory()}
                   onClose={handleCloseQuiz}
                 />
               )}
