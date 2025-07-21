@@ -92,7 +92,7 @@ const QuizAdmin = () => {
   useEffect(() => {
     let filtered = questions;
 
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== 'all') {
       filtered = filtered.filter(q => q.category === selectedCategory);
     }
 
@@ -356,7 +356,7 @@ const QuizAdmin = () => {
                       <SelectValue placeholder="Filter by category" />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      <SelectItem value="">All Categories</SelectItem>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {categories.map(cat => (
                         <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                       ))}
