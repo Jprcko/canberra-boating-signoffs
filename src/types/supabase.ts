@@ -100,6 +100,41 @@ export interface Database {
           phone?: string;
         };
       };
+      quiz_questions: {
+        Row: {
+          id: string;
+          question: string;
+          options: string;
+          correct_answer: string;
+          section: string | null;
+          category: string | null;
+          image_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          question: string;
+          options: string;
+          correct_answer: string;
+          section?: string | null;
+          category?: string | null;
+          image_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          question?: string;
+          options?: string;
+          correct_answer?: string;
+          section?: string | null;
+          category?: string | null;
+          image_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: {};
     Functions: {};

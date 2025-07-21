@@ -147,6 +147,42 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_questions: {
+        Row: {
+          category: string | null
+          correct_answer: string
+          created_at: string
+          id: string
+          image_url: string | null
+          options: string
+          question: string
+          section: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          correct_answer: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          options: string
+          question: string
+          section?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          correct_answer?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          options?: string
+          question?: string
+          section?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           answers: Json
