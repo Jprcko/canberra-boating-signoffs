@@ -60,6 +60,17 @@ const StudyModule = ({ module }: StudyModuleProps) => {
         "I am going astern"
       ],
       correctAnswer: "I am turning to starboard (right)"
+    },
+    {
+      id: 5,
+      question: "A vessel showing these lights is seen ahead. It is a:",
+      options: [
+        "Powered vessel underway.",
+        "Sailing vessel underway.",
+        "Powered vessel at anchor."
+      ],
+      correctAnswer: "Sailing vessel underway.",
+      image: "/lovable-uploads/578f1734-826f-4ae1-b4cc-05e61b04b108.png"
     }
   ];
 
