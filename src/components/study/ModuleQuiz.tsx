@@ -154,11 +154,11 @@ const ModuleQuiz = ({ moduleId, moduleTitle, questions, onClose }: ModuleQuizPro
         </div>
 
         {question.image && (
-          <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+          <div className="max-w-md mx-auto bg-gray-100 rounded-lg overflow-hidden">
             <img 
               src={question.image} 
               alt="Question illustration"
-              className="w-[70%] h-[70%] object-contain mx-auto"
+              className="w-full h-auto object-contain"
             />
           </div>
         )}
