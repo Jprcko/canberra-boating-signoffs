@@ -38,6 +38,9 @@ const QuizAdmin = () => {
   const [bulkText, setBulkText] = useState('');
   const [parsedQuestions, setParsedQuestions] = useState<ParsedQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [bulkImageText, setBulkImageText] = useState('');
+  const [parsedImageQuestions, setParsedImageQuestions] = useState<ParsedQuestion[]>([]);
+  const [bulkImages, setBulkImages] = useState<File[]>([]);
   const [singleQuestion, setSingleQuestion] = useState({
     question: '',
     options: ['', '', ''],
@@ -283,6 +286,135 @@ const QuizAdmin = () => {
     }
   };
 
+  // Parse bulk questions with images
+  const parseBulkImageQuestions = () => {
+    const lines = bulkImageText.trim().split('\n');
+    const questions: ParsedQuestion[] = [];
+    let currentQuestion: Partial<ParsedQuestion> = {};
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      if (line.startsWith('Question:')) {
+        // Save previous question if exists
+        if (currentQuestion.question) {
+          questions.push(currentQuestion as ParsedQuestion);
+        }
+        
+        // Start new question
+        currentQuestion = {
+          question: line.replace('Question:', '').trim().replace(/^"/, '').replace(/"$/, ''),
+          options: [],
+          correct_answer: '',
+          section: '',
+          category: ''
+        };
+      } else if (line.startsWith('Options:')) {
+        const optionsText = line.replace('Options:', '').trim();
+        // Parse JSON array or bracket format
+        try {
+          currentQuestion.options = JSON.parse(optionsText);
+        } catch (e) {
+          // Fallback for other formats
+          currentQuestion.options = optionsText.split(',').map(opt => opt.trim().replace(/^"/, '').replace(/"$/, ''));
+        }
+      } else if (line.startsWith('Correct Answer:')) {
+        currentQuestion.correct_answer = line.replace('Correct Answer:', '').trim().replace(/^"/, '').replace(/"$/, '');
+      } else if (line.startsWith('Section:')) {
+        currentQuestion.section = line.replace('Section:', '').trim();
+      } else if (line.startsWith('Category:')) {
+        const categoryText = line.replace('Category:', '').trim();
+        // Map category text to category value
+        const category = categories.find(cat => cat.label === categoryText);
+        currentQuestion.category = category ? category.value : categoryText.toLowerCase().replace(/ /g, '_');
+      }
+    }
+    
+    // Don't forget the last question
+    if (currentQuestion.question) {
+      questions.push(currentQuestion as ParsedQuestion);
+    }
+    
+    setParsedImageQuestions(questions);
+    toast({
+      title: "Questions Parsed",
+      description: `Successfully parsed ${questions.length} questions. You can now upload images.`
+    });
+  };
+
+  // Save bulk questions with images
+  const saveBulkImageQuestions = async () => {
+    if (parsedImageQuestions.length === 0) {
+      toast({
+        title: "No Questions",
+        description: "Please parse questions first",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const questionsWithImages = [];
+
+      for (let i = 0; i < parsedImageQuestions.length; i++) {
+        const question = parsedImageQuestions[i];
+        let imageUrl = null;
+
+        // Check if there's a corresponding image for this question
+        if (bulkImages[i]) {
+          imageUrl = await uploadImage(bulkImages[i]);
+        }
+
+        questionsWithImages.push({
+          question: question.question,
+          options: JSON.stringify(question.options),
+          correct_answer: question.correct_answer,
+          section: question.section,
+          category: question.category,
+          image_url: imageUrl
+        });
+      }
+
+      const { data, error } = await supabase
+        .from('quiz_questions')
+        .insert(questionsWithImages);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: `Saved ${parsedImageQuestions.length} questions with images to database`
+      });
+
+      setBulkImageText('');
+      setParsedImageQuestions([]);
+      setBulkImages([]);
+      
+      // Refresh questions list
+      fetchQuestions();
+    } catch (error) {
+      console.error('Error saving questions with images:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save questions with images",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = (index: number, file: File | null) => {
+    const newImages = [...bulkImages];
+    if (file) {
+      newImages[index] = file;
+    } else {
+      delete newImages[index];
+    }
+    setBulkImages(newImages);
+  };
+
   const deleteQuestion = async (questionId: string) => {
     try {
       const { error } = await supabase
@@ -320,9 +452,10 @@ const QuizAdmin = () => {
           <h1 className="text-3xl font-bold text-navy mb-8">Quiz Question Admin</h1>
           
           <Tabs defaultValue="log" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="log">Questions Log</TabsTrigger>
               <TabsTrigger value="bulk">Bulk Import</TabsTrigger>
+              <TabsTrigger value="bulk-image">Bulk + Images</TabsTrigger>
               <TabsTrigger value="single">Single Question</TabsTrigger>
             </TabsList>
 
@@ -590,6 +723,79 @@ const QuizAdmin = () => {
                   >
                     {isLoading ? 'Saving...' : 'Save Question'}
                   </Button>
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="bulk-image">
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-4">Bulk Import with Images</h2>
+                <p className="text-gray-600 mb-4">
+                  Paste your questions in the same format, then upload images for each question in order.
+                </p>
+                
+                <div className="space-y-6">
+                  <div>
+                    <Label htmlFor="bulk-image-text">Questions Text</Label>
+                    <Textarea
+                      id="bulk-image-text"
+                      value={bulkImageText}
+                      onChange={(e) => setBulkImageText(e.target.value)}
+                      placeholder="Paste your questions here..."
+                      className="min-h-[200px]"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <Button onClick={parseBulkImageQuestions} disabled={!bulkImageText.trim()}>
+                      Parse Questions
+                    </Button>
+                    <Button 
+                      onClick={saveBulkImageQuestions} 
+                      disabled={parsedImageQuestions.length === 0 || isLoading}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {isLoading ? 'Saving...' : `Save ${parsedImageQuestions.length} Questions with Images`}
+                    </Button>
+                  </div>
+
+                  {parsedImageQuestions.length > 0 && (
+                    <div className="mt-6">
+                      <h3 className="font-semibold mb-4">Questions with Image Upload:</h3>
+                      <div className="space-y-4 max-h-96 overflow-y-auto">
+                        {parsedImageQuestions.map((q, index) => (
+                          <div key={index} className="p-4 bg-gray-50 rounded-lg border">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                              <div>
+                                <p className="font-medium text-sm mb-2">Question {index + 1}:</p>
+                                <p className="text-sm mb-2">{q.question}</p>
+                                <p className="text-xs text-gray-600">
+                                  Section: {q.section} | Category: {q.category} | Answer: {q.correct_answer}
+                                </p>
+                              </div>
+                              <div>
+                                <Label htmlFor={`image-${index}`} className="text-sm">
+                                  Image for Question {index + 1} (optional)
+                                </Label>
+                                <Input
+                                  id={`image-${index}`}
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleImageUpload(index, e.target.files?.[0] || null)}
+                                  className="mt-1"
+                                />
+                                {bulkImages[index] && (
+                                  <p className="text-xs text-green-600 mt-1">
+                                    ✓ Image selected: {bulkImages[index].name}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Card>
             </TabsContent>
