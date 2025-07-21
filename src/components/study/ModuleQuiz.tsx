@@ -158,7 +158,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, questions, onClose }: ModuleQuizPro
             <img 
               src={question.image} 
               alt="Question illustration"
-              className="w-full h-full object-contain"
+              className="w-[70%] h-[70%] object-contain mx-auto"
             />
           </div>
         )}
