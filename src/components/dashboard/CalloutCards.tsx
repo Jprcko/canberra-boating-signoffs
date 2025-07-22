@@ -15,8 +15,8 @@ const CalloutCards = () => {
       color: "from-blue-500 to-blue-600"
     },
     {
-      title: "Quick Quiz",
-      description: "Take a quick 10-question quiz",
+      title: "15 Toughest Questions",
+      description: "Top student mistakes",
       icon: HelpCircle,
       action: "Start Quiz",
       link: "/quizzes",
