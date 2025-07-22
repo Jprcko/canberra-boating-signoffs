@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, RotateCcw, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useToughestQuestions } from "@/hooks/useToughestQuestions";
 
 export interface QuizQuestion {
   id: number;
@@ -39,6 +40,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { questions: toughestQuestions, loading: toughestLoading } = useToughestQuestions();
 
   // Shuffle array function
   const shuffleArray = <T,>(array: T[]): T[] => {
@@ -56,6 +58,28 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
       try {
         setLoading(true);
         console.log('Fetching questions for category:', category);
+        
+        // Handle special case for "toughest" category
+        if (category === 'toughest') {
+          // Wait for toughest questions to load
+          if (!toughestLoading && toughestQuestions.length > 0) {
+            const transformedQuestions: QuizQuestion[] = toughestQuestions.map((q, index) => ({
+              id: index + 1,
+              question: q.question,
+              options: q.options,
+              correctAnswer: q.correctAnswer,
+              image: q.image
+            }));
+
+            // Shuffle questions for random order each time
+            const shuffledQuestions = shuffleArray(transformedQuestions);
+            setQuestions(shuffledQuestions);
+            setLoading(false);
+          } else if (!toughestLoading) {
+            setLoading(false);
+          }
+          return;
+        }
         
         const { data, error } = await supabase
           .from('quiz_questions')
@@ -103,7 +127,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
     };
 
     fetchQuestions();
-  }, [category, toast]);
+  }, [category, toast, toughestQuestions, toughestLoading]);
 
   const score = answers.filter(answer => answer.isCorrect).length;
   const percentage = Math.round((score / questions.length) * 100);
