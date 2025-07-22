@@ -55,7 +55,7 @@ const Quizzes = () => {
         setCompletedModules(passedModules);
 
         // Fetch question counts for each category
-        const categories = ['navigation_marks', 'collision_rules', 'safety_equipment', 'preparation_behaviour', 'waterways', 'emergencies', 'environment'];
+        const categories = ['navigation_marks', 'rules', 'lifejackets_safety', 'preparation_behavior', 'waterways_areas', 'emergencies_incidents', 'protecting_environment'];
         const questionCounts: Record<string, number> = {};
 
         for (const category of categories) {
@@ -82,12 +82,12 @@ const Quizzes = () => {
   const getModuleQuizzes = () => {
     const baseModules = [
       { id: 1, title: "Navigation marks, lights & sounds", category: "navigation_marks" },
-      { id: 2, title: "Collision Rules", category: "collision_rules" },
-      { id: 3, title: "Lifejackets and safety equipment", category: "safety_equipment" },
-      { id: 4, title: "Preparation, behaviour and decisions", category: "preparation_behaviour" },
-      { id: 5, title: "Waterways and designated areas", category: "waterways" },
-      { id: 6, title: "Emergencies and incidents", category: "emergencies" },
-      { id: 7, title: "Protecting the environment", category: "environment" }
+      { id: 2, title: "Collision Rules", category: "rules" },
+      { id: 3, title: "Lifejackets and safety equipment", category: "lifejackets_safety" },
+      { id: 4, title: "Preparation, behaviour and decisions", category: "preparation_behavior" },
+      { id: 5, title: "Waterways and designated areas", category: "waterways_areas" },
+      { id: 6, title: "Emergencies and incidents", category: "emergencies_incidents" },
+      { id: 7, title: "Protecting the environment", category: "protecting_environment" }
     ];
 
     return baseModules.map((module, index) => {
