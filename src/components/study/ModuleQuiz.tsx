@@ -170,7 +170,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
   };
 
   const renderIntro = () => (
-    <div className="p-6 text-center space-y-6">
+    <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
       <h3 className="text-xl font-semibold text-navy">
         {moduleTitle} Test
       </h3>
@@ -303,7 +303,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
   };
 
   const renderResults = () => (
-    <div className="p-6 text-center space-y-6">
+    <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
       <h3 className="text-2xl font-bold text-navy">Results</h3>
       
       <div className="space-y-4">
