@@ -40,6 +40,16 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Shuffle array function
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   // Fetch questions from database based on category
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -75,8 +85,11 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
           image: q.image_url || undefined
         }));
 
-        console.log('Transformed questions:', transformedQuestions);
-        setQuestions(transformedQuestions);
+        // Shuffle questions for random order each time
+        const shuffledQuestions = shuffleArray(transformedQuestions);
+
+        console.log('Transformed and shuffled questions:', shuffledQuestions);
+        setQuestions(shuffledQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
         toast({
@@ -315,13 +328,13 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
         </div>
         
         <div className={`p-4 rounded-lg ${
-          percentage >= 70 
+          percentage >= 80 
             ? 'bg-green-50 border border-green-200 text-green-800' 
             : 'bg-red-50 border border-red-200 text-red-800'
         }`}>
-          {percentage >= 70 
+          {percentage >= 80 
             ? '🎉 Congratulations! You passed the test!' 
-            : '😔 You need 70% or higher to pass. Try again!'}
+            : '😔 You need 80% or higher to pass. Try again!'}
         </div>
       </div>
 

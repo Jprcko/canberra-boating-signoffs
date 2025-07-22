@@ -5,23 +5,87 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import StudyModule from "@/components/study/StudyModule";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const Study = () => {
-  const boatingModules = [
-    { id: 1, title: "Navigation marks, lights & sounds", completed: true, locked: false },
-    { id: 2, title: "Collision Rules", completed: false, locked: false },
-    { id: 3, title: "Lifejackets and safety equipment", completed: false, locked: false },
-    { id: 4, title: "Preparation, behaviour and decisions", completed: false, locked: false },
-    { id: 5, title: "Waterways and designated areas", completed: false, locked: false },
-    { id: 6, title: "Emergencies and incidents", completed: false, locked: false },
-    { id: 7, title: "Protecting the environment", completed: false, locked: false }
-  ];
+  const { user } = useAuth();
+  const [completedModules, setCompletedModules] = useState<number[]>([]);
+
+  // Fetch completed modules from quiz results
+  useEffect(() => {
+    const fetchCompletedModules = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('quiz_results')
+          .select('module_id, percentage')
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Error fetching quiz results:', error);
+          return;
+        }
+
+        // Filter modules with passing score (80% or higher)
+        const passedModules = (data || [])
+          .filter(result => result.percentage >= 80)
+          .map(result => parseInt(result.module_id));
+
+        setCompletedModules(passedModules);
+      } catch (error) {
+        console.error('Error fetching completed modules:', error);
+      }
+    };
+
+    fetchCompletedModules();
+  }, [user]);
+
+  // Sequential unlocking logic for boating modules
+  const getBoatingModules = () => {
+    const baseModules = [
+      { id: 1, title: "Navigation marks, lights & sounds" },
+      { id: 2, title: "Collision Rules" },
+      { id: 3, title: "Lifejackets and safety equipment" },
+      { id: 4, title: "Preparation, behaviour and decisions" },
+      { id: 5, title: "Waterways and designated areas" },
+      { id: 6, title: "Emergencies and incidents" },
+      { id: 7, title: "Protecting the environment" }
+    ];
+
+    return baseModules.map((module, index) => {
+      const isCompleted = completedModules.includes(module.id);
+      
+      // First two modules (Navigation marks and Collision Rules) are always unlocked
+      if (module.id === 1 || module.id === 2) {
+        return { ...module, completed: isCompleted, locked: false };
+      }
+
+      // Check if either of the first two modules is completed
+      const hasCompletedInitialModule = completedModules.includes(1) || completedModules.includes(2);
+      
+      // For subsequent modules, check if previous module is completed
+      const previousModuleCompleted = index === 0 || completedModules.includes(baseModules[index - 1].id);
+      
+      const isUnlocked = hasCompletedInitialModule && previousModuleCompleted;
+      
+      return { 
+        ...module, 
+        completed: isCompleted, 
+        locked: !isUnlocked 
+      };
+    });
+  };
 
   const pwcModules = [
     { id: 1, title: "PWC Safety", completed: false, locked: false },
     { id: 2, title: "Operating Rules", completed: false, locked: true },
     { id: 3, title: "Maintenance", completed: false, locked: true }
   ];
+
+  const boatingModules = getBoatingModules();
 
   return (
     <Layout>
