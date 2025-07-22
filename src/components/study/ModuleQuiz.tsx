@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, RotateCcw, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, RotateCcw, Loader2, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -207,33 +207,46 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
   };
 
   const renderIntro = () => (
-    <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
-      <h3 className="text-xl font-semibold text-navy">
-        {moduleTitle} Test
-      </h3>
-      <p className="text-gray-700">
-        You are about to attempt the {moduleTitle} Test. 
-        You will be asked questions based on information in the Boating Handbook.
-      </p>
-      {loading ? (
-        <div className="flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-water-blue" />
-          <span className="ml-2 text-gray-600">Loading questions...</span>
-        </div>
-      ) : (
-        <>
-          <p className="text-sm text-gray-600">
-            This quiz contains {questions.length} questions.
-          </p>
-          <Button 
-            onClick={startQuiz}
-            className="bg-water-blue hover:bg-water-blue/90 text-white px-8 py-2 rounded-full"
-            disabled={questions.length === 0}
-          >
-            {questions.length === 0 ? 'No Questions Available' : 'Start Test'}
-          </Button>
-        </>
-      )}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          variant="outline"
+          onClick={onClose}
+          className="flex items-center space-x-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Quizzes</span>
+        </Button>
+      </div>
+      
+      <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
+        <h3 className="text-xl font-semibold text-navy">
+          {moduleTitle} Test
+        </h3>
+        <p className="text-gray-700">
+          You are about to attempt the {moduleTitle} Test. 
+          You will be asked questions based on information in the Boating Handbook.
+        </p>
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <Loader2 className="w-6 h-6 animate-spin text-water-blue" />
+            <span className="ml-2 text-gray-600">Loading questions...</span>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-gray-600">
+              This quiz contains {questions.length} questions.
+            </p>
+            <Button 
+              onClick={startQuiz}
+              className="bg-water-blue hover:bg-water-blue/90 text-white px-8 py-2 rounded-full"
+              disabled={questions.length === 0}
+            >
+              {questions.length === 0 ? 'No Questions Available' : 'Start Test'}
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 
@@ -241,18 +254,30 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
     const question = questions[currentQuestion];
     
     return (
-      <div className="p-6 space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
-        <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-600">
-            Question {currentQuestion + 1} of {questions.length}
-          </span>
-          <div className="w-full max-w-xs bg-gray-200 rounded-full h-2 ml-4">
-            <div 
-              className="bg-water-blue h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-            />
-          </div>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Quizzes</span>
+          </Button>
         </div>
+        
+        <div className="p-6 space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-600">
+              Question {currentQuestion + 1} of {questions.length}
+            </span>
+            <div className="w-full max-w-xs bg-gray-200 rounded-full h-2 ml-4">
+              <div 
+                className="bg-water-blue h-2 rounded-full transition-all duration-300"
+                style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+              />
+            </div>
+          </div>
 
         {question.image && (
           <div className="max-w-md mx-auto bg-gray-100 rounded-lg overflow-hidden">
@@ -335,48 +360,62 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
             </div>
           )}
         </div>
+        </div>
       </div>
     );
   };
 
   const renderResults = () => (
-    <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
-      <h3 className="text-2xl font-bold text-navy">Results</h3>
-      
-      <div className="space-y-4">
-        <div className="text-6xl font-bold text-water-blue">
-          {score}/{questions.length}
-        </div>
-        <div className="text-xl text-gray-700">
-          {percentage}% Correct
-        </div>
-        
-        <div className={`p-4 rounded-lg ${
-          percentage >= 80 
-            ? 'bg-green-50 border border-green-200 text-green-800' 
-            : 'bg-red-50 border border-red-200 text-red-800'
-        }`}>
-          {percentage >= 80 
-            ? '🎉 Congratulations! You passed the test!' 
-            : '😔 You need 80% or higher to pass. Try again!'}
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <Button 
-          onClick={retryQuiz}
-          className="bg-water-blue hover:bg-water-blue/90 text-white w-full"
-        >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          Retry Test
-        </Button>
-        <Button 
-          onClick={onClose}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <Button
           variant="outline"
-          className="w-full"
+          onClick={onClose}
+          className="flex items-center space-x-2"
         >
-          Exit
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Quizzes</span>
         </Button>
+      </div>
+      
+      <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
+        <h3 className="text-2xl font-bold text-navy">Results</h3>
+        
+        <div className="space-y-4">
+          <div className="text-6xl font-bold text-water-blue">
+            {score}/{questions.length}
+          </div>
+          <div className="text-xl text-gray-700">
+            {percentage}% Correct
+          </div>
+          
+          <div className={`p-4 rounded-lg ${
+            percentage >= 80 
+              ? 'bg-green-50 border border-green-200 text-green-800' 
+              : 'bg-red-50 border border-red-200 text-red-800'
+          }`}>
+            {percentage >= 80 
+              ? '🎉 Congratulations! You passed the test!' 
+              : '😔 You need 80% or higher to pass. Try again!'}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Button 
+            onClick={retryQuiz}
+            className="bg-water-blue hover:bg-water-blue/90 text-white w-full"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Retry Test
+          </Button>
+          <Button 
+            onClick={onClose}
+            variant="outline"
+            className="w-full"
+          >
+            Exit
+          </Button>
+        </div>
       </div>
     </div>
   );
