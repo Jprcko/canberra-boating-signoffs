@@ -204,7 +204,7 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
     const question = questions[currentQuestion];
     
     return (
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="text-sm font-medium text-gray-600">
             Question {currentQuestion + 1} of {questions.length}
