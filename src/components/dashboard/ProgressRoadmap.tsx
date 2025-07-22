@@ -1,5 +1,6 @@
+
 import { Card } from "@/components/ui/card";
-import { CheckCircle, Circle, BookOpen, Ship, FileText, Calendar, Upload } from "lucide-react";
+import { CheckCircle, Circle, BookOpen, Ship, FileText, Calendar } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,25 +33,54 @@ const ProgressRoadmap = () => {
     enabled: !!user?.id
   });
 
+  // Fetch user's quiz results to determine study progress
+  const { data: quizResults } = useQuery({
+    queryKey: ['user-quiz-results', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      
+      const { data, error } = await supabase
+        .from('quiz_results')
+        .select('module_id, percentage')
+        .eq('user_id', user.id);
+      
+      if (error) {
+        console.error('Error fetching quiz results:', error);
+        return [];
+      }
+      
+      return data || [];
+    },
+    enabled: !!user?.id
+  });
+
   const bookingDate = bookingData?.booking_date ? new Date(bookingData.booking_date) : null;
   const currentDate = new Date();
   const isBookingDatePassed = bookingDate && currentDate > bookingDate;
 
+  // Calculate study progress based on completed modules
+  const totalModules = 7; // Total number of study modules
+  const completedModules = quizResults?.filter(result => result.percentage >= 80).length || 0;
+  const studyProgress = Math.round((completedModules / totalModules) * 100);
+  const isStudyCompleted = completedModules === totalModules;
+
   const steps = [
     {
       id: 1,
-      title: "Study",
-      icon: BookOpen,
-      completed: true,
-      progress: 100
-    },
-    {
-      id: 2,
       title: "Log Trips",
       icon: Ship,
       completed: isBookingDatePassed || false,
       progress: isBookingDatePassed ? 100 : 0,
       bookingDate: bookingDate
+    },
+    {
+      id: 2,
+      title: "Study",
+      icon: BookOpen,
+      completed: isStudyCompleted,
+      progress: studyProgress,
+      completedModules: completedModules,
+      totalModules: totalModules
     },
     {
       id: 3,
@@ -63,13 +93,6 @@ const ProgressRoadmap = () => {
       id: 4,
       title: "Book Service NSW Test",
       icon: Calendar,
-      completed: false,
-      progress: 0
-    },
-    {
-      id: 5,
-      title: "Upload Paperwork",
-      icon: Upload,
       completed: false,
       progress: 0
     }
@@ -109,9 +132,14 @@ const ProgressRoadmap = () => {
             
             <div className="mt-3 text-center">
               <p className="text-sm font-medium text-navy">{step.title}</p>
-              {step.id === 2 && step.bookingDate && (
+              {step.id === 1 && step.bookingDate && (
                 <p className="text-xs text-gray-600 mt-1">
                   Session: {format(step.bookingDate, 'MMM dd, yyyy')}
+                </p>
+              )}
+              {step.id === 2 && step.completedModules !== undefined && (
+                <p className="text-xs text-gray-600 mt-1">
+                  {step.completedModules}/{step.totalModules} modules completed
                 </p>
               )}
               <div className="w-16 bg-gray-200 rounded-full h-2 mt-2">
