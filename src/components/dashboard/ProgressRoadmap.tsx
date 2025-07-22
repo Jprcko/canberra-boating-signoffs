@@ -42,7 +42,8 @@ const ProgressRoadmap = () => {
       const { data, error } = await supabase
         .from('quiz_results')
         .select('module_id, percentage')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .neq('module_id', 'toughest_questions');
       
       if (error) {
         console.error('Error fetching quiz results:', error);
