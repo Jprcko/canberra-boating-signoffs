@@ -16,6 +16,7 @@ const Quizzes = () => {
   const { questions: toughestQuestions, loading: toughestLoading } = useToughestQuestions();
   const [completedModules, setCompletedModules] = useState<number[]>([]);
   const [showToughestQuiz, setShowToughestQuiz] = useState(false);
+  const [selectedModuleQuiz, setSelectedModuleQuiz] = useState<{id: string, title: string, category: string} | null>(null);
   const [moduleQuestionCounts, setModuleQuestionCounts] = useState<Record<string, number>>({});
   const [moduleScores, setModuleScores] = useState<Record<string, number>>({});
 
@@ -162,6 +163,23 @@ const Quizzes = () => {
     );
   }
 
+  if (selectedModuleQuiz) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-slate-50">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <ModuleQuiz
+              moduleId={selectedModuleQuiz.id}
+              moduleTitle={selectedModuleQuiz.title}
+              category={selectedModuleQuiz.category}
+              onClose={() => setSelectedModuleQuiz(null)}
+            />
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="min-h-screen bg-slate-50">
@@ -252,6 +270,11 @@ const Quizzes = () => {
                   <Button 
                     className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
                     disabled={quiz.status === 'Locked'}
+                    onClick={() => setSelectedModuleQuiz({
+                      id: quiz.id.toString(),
+                      title: quiz.title,
+                      category: quiz.category
+                    })}
                   >
                     {quiz.status === 'Passed' ? 'Retake Quiz' : 
                      quiz.status === 'In Progress' ? 'Continue Quiz' : 
