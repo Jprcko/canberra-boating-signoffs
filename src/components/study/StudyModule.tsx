@@ -215,13 +215,19 @@ const StudyModule = ({ module }: StudyModuleProps) => {
                 </ul>
               </div>
               
-              <Button 
-                onClick={handleTakeQuiz}
-                className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
-                disabled={module.locked || !getQuizCategory()}
-              >
-                {!getQuizCategory() ? 'Quiz Coming Soon' : 'Take Module Quiz'}
-              </Button>
+              <div className="mt-6 p-4 bg-gradient-to-r from-primary/10 to-water-blue/10 rounded-xl border-2 border-dashed border-primary/30">
+                <Button 
+                  onClick={handleTakeQuiz}
+                  className="w-full bg-gradient-to-r from-primary to-water-blue hover:from-primary/90 hover:to-water-blue/90 text-white rounded-full py-3 px-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                  disabled={module.locked || !getQuizCategory()}
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  {!getQuizCategory() ? 'Quiz Coming Soon' : 'Take Module Quiz'}
+                </Button>
+                <p className="text-center text-sm text-muted-foreground mt-2">
+                  Test your knowledge and track your progress
+                </p>
+              </div>
 
               {showQuiz && getQuizCategory() && (
                 <ModuleQuiz
