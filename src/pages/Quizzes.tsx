@@ -16,35 +16,65 @@ const Quizzes = () => {
   const { questions: toughestQuestions, loading: toughestLoading } = useToughestQuestions();
   const [completedModules, setCompletedModules] = useState<number[]>([]);
   const [showToughestQuiz, setShowToughestQuiz] = useState(false);
+  const [moduleQuestionCounts, setModuleQuestionCounts] = useState<Record<string, number>>({});
+  const [moduleScores, setModuleScores] = useState<Record<string, number>>({});
 
-  // Fetch completed modules from quiz results
+  // Fetch completed modules, scores, and question counts
   useEffect(() => {
-    const fetchCompletedModules = async () => {
+    const fetchQuizData = async () => {
       if (!user) return;
 
       try {
-        const { data, error } = await supabase
+        // Fetch quiz results
+        const { data: resultsData, error: resultsError } = await supabase
           .from('quiz_results')
           .select('module_id, percentage')
-          .eq('user_id', user.id);
+          .eq('user_id', user.id)
+          .order('completed_at', { ascending: false });
 
-        if (error) {
-          console.error('Error fetching quiz results:', error);
+        if (resultsError) {
+          console.error('Error fetching quiz results:', resultsError);
           return;
         }
 
-        // Filter modules with passing score (80% or higher)
-        const passedModules = (data || [])
-          .filter(result => result.percentage >= 80)
-          .map(result => parseInt(result.module_id));
+        // Get latest scores for each module
+        const latestScores: Record<string, number> = {};
+        const passedModules: number[] = [];
 
+        (resultsData || []).forEach(result => {
+          if (!latestScores[result.module_id]) {
+            latestScores[result.module_id] = result.percentage;
+            if (result.percentage >= 80) {
+              passedModules.push(parseInt(result.module_id));
+            }
+          }
+        });
+
+        setModuleScores(latestScores);
         setCompletedModules(passedModules);
+
+        // Fetch question counts for each category
+        const categories = ['navigation_marks', 'collision_rules', 'safety_equipment', 'preparation_behaviour', 'waterways', 'emergencies', 'environment'];
+        const questionCounts: Record<string, number> = {};
+
+        for (const category of categories) {
+          const { count, error: countError } = await supabase
+            .from('quiz_questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('category', category);
+
+          if (!countError && count !== null) {
+            questionCounts[category] = count;
+          }
+        }
+
+        setModuleQuestionCounts(questionCounts);
       } catch (error) {
-        console.error('Error fetching completed modules:', error);
+        console.error('Error fetching quiz data:', error);
       }
     };
 
-    fetchCompletedModules();
+    fetchQuizData();
   }, [user]);
 
   // Dynamic module quizzes based on Study page structure
@@ -61,6 +91,8 @@ const Quizzes = () => {
 
     return baseModules.map((module, index) => {
       const isCompleted = completedModules.includes(module.id);
+      const actualScore = moduleScores[module.id.toString()];
+      const questionCount = moduleQuestionCounts[module.category] || 0;
       
       // First two modules (Navigation marks and Collision Rules) are always unlocked
       if (module.id === 1 || module.id === 2) {
@@ -68,7 +100,8 @@ const Quizzes = () => {
           ...module, 
           status: isCompleted ? "Passed" : "Not Started", 
           locked: false,
-          score: isCompleted ? 85 : null // Mock score for display
+          score: actualScore || null,
+          questionCount
         };
       }
 
@@ -84,7 +117,8 @@ const Quizzes = () => {
         ...module, 
         status: isCompleted ? "Passed" : isUnlocked ? "Not Started" : "Locked",
         locked: !isUnlocked,
-        score: isCompleted ? 85 : null // Mock score for display
+        score: actualScore || null,
+        questionCount
       };
     });
   };
@@ -165,7 +199,7 @@ const Quizzes = () => {
 
               <div className="space-y-2 mb-4">
                 <p className="text-sm text-gray-600">
-                  {toughestLoading ? 'Loading questions...' : `${toughestQuestions.length} Questions • Dynamic content`}
+                  {toughestLoading ? 'Loading questions...' : `${toughestQuestions.length} Questions`}
                 </p>
                 <p className="text-sm text-gray-600">Top student mistakes</p>
                 <p className="text-sm text-gray-600">Pass: 80% or higher</p>
@@ -211,15 +245,15 @@ const Quizzes = () => {
                   )}
 
                   <div className="space-y-2 mb-4">
-                    <p className="text-sm text-gray-600">Dynamic Questions • 15 Minutes</p>
+                    <p className="text-sm text-gray-600">{quiz.questionCount} Questions</p>
                     <p className="text-sm text-gray-600">Pass: 80% or higher</p>
                   </div>
 
                   <Button 
                     className="w-full bg-water-blue hover:bg-water-blue/90 text-white rounded-full"
-                    disabled={quiz.status === 'Passed' || quiz.status === 'Locked'}
+                    disabled={quiz.status === 'Locked'}
                   >
-                    {quiz.status === 'Passed' ? 'Completed' : 
+                    {quiz.status === 'Passed' ? 'Retake Quiz' : 
                      quiz.status === 'In Progress' ? 'Continue Quiz' : 
                      quiz.status === 'Failed' ? 'Retake Quiz' : 
                      quiz.status === 'Locked' ? 'Locked' : 'Start Quiz'}
