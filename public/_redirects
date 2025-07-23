@@ -1,0 +1,5 @@
+# Redirect /index.html to root
+/index.html / 301
+
+# SPA fallback - serve index.html for all routes that don't exist as files
+/* /index.html 200
