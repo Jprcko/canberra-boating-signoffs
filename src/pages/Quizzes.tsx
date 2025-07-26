@@ -16,7 +16,7 @@ const Quizzes = () => {
   const { questions: toughestQuestions, loading: toughestLoading } = useToughestQuestions();
   const [completedModules, setCompletedModules] = useState<number[]>([]);
   const [showToughestQuiz, setShowToughestQuiz] = useState(false);
-  const [selectedModuleQuiz, setSelectedModuleQuiz] = useState<{id: string, title: string, category: string} | null>(null);
+  const [selectedModuleQuiz, setSelectedModuleQuiz] = useState<{id: string, title: string, category: string, videoTitle?: string} | null>(null);
   const [moduleQuestionCounts, setModuleQuestionCounts] = useState<Record<string, number>>({});
   const [moduleScores, setModuleScores] = useState<Record<string, number>>({});
 
@@ -77,6 +77,20 @@ const Quizzes = () => {
 
     fetchQuizData();
   }, [user]);
+
+  // Get video title for each module
+  const getVideoTitle = (moduleId: number) => {
+    switch (moduleId) {
+      case 1: return "Navigation marks, lights & sounds";
+      case 2: return "Collision Rules";
+      case 3: return "Lifejackets and safety equipment";
+      case 4: return "Preparation, behaviour and decisions";
+      case 5: return "Waterways and designated areas";
+      case 6: return "Emergencies and incidents";
+      case 7: return "Protecting the environment";
+      default: return undefined;
+    }
+  };
 
   // Dynamic module quizzes based on Study page structure
   const getModuleQuizzes = () => {
@@ -172,6 +186,7 @@ const Quizzes = () => {
               moduleId={selectedModuleQuiz.id}
               moduleTitle={selectedModuleQuiz.title}
               category={selectedModuleQuiz.category}
+              videoTitle={selectedModuleQuiz.videoTitle}
               onClose={() => setSelectedModuleQuiz(null)}
             />
           </div>
@@ -273,7 +288,8 @@ const Quizzes = () => {
                     onClick={() => setSelectedModuleQuiz({
                       id: quiz.id.toString(),
                       title: quiz.title,
-                      category: quiz.category
+                      category: quiz.category,
+                      videoTitle: getVideoTitle(quiz.id)
                     })}
                   >
                     {quiz.status === 'Passed' ? 'Retake Quiz' : 

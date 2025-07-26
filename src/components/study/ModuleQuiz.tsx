@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, RotateCcw, Loader2, ArrowLeft } from "lucide-react";
+import { CheckCircle, XCircle, RotateCcw, Loader2, ArrowLeft, Play } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +20,7 @@ interface ModuleQuizProps {
   moduleTitle: string;
   category: string;
   onClose: () => void;
+  videoTitle?: string;
 }
 
 type QuizState = 'intro' | 'quiz' | 'results';
@@ -30,7 +31,7 @@ interface QuizAnswer {
   isCorrect: boolean;
 }
 
-const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProps) => {
+const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose, videoTitle }: ModuleQuizProps) => {
   const [quizState, setQuizState] = useState<QuizState>('intro');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
@@ -218,6 +219,19 @@ const ModuleQuiz = ({ moduleId, moduleTitle, category, onClose }: ModuleQuizProp
           <span>Back to Quizzes</span>
         </Button>
       </div>
+
+      {/* Video Section */}
+      {videoTitle && (
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-navy mb-4">Study Video</h3>
+          <div className="aspect-video bg-black rounded-lg flex items-center justify-center">
+            <div className="text-white text-center">
+              <Play className="w-12 h-12 mx-auto mb-2" />
+              <p>Video: {videoTitle}</p>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="p-6 text-center space-y-6 bg-gradient-to-br from-primary/5 via-water-blue/5 to-accent/5 border-2 border-dashed border-primary/20 rounded-xl">
         <h3 className="text-xl font-semibold text-navy">
