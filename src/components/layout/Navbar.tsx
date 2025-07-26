@@ -24,10 +24,14 @@ const Navbar = () => {
     <header className="bg-white py-4 shadow-sm sticky top-0 z-50">
       <div className="container-custom flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="h-12 w-12 rounded-full bg-water-blue flex items-center justify-center text-white font-bold text-xl">CB</div>
+          <img 
+            src="/lovable-uploads/434df73e-5e4b-4e6d-9307-347d261ef73f.png" 
+            alt="ACT Boats & Licensing Logo" 
+            className="h-12 w-auto"
+          />
           <div>
-            <h1 className="text-xl font-bold text-navy">ACT Boat Licence</h1>
-            <p className="text-xs text-gray-600">Logbook Sign-offs</p>
+            <h1 className="text-xl font-bold text-navy">ACT Boats & Licensing</h1>
+            <p className="text-xs text-gray-600">Professional Boat Licence Services</p>
           </div>
         </Link>
         

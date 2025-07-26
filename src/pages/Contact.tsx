@@ -53,7 +53,7 @@ const Contact = () => {
                   <Mail className="h-5 w-5 text-water-blue mt-1" />
                   <div>
                     <p className="font-semibold">Email</p>
-                    <p className="text-gray-700">team@actboatlicencesignoff.com.au</p>
+                    <p className="text-gray-700">team@actboatsandlicensing.com.au</p>
                   </div>
                 </div>
                 

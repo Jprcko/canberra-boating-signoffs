@@ -10,7 +10,14 @@ const Footer = () => {
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-white">Canberra Boating</h3>
+          <div className="flex items-center space-x-3 mb-4">
+            <img 
+              src="/lovable-uploads/434df73e-5e4b-4e6d-9307-347d261ef73f.png" 
+              alt="ACT Boats & Licensing Logo" 
+              className="h-10 w-auto"
+            />
+            <h3 className="text-xl font-semibold text-white">ACT Boats & Licensing</h3>
+          </div>
             <p className="mb-4 text-gray-300">
               Professional boating logbook supervision and sign-off services in the Canberra region.
               Making the boat license process fast, easy, and stress-free.
@@ -39,7 +46,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start">
                 <Mail className="h-5 w-5 mr-2 text-water-blue" />
-                <span>team@actboatlicencesignoff.com.au</span>
+                <span>team@actboatsandlicensing.com.au</span>
               </li>
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 text-water-blue" />
@@ -51,7 +58,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-700 pt-6 mt-6">
           <p className="text-sm text-center text-gray-400">
-            &copy; {currentYear} Canberra Boating Logbook Services. All rights reserved.
+            &copy; {currentYear} ACT Boats & Licensing. All rights reserved.
           </p>
         </div>
       </div>

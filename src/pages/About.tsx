@@ -8,7 +8,7 @@ import { FAQ } from "@/components/sections/FAQ";
 import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
 const About = () => {
   return <Layout>
-      <Hero title="About Canberra Boating Sign-Offs" subtitle="Your trusted partner for professional boat licence logbook supervision in the ACT" backgroundImage="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80" showButton={false} />
+      <Hero title="About ACT Boats & Licensing" subtitle="Your trusted partner for professional boat licence logbook supervision in the ACT" backgroundImage="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80" showButton={false} />
 
       {/* Why I Started This Service */}
       <section className="section-padding bg-white">
@@ -16,7 +16,7 @@ const About = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-6">Why We Started This Service</h2>
             <div className="bg-slate-light rounded-lg p-8">
-              <p className="text-lg text-gray-700 leading-relaxed italic">&quot;We created Canberra Boating Sign-Offs to give people a simple, hands-on way to complete their boat licence logbook without the classroom overload. After years of boating and mentoring new skippers, we knew there had to be a better way — and now, there is.&quot;</p>
+              <p className="text-lg text-gray-700 leading-relaxed italic">&quot;We created ACT Boats & Licensing to give people a simple, hands-on way to complete their boat licence logbook without the classroom overload. After years of boating and mentoring new skippers, we knew there had to be a better way — and now, there is.&quot;</p>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@ const About = () => {
             <div>
               <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
               <p className="text-gray-700 mb-6">
-                At Canberra Boating Sign-Offs, we believe getting your boat licence should be straightforward, 
+                At ACT Boats & Licensing, we believe getting your boat licence should be straightforward, 
                 practical, and enjoyable. We're here to eliminate the stress and confusion from the logbook 
                 process by providing professional, one-on-one supervision that gets you water-ready fast.
               </p>
@@ -74,7 +74,7 @@ const About = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-3">Our Values</h2>
             <p className="text-gray-700 max-w-2xl mx-auto">
-              These core values guide everything we do at Canberra Boating Sign-Offs
+              These core values guide everything we do at ACT Boats & Licensing
             </p>
           </div>
 
@@ -198,7 +198,7 @@ const About = () => {
         <div className="container-custom text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="mb-8 text-xl max-w-2xl mx-auto">
-            Take the first step toward your boat licence with Canberra's most trusted logbook supervision service
+            Take the first step toward your boat licence with the ACT's most trusted logbook supervision service
           </p>
           <Link to="/booking">
             <Button className="bg-white text-water-blue hover:bg-sky-light px-8 py-6 text-lg">
