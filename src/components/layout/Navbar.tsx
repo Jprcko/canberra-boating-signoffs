@@ -25,7 +25,7 @@ const Navbar = () => {
       <div className="container-custom flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
           <img 
-            src="/lovable-uploads/434df73e-5e4b-4e6d-9307-347d261ef73f.png" 
+            src="/lovable-uploads/9d7a839e-573f-49ef-9e93-490b7f5dba20.png" 
             alt="ACT Boats & Licensing Logo" 
             className="h-12 w-auto"
           />
