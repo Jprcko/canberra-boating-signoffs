@@ -40,8 +40,11 @@ export const useBookingSubmission = () => {
       const formattedDate = formData.date ? formData.date.toISOString() : null;
       
       if (!formattedDate) {
+        console.error("No date provided for booking");
         throw new Error("Please select a valid booking date");
       }
+
+      console.log("Formatted date:", formattedDate);
 
       const bookingData: BookingData = {
         bookingDate: formattedDate,
@@ -69,6 +72,7 @@ export const useBookingSubmission = () => {
 
     } catch (error: any) {
       console.error('Booking error:', error);
+      console.error('Error stack:', error.stack);
       toast({
         title: "Error Submitting Booking",
         description: error.message || "There was an error submitting your booking",
