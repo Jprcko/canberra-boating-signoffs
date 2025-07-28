@@ -190,19 +190,29 @@ async function sendReminderEmails(booking: any, reminderType: '7-day' | '24-hour
           <p>Dear ${participant.first_name},</p>
           <p>This is a friendly reminder about your upcoming boating session booking.</p>
           
-          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
-            <p><strong>Date:</strong> ${new Date(booking.booking_date).toLocaleDateString('en-AU', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              timeZone: CANBERRA_TZ
-            })}</p>
-            <p><strong>Preferred Time:</strong> ${metadata.preferred_time || 'To be confirmed'}</p>
-            <p><strong>Total Amount:</strong> $${booking.total_price}</p>
-            ${participants.length > 1 ? `<p><strong>Group Size:</strong> ${participants.length} participants</p>` : ''}
-          </div>
+           <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+             <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
+             <p><strong>Date:</strong> ${new Date(booking.booking_date).toLocaleDateString('en-AU', {
+               weekday: 'long',
+               year: 'numeric',
+               month: 'long',
+               day: 'numeric',
+               timeZone: CANBERRA_TZ
+             })}</p>
+             <p><strong>Start Time:</strong> 9:00 AM</p>
+             <p><strong>Total Amount:</strong> $${booking.total_price}</p>
+             ${participants.length > 1 ? `<p><strong>Group Size:</strong> ${participants.length} participants</p>` : ''}
+           </div>
+
+           <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+             <h3 style="color: #065f46; margin-top: 0;">What to Expect</h3>
+             <ul style="color: #064e3b;">
+               <li>Complete your logbook requirements in one comprehensive session</li>
+               <li>Professional supervision and guidance throughout</li>
+               <li>Official sign-off upon successful completion</li>
+               <li>Assistance with booking your Service NSW test</li>
+             </ul>
+           </div>
 
           <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="color: #92400e; margin-top: 0;">What to Bring</h3>
@@ -227,11 +237,8 @@ async function sendReminderEmails(booking: any, reminderType: '7-day' | '24-hour
           ` : ''}
 
           <div style="margin: 30px 0; text-align: center;">
-            <p>If you have any questions or need to make changes, please contact us as soon as possible.</p>
-            <p><a href="https://canberra-boating-signoffs.lovable.app/portal" 
-                 style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                View Your Booking
-              </a></p>
+            <p>If you have any questions, please don't hesitate to contact us at team@actboatsandlicensing.com.au</p>
+            <p>Looking forward to seeing you on the water!</p>
           </div>
           
           <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 14px;">
