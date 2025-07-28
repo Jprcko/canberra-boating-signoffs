@@ -84,7 +84,7 @@ serve(async (req) => {
             <p>Dear ${participant.first_name},</p>
             <p>Your boating session booking has been confirmed!</p>
             
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
               <p><strong>Date:</strong> ${new Date(booking.booking_date).toLocaleDateString('en-AU', {
                 weekday: 'long',
