@@ -42,6 +42,8 @@ export const submitBooking = async (data: BookingData) => {
       .select()
       .single();
 
+    console.log("Booking insert result:", { newBookingData, bookingError });
+
     if (bookingError) {
       console.error('Booking insert error:', bookingError);
       throw new Error(`Failed to create booking: ${bookingError.message}`);
