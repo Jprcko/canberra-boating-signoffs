@@ -56,7 +56,9 @@ export const useBookingSubmission = () => {
         promoCode: formData.promoCode
       };
 
-      await submitBooking(bookingData);
+      console.log("About to call submitBooking with:", bookingData);
+      const result = await submitBooking(bookingData);
+      console.log("submitBooking returned:", result);
 
       toast({
         title: "Booking Submitted Successfully",
