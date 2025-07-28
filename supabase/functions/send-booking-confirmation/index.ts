@@ -53,30 +53,34 @@ serve(async (req) => {
 
     console.log(`Processing booking confirmation for ${participants.length} participants`);
 
-    // Create account if needed (for the first participant's email)
-    if (isNewAccount && metadata.user_email && metadata.temp_password) {
-      console.log('Creating user account for:', metadata.user_email);
-      const { error: signUpError } = await supabaseAdmin.auth.admin.createUser({
-        email: metadata.user_email,
-        password: metadata.temp_password,
-        email_confirm: true
-      });
+    // Send invite for new account (for the first participant's email)
+    if (isNewAccount && metadata.user_email) {
+      console.log('Sending account invitation to:', metadata.user_email);
+      try {
+        const { error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(
+          metadata.user_email
+        );
 
-      if (signUpError) {
-        console.error('Error creating user account:', signUpError);
-        // Don't throw here, still send emails even if account creation fails
-      } else {
-        console.log('User account created successfully');
+        if (inviteError) {
+          console.error('Error sending account invitation:', inviteError);
+          // Don't throw here, still send emails even if invite fails
+        } else {
+          console.log('Account invitation sent successfully');
+        }
+      } catch (inviteError) {
+        console.error('Exception sending account invitation:', inviteError);
+        // Don't throw here, still send emails even if invite fails
       }
     }
 
     // Send emails to all participants
     const emailPromises = participants.map(async (participant, index) => {
       try {
-        // Prepare email content for each participant
+        // Prepare email content for each participant with mobile-friendly styling
         let emailContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">Booking Confirmation</h1>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <h1 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; font-size: 24px;">Booking Confirmation</h1>
             <p>Dear ${participant.first_name},</p>
             <p>Your boating session booking has been confirmed!</p>
             
@@ -114,16 +118,22 @@ serve(async (req) => {
             </div>
         `;
 
-        // Add account information if this is the primary participant and account was created
+        // Add account setup invitation if this is the primary participant and account was created
         if (index === 0 && isNewAccount && metadata.user_email === participant.email) {
           emailContent += `
             <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #1e40af; margin-top: 0;">Your Account Details</h3>
-              <p>We've created an account for you to manage your bookings:</p>
-              <p><strong>Email:</strong> ${metadata.user_email}</p>
-              <p><strong>Temporary Password:</strong> ${metadata.temp_password}</p>
-              <p style="color: #dc2626;"><strong>Important:</strong> Please log in and change your password as soon as possible for security.</p>
-              <p><a href="${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '') || 'https://your-site.com'}/auth" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Access Your Account</a></p>
+              <h3 style="color: #1e40af; margin-top: 0;">Set Up Your Account</h3>
+              <p>Set up your account to view bookings, update details, and more.</p>
+              <p><strong>Use your email:</strong> ${metadata.user_email}</p>
+              <p style="margin: 15px 0;">
+                <a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" 
+                   style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                  Set Up Account
+                </a>
+              </p>
+              <p style="color: #374151; font-size: 14px;">
+                An account invitation has been sent to your email. Check your inbox for setup instructions.
+              </p>
             </div>
           `;
         }
@@ -135,7 +145,19 @@ serve(async (req) => {
             </div>
             
             <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 14px;">
-              <p>Best regards,<br>The Boating Team</p>
+              <p>Best regards,<br>ACT Boats & Licensing Team</p>
+              
+              <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+                  We use your email only for booking-related communications.
+                </p>
+                <p style="font-size: 12px; margin: 5px 0;">
+                  <a href="mailto:team@actboatsandlicensing.com.au?subject=Unsubscribe Request" 
+                     style="color: #6b7280; text-decoration: underline;">
+                    Unsubscribe from booking communications
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         `;

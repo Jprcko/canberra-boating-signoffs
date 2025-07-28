@@ -124,6 +124,7 @@ export type Database = {
           discount_amount: number
           id: string
           metadata: Json
+          reminders_sent: string[] | null
           total_price: number
           user_id: string | null
         }
@@ -133,6 +134,7 @@ export type Database = {
           discount_amount?: number
           id?: string
           metadata?: Json
+          reminders_sent?: string[] | null
           total_price: number
           user_id?: string | null
         }
@@ -142,6 +144,7 @@ export type Database = {
           discount_amount?: number
           id?: string
           metadata?: Json
+          reminders_sent?: string[] | null
           total_price?: number
           user_id?: string | null
         }
