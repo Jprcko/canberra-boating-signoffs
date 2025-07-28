@@ -53,7 +53,7 @@ serve(async (req) => {
 
     console.log(`Processing booking confirmation for ${participants.length} participants`);
 
-    // Send invite for new account (for the first participant's email)
+    // Send invite for new account (no automatic account creation with temp passwords)
     if (isNewAccount && metadata.user_email) {
       console.log('Sending account invitation to:', metadata.user_email);
       try {
@@ -63,13 +63,13 @@ serve(async (req) => {
 
         if (inviteError) {
           console.error('Error sending account invitation:', inviteError);
-          // Don't throw here, still send emails even if invite fails
+          // Don't throw here, continue with confirmation emails
         } else {
           console.log('Account invitation sent successfully');
         }
       } catch (inviteError) {
         console.error('Exception sending account invitation:', inviteError);
-        // Don't throw here, still send emails even if invite fails
+        // Don't throw here, continue with confirmation emails
       }
     }
 
@@ -118,21 +118,12 @@ serve(async (req) => {
             </div>
         `;
 
-        // Add account setup invitation if this is the primary participant and account was created
+        // Add note for primary participant about separate portal setup email
         if (index === 0 && isNewAccount && metadata.user_email === participant.email) {
           emailContent += `
-            <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #1e40af; margin-top: 0;">Set Up Your Account</h3>
-              <p>Set up your account to view bookings, update details, and more.</p>
-              <p><strong>Use your email:</strong> ${metadata.user_email}</p>
-              <p style="margin: 15px 0;">
-                <a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" 
-                   style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                  Set Up Account
-                </a>
-              </p>
-              <p style="color: #374151; font-size: 14px;">
-                An account invitation has been sent to your email. Check your inbox for setup instructions.
+            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb;">
+              <p style="margin: 0; color: #374151; font-size: 14px;">
+                <strong>Note:</strong> You'll receive a separate email to set up your client portal account.
               </p>
             </div>
           `;
@@ -199,6 +190,47 @@ serve(async (req) => {
 
     if (failedEmails > 0) {
       console.warn(`Some emails failed to send. Successful: ${successfulEmails}, Failed: ${failedEmails}`);
+    }
+
+    // Send separate signup email to primary participant after confirmation emails are processed
+    if (isNewAccount && metadata.user_email && successfulEmails > 0) {
+      console.log('Sending separate signup email to:', metadata.user_email);
+      try {
+        const signupEmailContent = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+            <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #1e40af; margin-top: 0;">Access Your Client Portal</h3>
+              <p>Set up your account to view bookings, update details, undertake quizzes, look at study material, and more.</p>
+              <p><strong>Use your email:</strong> ${metadata.user_email}</p>
+              <p style="margin: 20px 0;">
+                <a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" 
+                   style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                  Set Up Account
+                </a>
+              </p>
+            </div>
+            
+            <div style="text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px;">
+              <p>Best regards,<br>ACT Boats & Licensing Team</p>
+            </div>
+          </div>
+        `;
+
+        const { error: signupEmailError } = await resend.emails.send({
+          from: "Boating Sessions <team@actboatsandlicensing.com.au>",
+          to: metadata.user_email,
+          subject: "Set Up Your Boating Portal Account",
+          html: signupEmailContent,
+        });
+
+        if (signupEmailError) {
+          console.error('Error sending signup email:', signupEmailError);
+        } else {
+          console.log('Signup email sent successfully');
+        }
+      } catch (error) {
+        console.error('Exception sending signup email:', error);
+      }
     }
 
     return new Response(
