@@ -21,7 +21,21 @@ const BookingPage = () => {
       </section>
 
       <section className="section-padding bg-white">
-        <div className="container-custom max-w-5xl">
+    <div className="container-custom max-w-5xl">
+      {/* TESTING BUTTON - DELETE AFTER TESTING */}
+      <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <button 
+          onClick={() => {
+            // Force trigger the form submission without payment
+            const event = new CustomEvent('test-booking-submit');
+            window.dispatchEvent(event);
+          }}
+          className="bg-red-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-red-700"
+        >
+          🧪 TEST: Bypass Payment & Send Email
+        </button>
+        <p className="text-xs text-red-600 mt-1">Testing only - bypasses payment process</p>
+      </div>
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-3">Book Your Boating Session</h2>
             <p className="text-gray-700">Choose your session below to complete all your logbook requirements in one go. Once you're done, we'll sign you off and help you book your official test at Service NSW.</p>
