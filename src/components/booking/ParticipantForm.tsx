@@ -21,7 +21,7 @@ export const ParticipantForm = ({ participant, index, onChange }: ParticipantFor
   const [tempDate, setTempDate] = useState<Date | null>(null);
 
   const validateAustralianPhone = (phone: string) => {
-    const australianPhoneRegex = /^(?:\+?61|0)[2-47-8](?:[ -]?[0-9]){8}$/;
+    const australianPhoneRegex = /^(?:\+?61|0)[234578](?:[ -]?[0-9]){8}$/;
     return australianPhoneRegex.test(phone);
   };
 

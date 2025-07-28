@@ -37,7 +37,7 @@ export const ContactInfoSection = ({ participant, index, onChange, onPhoneChange
           value={participant.phone}
           onChange={onPhoneChange}
           placeholder="e.g., 0412345678"
-          pattern="^(?:\+?61|0)[2-47-8](?:[ -]?[0-9]){8}$"
+          pattern="^(?:\+?61|0)[234578](?:[ -]?[0-9]){8}$"
           required
           className="mt-1"
         />
