@@ -118,21 +118,11 @@ serve(async (req) => {
             </div>
         `;
 
-        // Add note for primary participant about separate portal setup email
-        if (index === 0 && isNewAccount && metadata.user_email === participant.email) {
-          emailContent += `
-            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb;">
-              <p style="margin: 0; color: #374151; font-size: 14px;">
-                <strong>Note:</strong> You'll receive a separate email to set up your client portal account.
-              </p>
-            </div>
-          `;
-        }
-
         emailContent += `
             <div style="margin: 30px 0; text-align: center;">
               <p>If you have any questions, please don't hesitate to contact us.</p>
               <p>Looking forward to seeing you on the water!</p>
+              ${index === 0 && isNewAccount && metadata.user_email === participant.email ? '<p style="margin-top: 20px; font-size: 14px; color: #6b7280;"><strong>Note:</strong> You\'ll receive a separate email to set up your client portal account.</p>' : ''}
             </div>
             
             <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 14px;">
@@ -197,21 +187,12 @@ serve(async (req) => {
       console.log('Sending separate signup email to:', metadata.user_email);
       try {
         const signupEmailContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
-            <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #1e40af; margin-top: 0;">Access Your Client Portal</h3>
-              <p>Set up your account to view bookings, update details, undertake quizzes, look at study material, and more.</p>
-              <p><strong>Use your email:</strong> ${metadata.user_email}</p>
-              <p style="margin: 20px 0;">
-                <a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" 
-                   style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-                  Set Up Account
-                </a>
-              </p>
-            </div>
-            
-            <div style="text-align: center; color: #6b7280; font-size: 14px; margin-top: 30px;">
-              <p>Best regards,<br>ACT Boats & Licensing Team</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #dbeafe; border-radius: 8px;">
+            <h3 style="color: #1e40af; margin-top: 0;">Access Your Client Portal</h3>
+            <p>Set up your account to view bookings, update details, undertake quizzes, look at study material, and more. Use your email: ${metadata.user_email}</p>
+            <p><a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Set Up Account</a></p>
+            <div style="margin-top: 20px; text-align: center; color: #6b7280; font-size: 14px;">
+              Best regards,<br>ACT Boats & Licensing Team
             </div>
           </div>
         `;
