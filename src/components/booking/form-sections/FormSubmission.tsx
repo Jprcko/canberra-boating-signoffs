@@ -40,11 +40,11 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
     setPaymentIntentId(paymentId);
     setValue("paymentIntentId", paymentId);
     
-    // Now submit the booking form with the payment ID
+    // Trigger the actual form submission
+    console.log("About to trigger form submission...");
     handleSubmit((data) => {
-      console.log("Submitting booking with payment ID:", paymentId);
-      // The parent form will handle the actual booking submission
-      // You can access the payment ID via paymentIntentId state
+      console.log("Form submission triggered with data:", data);
+      // The data object now contains the payment ID and will be processed by parent onSubmit
     })();
   };
 
