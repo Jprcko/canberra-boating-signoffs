@@ -14,7 +14,7 @@ const Footer = () => {
             <img 
               src="/lovable-uploads/9d7a839e-573f-49ef-9e93-490b7f5dba20.png" 
               alt="ACT Boats & Licensing Logo" 
-              className="h-10 w-auto"
+              className="h-25 w-auto"
             />
             <h3 className="text-xl font-semibold text-white">ACT Boats & Licensing</h3>
           </div>

@@ -27,7 +27,7 @@ const Navbar = () => {
           <img 
             src="/lovable-uploads/9d7a839e-573f-49ef-9e93-490b7f5dba20.png" 
             alt="ACT Boats & Licensing Logo" 
-            className="h-12 w-auto"
+            className="h-30 w-auto"
           />
           <div>
             <h1 className="text-xl font-bold text-navy">ACT Boats & Licensing</h1>
