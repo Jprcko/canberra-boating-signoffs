@@ -59,14 +59,28 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
   };
 
   const onSubmit = async (formData: BookingFormValues) => {
-    await submitBookingForm(
-      formData,
-      selectedServices,
-      participants,
-      participantsInfo,
-      price,
-      discount
-    );
+    console.log("=== FORM SUBMISSION STARTED ===");
+    console.log("Form data received in onSubmit:", formData);
+    console.log("Selected services:", selectedServices);
+    console.log("Participants:", participants);
+    console.log("Participants info:", participantsInfo);
+    console.log("Price:", price);
+    console.log("Discount:", discount);
+    
+    try {
+      await submitBookingForm(
+        formData,
+        selectedServices,
+        participants,
+        participantsInfo,
+        price,
+        discount
+      );
+      console.log("=== FORM SUBMISSION COMPLETED ===");
+    } catch (error) {
+      console.error("=== FORM SUBMISSION FAILED ===", error);
+      throw error;
+    }
   };
 
   // Set payment intent ID when payment is successful
