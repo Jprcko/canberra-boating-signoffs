@@ -14,11 +14,13 @@ import { Badge } from "@/components/ui/badge";
 interface FormSubmissionProps {
   selectedServices: string[];
   isSubmitting: boolean;
+  onPaymentSuccess: (paymentId: string) => void;
 }
 
 export const FormSubmission: FC<FormSubmissionProps> = ({
   selectedServices,
-  isSubmitting
+  isSubmitting,
+  onPaymentSuccess
 }) => {
   const { formState, handleSubmit, setValue } = useFormContext();
   const { isValid, errors } = formState;
@@ -36,16 +38,10 @@ export const FormSubmission: FC<FormSubmissionProps> = ({
   }
 
   const handlePaymentSuccess = (paymentId: string) => {
-    console.log("Payment successful:", paymentId);
+    console.log("Payment successful in FormSubmission:", paymentId);
     setPaymentIntentId(paymentId);
-    setValue("paymentIntentId", paymentId);
-    
-    // Trigger the actual form submission
-    console.log("About to trigger form submission...");
-    handleSubmit((data) => {
-      console.log("Form submission triggered with data:", data);
-      // The data object now contains the payment ID and will be processed by parent onSubmit
-    })();
+    // Call the parent's payment success handler which will trigger form submission
+    onPaymentSuccess(paymentId);
   };
 
   const handlePaymentError = (error: string) => {

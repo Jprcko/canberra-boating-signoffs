@@ -124,9 +124,10 @@ const BookingForm = ({ selectedServices }: BookingFormProps) => {
               />
             )}
           </CardContent>
-          <FormSubmission 
+          <FormSubmission
             selectedServices={selectedServices}
             isSubmitting={isSubmitting}
+            onPaymentSuccess={handlePaymentSuccess}
           />
         </form>
       </FormProvider>

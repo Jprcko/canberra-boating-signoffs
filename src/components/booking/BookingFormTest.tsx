@@ -184,9 +184,13 @@ const BookingFormTest = ({ selectedServices }: BookingFormProps) => {
               />
             )}
           </CardContent>
-          <FormSubmission 
+          <FormSubmission
             selectedServices={selectedServices}
             isSubmitting={isSubmitting}
+            onPaymentSuccess={(paymentId) => {
+              setValue("paymentIntentId", paymentId);
+              handleSubmit(onSubmit)();
+            }}
           />
         </form>
       </FormProvider>
