@@ -6,7 +6,7 @@ const TrustBadges = () => {
     {
       icon: Shield,
       title: "Fully Licensed",
-      description: "Certified instructors"
+      description: "Qualified instructors"
     },
     {
       icon: Award,
