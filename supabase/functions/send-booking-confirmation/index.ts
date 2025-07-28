@@ -124,7 +124,6 @@ serve(async (req) => {
             <div style="margin: 30px 0; text-align: center;">
               <p>If you have any questions, please don't hesitate to contact us.</p>
               <p>Looking forward to seeing you on the water!</p>
-              ${index === 0 ? '<p style="margin-top: 20px; font-size: 14px; color: #6b7280;"><strong>Note:</strong> You\'ll receive a separate email to set up your client portal account.</p>' : ''}
             </div>
             
             <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 14px;">
@@ -184,39 +183,53 @@ serve(async (req) => {
       console.warn(`Some emails failed to send. Successful: ${successfulEmails}, Failed: ${failedEmails}`);
     }
 
-    // Always send separate signup email to primary participant after confirmation emails are processed
-    const primaryParticipant = participants[0];
-    if (primaryParticipant && primaryParticipant.email && successfulEmails > 0) {
-      console.log('Sending separate signup email to primary participant:', primaryParticipant.email);
-      try {
-        const signupEmailContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #dbeafe; border-radius: 8px; white-space: normal; text-overflow: clip; overflow: visible;">
-            <h3 style="color: #1e40af; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">Access Your Client Portal</h3>
-            <p style="white-space: normal; text-overflow: clip; overflow: visible;">Set up your account to view bookings, update details, undertake quizzes, look at study material, and more. Use your email: ${primaryParticipant.email}</p>
-            <p style="white-space: normal; text-overflow: clip; overflow: visible;"><a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(primaryParticipant.email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; white-space: normal; text-overflow: clip; overflow: visible;">Set Up Account</a></p>
-            <div style="margin-top: 20px; text-align: center; color: #6b7280; font-size: 14px; white-space: normal; text-overflow: clip; overflow: visible;">
-              Best regards,<br>ACT Boats & Licensing Team
-            </div>
-          </div>
-        `;
+    // Check which participant emails need signup emails (don't have accounts yet)
+    if (successfulEmails > 0) {
+      // Get unique email addresses from participants
+      const uniqueEmails = [...new Set(participants.map(p => p.email).filter(email => email && email.trim()))];
+      console.log('Checking accounts for unique emails:', uniqueEmails);
+      
+      for (const email of uniqueEmails) {
+        try {
+          // Check if account exists for this email
+          const { data: existingUser, error: userCheckError } = await supabaseAdmin.auth.admin.listUsers();
+          
+          const accountExists = existingUser?.users?.some(user => user.email === email);
+          console.log(`Account check for ${email}: ${accountExists ? 'exists' : 'does not exist'}`);
+          
+          if (!accountExists) {
+            console.log('Sending signup email to new email address:', email);
+            
+            const signupEmailContent = `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #dbeafe; border-radius: 8px; white-space: normal; text-overflow: clip; overflow: visible;">
+                <h3 style="color: #1e40af; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">Access Your Client Portal</h3>
+                <p style="white-space: normal; text-overflow: clip; overflow: visible;">Set up your account to view bookings, update details, undertake quizzes, look at study material, and more. Use your email: ${email}</p>
+                <p style="white-space: normal; text-overflow: clip; overflow: visible;"><a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; white-space: normal; text-overflow: clip; overflow: visible;">Set Up Account</a></p>
+                <div style="margin-top: 20px; text-align: center; color: #6b7280; font-size: 14px; white-space: normal; text-overflow: clip; overflow: visible;">
+                  Best regards,<br>ACT Boats & Licensing Team
+                </div>
+              </div>
+            `;
 
-        const { error: signupEmailError } = await resend.emails.send({
-          from: "Boating Sessions <team@actboatsandlicensing.com.au>",
-          to: primaryParticipant.email,
-          subject: "Set Up Your Boating Portal Account",
-          html: signupEmailContent,
-        });
+            const { error: signupEmailError } = await resend.emails.send({
+              from: "Boating Sessions <team@actboatsandlicensing.com.au>",
+              to: email,
+              subject: "Set Up Your Boating Portal Account",
+              html: signupEmailContent,
+            });
 
-        if (signupEmailError) {
-          console.error('Error sending signup email:', signupEmailError);
-        } else {
-          console.log('Signup email sent successfully to:', primaryParticipant.email);
+            if (signupEmailError) {
+              console.error(`Error sending signup email to ${email}:`, signupEmailError);
+            } else {
+              console.log('Signup email sent successfully to:', email);
+            }
+          } else {
+            console.log(`Skipping signup email for ${email} - account already exists`);
+          }
+        } catch (error) {
+          console.error(`Exception checking/sending signup email for ${email}:`, error);
         }
-      } catch (error) {
-        console.error('Exception sending signup email:', error);
       }
-    } else {
-      console.log('Skipping signup email - no primary participant or no successful confirmation emails');
     }
 
     return new Response(
