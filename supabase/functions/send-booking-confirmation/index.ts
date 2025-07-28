@@ -52,6 +52,8 @@ serve(async (req) => {
     const isNewAccount = metadata?.account_created === true;
 
     console.log(`Processing booking confirmation for ${participants.length} participants`);
+    console.log(`Metadata:`, metadata);
+    console.log(`isNewAccount:`, isNewAccount);
 
     // Send invite for new account (no automatic account creation with temp passwords)
     if (isNewAccount && metadata.user_email) {
@@ -76,53 +78,53 @@ serve(async (req) => {
     // Send emails to all participants
     const emailPromises = participants.map(async (participant, index) => {
       try {
-        // Prepare email content for each participant with mobile-friendly styling
-        let emailContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <h1 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; font-size: 24px;">Booking Confirmation</h1>
-            <p>Dear ${participant.first_name},</p>
-            <p>Your boating session booking has been confirmed!</p>
-            
-            <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h2 style="color: #1e40af; margin-top: 0;">Booking Details</h2>
-              <p><strong>Date:</strong> ${new Date(booking.booking_date).toLocaleDateString('en-AU', {
-                weekday: 'long',
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric'
-              })}</p>
-              <p><strong>Start Time:</strong> 9:00 AM</p>
-              <p><strong>Total Amount:</strong> $${booking.total_price}</p>
-              ${participants.length > 1 ? `<p><strong>Group Size:</strong> ${participants.length} participants</p>` : ''}
-            </div>
+         // Prepare email content with explicit anti-ellipsis styling
+         let emailContent = `
+           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; white-space: normal; text-overflow: clip; overflow: visible; word-wrap: break-word;">
+             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+             <h1 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; font-size: 24px; white-space: normal; text-overflow: clip; overflow: visible;">Booking Confirmation</h1>
+             <p style="white-space: normal; text-overflow: clip; overflow: visible;">Dear ${participant.first_name},</p>
+             <p style="white-space: normal; text-overflow: clip; overflow: visible;">Your boating session booking has been confirmed!</p>
+             
+             <div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; white-space: normal; text-overflow: clip; overflow: visible;">
+               <h2 style="color: #1e40af; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">Booking Details</h2>
+               <p style="white-space: normal; text-overflow: clip; overflow: visible;"><strong>Date:</strong> ${new Date(booking.booking_date).toLocaleDateString('en-AU', {
+                 weekday: 'long',
+                 year: 'numeric', 
+                 month: 'long', 
+                 day: 'numeric'
+               })}</p>
+               <p style="white-space: normal; text-overflow: clip; overflow: visible;"><strong>Start Time:</strong> 9:00 AM</p>
+               <p style="white-space: normal; text-overflow: clip; overflow: visible;"><strong>Total Amount:</strong> $${booking.total_price}</p>
+               ${participants.length > 1 ? `<p style="white-space: normal; text-overflow: clip; overflow: visible;"><strong>Group Size:</strong> ${participants.length} participants</p>` : ''}
+             </div>
 
-            <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #065f46; margin-top: 0;">What to Expect</h3>
-              <ul style="color: #064e3b;">
-                <li>Complete your logbook requirements in one comprehensive session</li>
-                <li>Professional supervision and guidance throughout</li>
-                <li>Official sign-off upon successful completion</li>
-                <li>Assistance with booking your Service NSW test</li>
-              </ul>
-            </div>
+             <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0; white-space: normal; text-overflow: clip; overflow: visible;">
+               <h3 style="color: #065f46; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">What to Expect</h3>
+               <ul style="color: #064e3b; white-space: normal; text-overflow: clip; overflow: visible;">
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Complete your logbook requirements in one comprehensive session</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Professional supervision and guidance throughout</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Official sign-off upon successful completion</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Assistance with booking your Service NSW test</li>
+               </ul>
+             </div>
 
-            <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #92400e; margin-top: 0;">What to Bring</h3>
-              <ul style="color: #78350f;">
-                <li>Valid photo ID (driver's licence or passport)</li>
-                <li>Comfortable clothing suitable for water activities</li>
-                <li>Sun protection (hat, sunscreen, sunglasses)</li>
-                <li>Water bottle and snacks</li>
-              </ul>
-            </div>
-        `;
+             <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0; white-space: normal; text-overflow: clip; overflow: visible;">
+               <h3 style="color: #92400e; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">What to Bring</h3>
+               <ul style="color: #78350f; white-space: normal; text-overflow: clip; overflow: visible;">
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Valid photo ID (driver's licence or passport)</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Comfortable clothing suitable for water activities</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Sun protection (hat, sunscreen, sunglasses)</li>
+                 <li style="white-space: normal; text-overflow: clip; overflow: visible;">Water bottle and snacks</li>
+               </ul>
+             </div>
+         `;
 
         emailContent += `
             <div style="margin: 30px 0; text-align: center;">
               <p>If you have any questions, please don't hesitate to contact us.</p>
               <p>Looking forward to seeing you on the water!</p>
-              ${index === 0 && isNewAccount && metadata.user_email === participant.email ? '<p style="margin-top: 20px; font-size: 14px; color: #6b7280;"><strong>Note:</strong> You\'ll receive a separate email to set up your client portal account.</p>' : ''}
+              ${index === 0 ? '<p style="margin-top: 20px; font-size: 14px; color: #6b7280;"><strong>Note:</strong> You\'ll receive a separate email to set up your client portal account.</p>' : ''}
             </div>
             
             <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 14px;">
@@ -182,16 +184,17 @@ serve(async (req) => {
       console.warn(`Some emails failed to send. Successful: ${successfulEmails}, Failed: ${failedEmails}`);
     }
 
-    // Send separate signup email to primary participant after confirmation emails are processed
-    if (isNewAccount && metadata.user_email && successfulEmails > 0) {
-      console.log('Sending separate signup email to:', metadata.user_email);
+    // Always send separate signup email to primary participant after confirmation emails are processed
+    const primaryParticipant = participants[0];
+    if (primaryParticipant && primaryParticipant.email && successfulEmails > 0) {
+      console.log('Sending separate signup email to primary participant:', primaryParticipant.email);
       try {
         const signupEmailContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #dbeafe; border-radius: 8px;">
-            <h3 style="color: #1e40af; margin-top: 0;">Access Your Client Portal</h3>
-            <p>Set up your account to view bookings, update details, undertake quizzes, look at study material, and more. Use your email: ${metadata.user_email}</p>
-            <p><a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(metadata.user_email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Set Up Account</a></p>
-            <div style="margin-top: 20px; text-align: center; color: #6b7280; font-size: 14px;">
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #dbeafe; border-radius: 8px; white-space: normal; text-overflow: clip; overflow: visible;">
+            <h3 style="color: #1e40af; margin-top: 0; white-space: normal; text-overflow: clip; overflow: visible;">Access Your Client Portal</h3>
+            <p style="white-space: normal; text-overflow: clip; overflow: visible;">Set up your account to view bookings, update details, undertake quizzes, look at study material, and more. Use your email: ${primaryParticipant.email}</p>
+            <p style="white-space: normal; text-overflow: clip; overflow: visible;"><a href="https://canberra-boating-signoffs.lovable.app/portal/signup?email=${encodeURIComponent(primaryParticipant.email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; white-space: normal; text-overflow: clip; overflow: visible;">Set Up Account</a></p>
+            <div style="margin-top: 20px; text-align: center; color: #6b7280; font-size: 14px; white-space: normal; text-overflow: clip; overflow: visible;">
               Best regards,<br>ACT Boats & Licensing Team
             </div>
           </div>
@@ -199,7 +202,7 @@ serve(async (req) => {
 
         const { error: signupEmailError } = await resend.emails.send({
           from: "Boating Sessions <team@actboatsandlicensing.com.au>",
-          to: metadata.user_email,
+          to: primaryParticipant.email,
           subject: "Set Up Your Boating Portal Account",
           html: signupEmailContent,
         });
@@ -207,11 +210,13 @@ serve(async (req) => {
         if (signupEmailError) {
           console.error('Error sending signup email:', signupEmailError);
         } else {
-          console.log('Signup email sent successfully');
+          console.log('Signup email sent successfully to:', primaryParticipant.email);
         }
       } catch (error) {
         console.error('Exception sending signup email:', error);
       }
+    } else {
+      console.log('Skipping signup email - no primary participant or no successful confirmation emails');
     }
 
     return new Response(
