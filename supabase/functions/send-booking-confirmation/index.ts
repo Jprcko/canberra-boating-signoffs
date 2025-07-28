@@ -92,7 +92,7 @@ serve(async (req) => {
                 month: 'long', 
                 day: 'numeric'
               })}</p>
-              <p><strong>Preferred Time:</strong> ${metadata.preferred_time || 'To be confirmed'}</p>
+              <p><strong>Start Time:</strong> 9:00 AM</p>
               <p><strong>Total Amount:</strong> $${booking.total_price}</p>
               ${participants.length > 1 ? `<p><strong>Group Size:</strong> ${participants.length} participants</p>` : ''}
             </div>
