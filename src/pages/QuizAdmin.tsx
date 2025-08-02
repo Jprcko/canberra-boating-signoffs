@@ -538,7 +538,7 @@ const QuizAdmin = () => {
   return (
     <Layout>
       <div className="min-h-screen bg-slate-50">
-        <div className="max-w-4xl mx-auto px-6 py-8">
+        <div className="mx-auto px-6 py-8">
           <h1 className="text-3xl font-bold text-navy mb-8">Quiz Question Admin</h1>
           
           <Tabs defaultValue="log" className="space-y-6">
