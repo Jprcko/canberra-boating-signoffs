@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Plus, Download, Filter, Search, Trash2 } from "lucide-react";
@@ -53,6 +54,8 @@ const QuizAdmin = () => {
   const [filteredQuestions, setFilteredQuestions] = useState<DatabaseQuestion[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedQuestion, setSelectedQuestion] = useState<DatabaseQuestion | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
 
   const categories = [
@@ -513,7 +516,14 @@ const QuizAdmin = () => {
                     </TableHeader>
                     <TableBody>
                       {filteredQuestions.map((question) => (
-                        <TableRow key={question.id}>
+                        <TableRow 
+                          key={question.id} 
+                          className="cursor-pointer hover:bg-gray-50"
+                          onClick={() => {
+                            setSelectedQuestion(question);
+                            setIsModalOpen(true);
+                          }}
+                        >
                           <TableCell className="max-w-md">
                             <div className="truncate" title={question.question}>
                               {question.question}
@@ -553,7 +563,10 @@ const QuizAdmin = () => {
                           </TableCell>
                           <TableCell>
                             <Button 
-                              onClick={() => deleteQuestion(question.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteQuestion(question.id);
+                              }}
                               variant="outline"
                               size="sm"
                               className="text-red-600 hover:text-red-700"
@@ -802,6 +815,82 @@ const QuizAdmin = () => {
           </Tabs>
         </div>
       </div>
+      
+      {/* Question Details Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Question Details</DialogTitle>
+          </DialogHeader>
+          
+          {selectedQuestion && (
+            <div className="space-y-6">
+              {/* Question */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Question</h3>
+                <p className="text-gray-800 leading-relaxed">{selectedQuestion.question}</p>
+              </div>
+
+              {/* Image if present */}
+              {selectedQuestion.image_url && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Image</h3>
+                  <img 
+                    src={selectedQuestion.image_url} 
+                    alt="Question Image" 
+                    className="max-w-full h-auto rounded-lg border shadow-sm"
+                  />
+                </div>
+              )}
+
+              {/* Options */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Options</h3>
+                <div className="space-y-2">
+                  {JSON.parse(selectedQuestion.options).map((option: string, index: number) => (
+                    <div 
+                      key={index}
+                      className={`p-3 rounded-lg border ${
+                        option === selectedQuestion.correct_answer 
+                          ? 'bg-green-50 border-green-200 text-green-800' 
+                          : 'bg-gray-50 border-gray-200'
+                      }`}
+                    >
+                      <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {option}
+                      {option === selectedQuestion.correct_answer && (
+                        <span className="ml-2 text-green-600 font-semibold">✓ Correct Answer</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Metadata */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Category</h3>
+                  <Badge variant="secondary" className="text-sm">
+                    {selectedQuestion.category ? getCategoryLabel(selectedQuestion.category) : 'Not specified'}
+                  </Badge>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Section</h3>
+                  <Badge variant="outline" className="text-sm">
+                    {selectedQuestion.section || 'Not specified'}
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Timestamps */}
+              <div className="text-sm text-gray-500 border-t pt-4">
+                <p>Created: {new Date(selectedQuestion.created_at).toLocaleString()}</p>
+                <p>Updated: {new Date(selectedQuestion.updated_at).toLocaleString()}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
