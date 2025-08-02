@@ -550,7 +550,7 @@ const QuizAdmin = () => {
             </TabsList>
 
             <TabsContent value="log">
-              <Card className="p-6">
+              <Card className="w-full p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold">All Questions ({filteredQuestions.length})</h2>
                   <Button onClick={fetchQuestions} variant="outline">
