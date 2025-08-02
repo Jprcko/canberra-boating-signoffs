@@ -611,8 +611,8 @@ const QuizAdmin = () => {
                             setIsModalOpen(true);
                           }}
                         >
-                          <TableCell className="max-w-md">
-                            <div className="truncate" title={question.question}>
+                          <TableCell className="min-w-0">
+                            <div className="whitespace-normal break-words">
                               {question.question}
                             </div>
                           </TableCell>
