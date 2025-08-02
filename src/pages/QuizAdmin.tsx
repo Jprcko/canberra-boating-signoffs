@@ -56,6 +56,8 @@ const QuizAdmin = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedQuestion, setSelectedQuestion] = useState<DatabaseQuestion | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedQuestion, setEditedQuestion] = useState<DatabaseQuestion | null>(null);
   const { toast } = useToast();
 
   const categories = [
@@ -448,6 +450,91 @@ const QuizAdmin = () => {
     return category ? category.label : value;
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setEditedQuestion(selectedQuestion);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedQuestion(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editedQuestion) return;
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('quiz_questions')
+        .update({
+          question: editedQuestion.question,
+          options: editedQuestion.options,
+          correct_answer: editedQuestion.correct_answer,
+          section: editedQuestion.section,
+          category: editedQuestion.category,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editedQuestion.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Question updated successfully"
+      });
+
+      setIsEditing(false);
+      setEditedQuestion(null);
+      setSelectedQuestion(editedQuestion);
+      fetchQuestions();
+    } catch (error) {
+      console.error('Error updating question:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update question",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateEditedOption = (index: number, value: string) => {
+    if (!editedQuestion) return;
+    
+    const options = JSON.parse(editedQuestion.options);
+    options[index] = value;
+    setEditedQuestion({
+      ...editedQuestion,
+      options: JSON.stringify(options)
+    });
+  };
+
+  const addEditedOption = () => {
+    if (!editedQuestion) return;
+    
+    const options = JSON.parse(editedQuestion.options);
+    options.push('');
+    setEditedQuestion({
+      ...editedQuestion,
+      options: JSON.stringify(options)
+    });
+  };
+
+  const removeEditedOption = (index: number) => {
+    if (!editedQuestion) return;
+    
+    const options = JSON.parse(editedQuestion.options);
+    if (options.length > 2) {
+      options.splice(index, 1);
+      setEditedQuestion({
+        ...editedQuestion,
+        options: JSON.stringify(options)
+      });
+    }
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-slate-50">
@@ -825,10 +912,36 @@ const QuizAdmin = () => {
           
           {selectedQuestion && (
             <div className="space-y-6">
+              {/* Edit/Save Buttons */}
+              <div className="flex justify-end gap-2">
+                {!isEditing ? (
+                  <Button onClick={handleEditClick} variant="outline">
+                    Edit Question
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button onClick={handleCancelEdit} variant="outline">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSaveEdit} disabled={isLoading}>
+                      {isLoading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                  </div>
+                )}
+              </div>
+
               {/* Question */}
               <div>
                 <h3 className="font-semibold text-lg mb-2">Question</h3>
-                <p className="text-gray-800 leading-relaxed">{selectedQuestion.question}</p>
+                {isEditing && editedQuestion ? (
+                  <Textarea
+                    value={editedQuestion.question}
+                    onChange={(e) => setEditedQuestion({...editedQuestion, question: e.target.value})}
+                    className="min-h-[100px]"
+                  />
+                ) : (
+                  <p className="text-gray-800 leading-relaxed">{selectedQuestion.question}</p>
+                )}
               </div>
 
               {/* Image if present */}
@@ -846,39 +959,111 @@ const QuizAdmin = () => {
               {/* Options */}
               <div>
                 <h3 className="font-semibold text-lg mb-2">Options</h3>
-                <div className="space-y-2">
-                  {JSON.parse(selectedQuestion.options).map((option: string, index: number) => (
-                    <div 
-                      key={index}
-                      className={`p-3 rounded-lg border ${
-                        option === selectedQuestion.correct_answer 
-                          ? 'bg-green-50 border-green-200 text-green-800' 
-                          : 'bg-gray-50 border-gray-200'
-                      }`}
-                    >
-                      <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {option}
-                      {option === selectedQuestion.correct_answer && (
-                        <span className="ml-2 text-green-600 font-semibold">✓ Correct Answer</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                {isEditing && editedQuestion ? (
+                  <div className="space-y-2">
+                    {JSON.parse(editedQuestion.options).map((option: string, index: number) => (
+                      <div key={index} className="flex gap-2">
+                        <Input
+                          value={option}
+                          onChange={(e) => updateEditedOption(index, e.target.value)}
+                          placeholder={`Option ${index + 1}`}
+                        />
+                        <Button
+                          onClick={() => removeEditedOption(index)}
+                          variant="outline"
+                          size="sm"
+                          disabled={JSON.parse(editedQuestion.options).length <= 2}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <Button onClick={addEditedOption} variant="outline" size="sm">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Option
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {JSON.parse(selectedQuestion.options).map((option: string, index: number) => (
+                      <div 
+                        key={index}
+                        className={`p-3 rounded-lg border ${
+                          option === selectedQuestion.correct_answer 
+                            ? 'bg-green-50 border-green-200 text-green-800' 
+                            : 'bg-gray-50 border-gray-200'
+                        }`}
+                      >
+                        <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {option}
+                        {option === selectedQuestion.correct_answer && (
+                          <span className="ml-2 text-green-600 font-semibold">✓ Correct Answer</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Correct Answer */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Correct Answer</h3>
+                {isEditing && editedQuestion ? (
+                  <Input
+                    value={editedQuestion.correct_answer}
+                    onChange={(e) => setEditedQuestion({...editedQuestion, correct_answer: e.target.value})}
+                    placeholder="Enter the correct answer"
+                  />
+                ) : (
+                  <p className="text-gray-800">{selectedQuestion.correct_answer}</p>
+                )}
               </div>
 
               {/* Metadata */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Category</h3>
-                  <Badge variant="secondary" className="text-sm">
-                    {selectedQuestion.category ? getCategoryLabel(selectedQuestion.category) : 'Not specified'}
-                  </Badge>
+                  {isEditing && editedQuestion ? (
+                    <Select 
+                      value={editedQuestion.category || ''} 
+                      onValueChange={(value) => setEditedQuestion({...editedQuestion, category: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map(cat => (
+                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge variant="secondary" className="text-sm">
+                      {selectedQuestion.category ? getCategoryLabel(selectedQuestion.category) : 'Not specified'}
+                    </Badge>
+                  )}
                 </div>
                 
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Section</h3>
-                  <Badge variant="outline" className="text-sm">
-                    {selectedQuestion.section || 'Not specified'}
-                  </Badge>
+                  {isEditing && editedQuestion ? (
+                    <Select 
+                      value={editedQuestion.section || ''} 
+                      onValueChange={(value) => setEditedQuestion({...editedQuestion, section: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select section" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map(section => (
+                          <SelectItem key={section} value={section}>{section}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Badge variant="outline" className="text-sm">
+                      {selectedQuestion.section || 'Not specified'}
+                    </Badge>
+                  )}
                 </div>
               </div>
 
