@@ -23,6 +23,9 @@ import Quizzes from "./pages/Quizzes";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./hooks/useAuth";
 import AdminProtectedRoute from "./components/auth/AdminProtectedRoute";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import BlogDashboard from "./pages/BlogDashboard";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +51,8 @@ function App() {
               <Route path="/logbook" element={<Logbook />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/quizzes" element={<Quizzes />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/admin" element={
                 <AdminProtectedRoute>
                   <Admin />
@@ -61,6 +66,11 @@ function App() {
               <Route path="/admin/quiz" element={
                 <AdminProtectedRoute>
                   <QuizAdmin />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/blog" element={
+                <AdminProtectedRoute>
+                  <BlogDashboard />
                 </AdminProtectedRoute>
               } />
               <Route path="*" element={<NotFound />} />
