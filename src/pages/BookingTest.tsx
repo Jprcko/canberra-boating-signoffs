@@ -6,11 +6,13 @@ import TrustBadges from "@/components/ui/TrustBadges";
 import ServiceSelection from "@/components/booking/ServiceSelectionTest";
 import BookingForm from "@/components/booking/BookingFormTest";
 import Benefits from "@/components/booking/Benefits";
+import SEO from "@/components/seo/SEO";
 
 const BookingTestPage = () => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   
   return <Layout>
+      <SEO title="Book Session (Test) | ACT Boats & Licensing" description="Testing page for booking flow." canonicalPath="/booking-test" noindex />
       <Hero title="Book Your Session (Test)" subtitle="Schedule your boating logbook supervision and get one step closer to your licence" backgroundImage="https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&fit=crop&w=1920&q=80" showButton={false} />
 
       {/* Trust Badges Section */}

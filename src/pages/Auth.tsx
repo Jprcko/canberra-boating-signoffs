@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import SEO from "@/components/seo/SEO";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -81,8 +82,9 @@ const Auth = () => {
 
   if (isForgotPassword) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <Card className="w-full max-w-md">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+          <SEO title="Reset Password | ACT Boats & Licensing" description="Reset your password to access your account." canonicalPath="/auth" noindex />
+          <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Reset Password</CardTitle>
             <CardDescription>
@@ -123,8 +125,9 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <SEO title="Sign In | ACT Boats & Licensing" description="Sign in to your account to access the client portal." canonicalPath="/auth" noindex />
+        <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{isAdminLogin ? "Admin Sign In" : "Client Sign In"}</CardTitle>
           <CardDescription>

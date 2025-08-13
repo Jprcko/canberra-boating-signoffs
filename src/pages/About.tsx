@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import { CheckCircle, Award, Users, Clock } from "lucide-react";
 import { FAQ } from "@/components/sections/FAQ";
 import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
+import SEO from "@/components/seo/SEO";
 const About = () => {
   return <Layout>
+      <SEO title="About ACT Boats & Licensing" description="Learn about our mission, values and qualified instructors providing boating logbook supervision in Canberra." canonicalPath="/about" />
       <Hero title="About ACT Boats & Licensing" subtitle="Your trusted partner for professional boat licence logbook supervision in the ACT" backgroundImage="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=80" showButton={false} />
 
       {/* Why I Started This Service */}

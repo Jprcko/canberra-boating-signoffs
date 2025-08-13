@@ -12,11 +12,13 @@ import IndexServices from "@/components/sections/Index/IndexServices";
 import IndexUrgentAvailability from "@/components/sections/Index/IndexUrgentAvailability";
 import IndexWhyChooseUs from "@/components/sections/Index/IndexWhyChooseUs";
 import IndexCallToAction from "@/components/sections/Index/IndexCallToAction";
+import SEO from "@/components/seo/SEO";
 
 const Index = () => {
   return (
     <div className="overflow-x-hidden min-h-screen">
       <Layout>
+        <SEO title="ACT Boats & Licensing | Logbook Supervision" description="Boating logbook supervision and sign-offs in Canberra. Complete your boat licence with qualified instructors." canonicalPath="/" />
         <div className="w-full max-w-full overflow-x-hidden">
           <IndexHero />
           <IndexCompellingMessage />

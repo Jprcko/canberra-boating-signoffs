@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Calendar, DollarSign, FileText, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "@/components/seo/SEO";
 const BookTest = () => {
   const requirements = [{
     item: "Valid Photo ID",
@@ -34,6 +35,7 @@ const BookTest = () => {
     description: "When upgrading to PWC licence"
   }];
   return <Layout>
+      <SEO title="Book Your Test | ACT Boats & Licensing" description="Book your official NSW boating knowledge test." canonicalPath="/book-test" noindex />
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="mb-8">

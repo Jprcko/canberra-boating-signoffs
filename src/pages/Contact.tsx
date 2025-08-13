@@ -10,6 +10,7 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { FAQ } from "@/components/sections/FAQ";
 import ChatbaseAsk from "@/components/sections/ChatbaseAsk";
+import SEO from "@/components/seo/SEO";
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,6 +29,7 @@ const Contact = () => {
     }, 1500);
   };
   return <Layout>
+      <SEO title="Contact | ACT Boats & Licensing" description="Get in touch with ACT Boats & Licensing for bookings and support." canonicalPath="/contact" />
       <Hero title="Contact Us" subtitle="Get in touch with our team for inquiries and support" backgroundImage="https://images.unsplash.com/photo-1518877593221-1f28583780b4?auto=format&fit=crop&w=1920&q=80" showButton={false} />
 
       <section className="section-padding bg-white">

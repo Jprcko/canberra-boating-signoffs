@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Upload, Download, Filter, UserPlus, BarChart3 } from "lucide-react";
 import { useState } from "react";
+import SEO from "@/components/seo/SEO";
 
 const Admin = () => {
   const [selectedCohort, setSelectedCohort] = useState("all");
@@ -61,7 +62,7 @@ const Admin = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-slate-50">
+      <SEO title="Admin Dashboard | ACT Boats & Licensing" description="Admin tools and cohort management." canonicalPath="/admin" noindex />
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-navy mb-2">Admin Dashboard</h1>

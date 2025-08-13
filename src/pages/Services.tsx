@@ -8,10 +8,12 @@ import ServicesHero from "@/components/sections/Services/ServicesHero";
 import ServicesCards from "@/components/sections/Services/ServicesCards";
 import ServicesProcess from "@/components/sections/Services/ServicesProcess";
 import ServicesCallToAction from "@/components/sections/Services/ServicesCallToAction";
+import SEO from "@/components/seo/SEO";
 
 const Services = () => {
   return (
     <Layout>
+      <SEO title="Boat Licence Services | ACT Boats & Licensing" description="Hands-on logbook supervision, PWC add-ons and tailored training in Canberra." canonicalPath="/services" />
       <ServicesHero />
 
       {/* Trust Badges Section */}

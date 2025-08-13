@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download, Search, Anchor, LifeBuoy } from "lucide-react";
 import { useState } from "react";
+import SEO from "@/components/seo/SEO";
 
 const Resources = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,6 +33,7 @@ const Resources = () => {
 
   return (
     <Layout>
+      <SEO title="Boating Resources | ACT Boats & Licensing" description="Essential boating guides, glossary and reference materials." canonicalPath="/resources" />
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-6xl mx-auto px-6 py-8">
           <div className="mb-8">

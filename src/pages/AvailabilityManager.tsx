@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getAvailability, getBookingCapacity, updateAvailability, Availability, BookingCapacity } from "@/services/availabilityService";
+import SEO from "@/components/seo/SEO";
 
 const AvailabilityManager = () => {
   const [availability, setAvailability] = useState<Availability[]>([]);
@@ -91,6 +92,7 @@ const AvailabilityManager = () => {
   if (isLoading) {
     return (
       <Layout>
+        <SEO title="Admin Availability | ACT Boats & Licensing" description="Manage booking availability and capacity." canonicalPath="/admin/availability" noindex />
         <div className="container-custom py-8">
           <div className="text-center">Loading availability data...</div>
         </div>
@@ -100,6 +102,7 @@ const AvailabilityManager = () => {
 
   return (
     <Layout>
+      <SEO title="Admin Availability | ACT Boats & Licensing" description="Manage booking availability and capacity." canonicalPath="/admin/availability" noindex />
       <div className="container-custom py-8 max-w-6xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Availability Manager</h1>
