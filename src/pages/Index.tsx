@@ -18,7 +18,7 @@ const Index = () => {
   return (
     <div className="overflow-x-hidden min-h-screen">
       <Layout>
-        <SEO title="ACT Boats & Licensing | Logbook Supervision" description="Boating logbook supervision and sign-offs in Canberra. Complete your boat licence with qualified instructors." canonicalPath="/" />
+        <SEO title="ACT Boat Licence Training & Logbook Supervision | Get Licensed Fast" description="Get your ACT boat licence with professional logbook supervision in Canberra. Complete training in one day with qualified instructors. Book your spot today!" canonicalPath="/" />
         <div className="w-full max-w-full overflow-x-hidden">
           <IndexHero />
           <IndexCompellingMessage />
