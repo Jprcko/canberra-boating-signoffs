@@ -61,8 +61,9 @@ const Admin = () => {
   ];
 
   return (
-    <Layout>
-      <SEO title="Admin Dashboard | ACT Boats & Licensing" description="Admin tools and cohort management." canonicalPath="/admin" noindex />
+    <div className="overflow-x-hidden min-h-screen">
+      <Layout>
+        <SEO title="Admin Dashboard | ACT Boats & Licensing" description="Admin tools and cohort management." canonicalPath="/admin" noindex />
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-navy mb-2">Admin Dashboard</h1>
@@ -266,8 +267,8 @@ const Admin = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </div>
   );
 };
 
