@@ -1,10 +1,16 @@
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Book, TestTube, Users, CheckCircle } from "lucide-react";
 
 const IndexServices = () => {
+  const navigate = useNavigate();
+
+  const handleBookNow = () => {
+    navigate("/booking");
+    window.scrollTo(0, 0);
+  };
+
   return (
     <section className="section-padding bg-white">
       <div className="container-custom">
@@ -57,9 +63,7 @@ const IndexServices = () => {
               </ul>
             </CardContent>
             <CardFooter className="mt-auto">
-              <Link to="/booking" className="w-full">
-                <Button className="w-full">Book Now</Button>
-              </Link>
+              <Button className="w-full" onClick={handleBookNow}>Book Now</Button>
             </CardFooter>
           </Card>
 
@@ -84,9 +88,7 @@ const IndexServices = () => {
               </ul>
             </CardContent>
             <CardFooter className="mt-auto">
-              <Link to="/booking" className="w-full">
-                <Button className="w-full">Book Now</Button>
-              </Link>
+              <Button className="w-full" onClick={handleBookNow}>Book Now</Button>
             </CardFooter>
           </Card>
 
@@ -111,9 +113,7 @@ const IndexServices = () => {
               </ul>
             </CardContent>
             <CardFooter className="mt-auto">
-              <Link to="/booking" className="w-full">
-                <Button className="w-full">Book Now</Button>
-              </Link>
+              <Button className="w-full" onClick={handleBookNow}>Book Now</Button>
             </CardFooter>
           </Card>
         </div>
