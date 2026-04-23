@@ -75,20 +75,24 @@ Belconnen ACT 2617</p>
                   <CardTitle className="text-xl">Operating Hours</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium">Monday - Friday</span>
-                      <span>9:00 AM - 5:00 PM</span>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="font-semibold mb-1">Classes</p>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Saturday</span>
+                        <span>8:00 AM - 4:00 PM</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">Saturday</span>
-                      <span>8:00 AM - 4:00 PM</span>
+                    <div>
+                      <p className="font-semibold mb-1">Enquiries</p>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Monday - Saturday</span>
+                        <span>9:00 AM - 5:00 PM</span>
+                      </div>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Sunday</span>
-                      <Button asChild variant="link" className="p-0 h-auto text-water-blue text-base font-normal">
-                        <a href="/booking">Book Online</a>
-                      </Button>
+                      <span>Closed</span>
                     </div>
                   </div>
                 </CardContent>
