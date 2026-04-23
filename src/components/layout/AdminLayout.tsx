@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -40,7 +42,12 @@ const navItems = [
 
 const AdminSidebar = () => {
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
 
   const isActive = (url: string, end: boolean) =>
     end ? location.pathname === url : location.pathname.startsWith(url);
@@ -107,7 +114,7 @@ const AdminSidebar = () => {
         </div>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => signOut()} tooltip="Sign out">
+            <SidebarMenuButton onClick={handleSignOut} tooltip="Sign out">
               <LogOut className="h-4 w-4" />
               <span>Sign Out</span>
             </SidebarMenuButton>
