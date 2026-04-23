@@ -266,8 +266,7 @@ const Admin = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </Layout>
-    </div>
+    </AdminLayout>
   );
 };
 
