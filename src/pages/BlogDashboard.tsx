@@ -1,4 +1,4 @@
-import Layout from "@/components/layout/Layout";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,9 +140,8 @@ const BlogDashboard = () => {
   };
 
   return (
-    <Layout>
-      <div className="container-custom py-8">
-        <h1 className="text-3xl font-bold text-navy mb-6">Blog Dashboard</h1>
+    <AdminLayout title="Blog Posts" description="Create, edit and publish blog content">
+      <div className="max-w-6xl mx-auto">
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
@@ -216,7 +215,7 @@ const BlogDashboard = () => {
           </Card>
         </div>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 };
 

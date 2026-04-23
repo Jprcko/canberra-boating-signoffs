@@ -1,5 +1,5 @@
 
-import Layout from "@/components/layout/Layout";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -61,16 +61,15 @@ const Admin = () => {
   ];
 
   return (
-    <div className="overflow-x-hidden min-h-screen">
-      <Layout>
-        <SEO title="Admin Dashboard | ACT Boats & Licensing" description="Admin tools and cohort management." canonicalPath="/admin" noindex />
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-navy mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">
-              Manage cohorts, track progress and monitor system activity
-            </p>
-          </div>
+    <AdminLayout title="Admin Dashboard" description="Manage cohorts, track progress and monitor system activity">
+      <SEO title="Admin Dashboard | ACT Boats & Licensing" description="Admin tools and cohort management." canonicalPath="/admin" noindex />
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-navy mb-1">Overview</h2>
+          <p className="text-gray-600 text-sm">
+            Quick access to cohorts, enrollment and audit logs. Use the sidebar to manage availability, quizzes and blog posts.
+          </p>
+        </div>
 
           <Tabs defaultValue="cohort" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3 max-w-md">
@@ -267,8 +266,7 @@ const Admin = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </Layout>
-    </div>
+    </AdminLayout>
   );
 };
 
