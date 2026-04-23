@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import Layout from "@/components/layout/Layout";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -536,9 +536,9 @@ const QuizAdmin = () => {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-slate-50">
-        <div className="mx-auto px-6 py-8">
+    <AdminLayout title="Quiz Questions" description="Manage quiz questions, bulk import and edit content">
+      <div>
+        <div className="mx-auto">
           <h1 className="text-3xl font-bold text-navy mb-8">Quiz Question Admin</h1>
           
           <Tabs defaultValue="log" className="space-y-6">
@@ -1076,7 +1076,7 @@ const QuizAdmin = () => {
           )}
         </DialogContent>
       </Dialog>
-    </Layout>
+    </AdminLayout>
   );
 };
 

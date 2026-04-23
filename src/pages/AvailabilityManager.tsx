@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, subMonths } from "date-fns";
 import { enGB } from "date-fns/locale";
-import Layout from "@/components/layout/Layout";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -91,23 +91,17 @@ const AvailabilityManager = () => {
 
   if (isLoading) {
     return (
-      <Layout>
+      <AdminLayout title="Availability Manager" description="Manage your booking availability and capacity">
         <SEO title="Admin Availability | ACT Boats & Licensing" description="Manage booking availability and capacity." canonicalPath="/admin/availability" noindex />
-        <div className="container-custom py-8">
-          <div className="text-center">Loading availability data...</div>
-        </div>
-      </Layout>
+        <div className="text-center py-12">Loading availability data...</div>
+      </AdminLayout>
     );
   }
 
   return (
-    <Layout>
+    <AdminLayout title="Availability Manager" description="Manage your booking availability and capacity">
       <SEO title="Admin Availability | ACT Boats & Licensing" description="Manage booking availability and capacity." canonicalPath="/admin/availability" noindex />
-      <div className="container-custom py-8 max-w-6xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Availability Manager</h1>
-          <p className="text-gray-600">Manage your booking availability and capacity</p>
-        </div>
+      <div className="max-w-6xl mx-auto">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
@@ -275,7 +269,7 @@ const AvailabilityManager = () => {
           </Card>
         </div>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 };
 
